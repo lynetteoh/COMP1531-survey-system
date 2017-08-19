@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+
+<head>
+	<title>Login</title>
+</head>
+
+<body><center>
+		<h1> Login </h1>
+		{% if page != None %}
+			<h3>Please login before you can access that page.</h3>
+		{% endif %}
+		<form method = "POST">
+			Username: <input name = "username"/> <br>
+			Password: <input type = "password" name = "password"/> <br>
+			<button type = "submit" name = "loginButton">Login</button>
+		</form>
+</center></body>
+
+
+</html>
