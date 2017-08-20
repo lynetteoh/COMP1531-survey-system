@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+
+
+<head>
+	<title>Create Survey</title>
+	<script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}">
+	</script>
+</head>
+
+<body><center>
+		<h1> Create a survey for {{ course }} - {{ semester }} </h1>
+
+		<div id="qSpace"> </div> <!-- Space for questions -->
+
+		<button onclick="init_new_question()"> Add new Question </button>
+</center></body>
+
+
+</html>
