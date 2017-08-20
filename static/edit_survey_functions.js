@@ -135,6 +135,30 @@ function deleteOption(question, option){
 		table.rows[option - 1].cells[4].innerHTML = "";
 	}
 	row.parentNode.deleteRow(option);
+
+	//Update all subsequent id's (what a hassle >.<)
+	for (var i = option; i < table.rows.length - 1; i++){
+		table.rows[i].id = "Q" + question + "O" + i;
+		var editing = table.rows[i].cells[0].getElementsByTagName("input").length > 0;
+		if (editing){
+			table.rows[i].cells[0].getElementsByTagName("input")[0].id = "Q" + question + "O" + i + "input";
+		}
+		if (editing){
+			console.log("<button onclick = \"finishOptionEdit(" + question + ", " + i + ")\">Done</button>");
+			table.rows[i].cells[1].innerHTML = "<button onclick = \"finishOptionEdit(" + question + ", " + i + ")\">Done</button>";
+		} else {
+			table.rows[i].cells[1].innerHTML = "<button onclick = \"editOption(" + question + ", " + i + ")\">Edit</button>";
+		}
+		table.rows[i].cells[2].innerHTML = "<button onclick = \"deleteOption(" + question + ", " + i + ")\">Delete</button>";
+
+		if (table.rows[i].cells[3].getElementsByTagName("button").length > 0) {
+			table.rows[i].cells[3].innerHTML = "<button onclick = \"moveUp(" + question + ", " + i + ")\">Up</button>"
+		}
+
+		if (table.rows[i].cells[4].getElementsByTagName("button").length > 0) {
+			table.rows[i].cells[4].innerHTML = "<button onclick = \"moveDown(" + question + ", " + i + ")\">Down</button>"
+		}
+	}
 }
 
 function moveUp(question, option){
