@@ -32,3 +32,10 @@ def create():
 		return redirect("/login/@2Fcreate")
 	update(request.remote_addr)
 	return view_courses(request)
+
+@app.route("/create/<course>/<semester>", methods = ["GET", "POST"])
+def edit_survey(course, semester):
+	if (not has_access(request.remote_addr)):
+		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
+	update(request.remote_addr)
+	return render_template("edit_survey.html", course = course, semester = semester)
