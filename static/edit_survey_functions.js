@@ -68,6 +68,14 @@ function finish_new_question(saving){
 //Toggles whether question n uses radio buttons or check boxes
 function toggleRadio(question){
 	console.log("toggle", question);
+
+	button = document.getElementById("Question"+question).getElementsByTagName("table")[0].rows[0].getElementsByTagName("button")[0];
+	console.log(button);
+	if (button.innerHTML == "Choose one option"){
+		button.innerHTML = "Choose many options";
+	} else {
+		button.innerHTML = "Choose one option";
+	}
 }
 
 //Saves a question to the csv file
@@ -138,33 +146,70 @@ function deleteOption(question, option){
 
 	//Update all subsequent id's (what a hassle >.<)
 	for (var i = option; i < table.rows.length - 1; i++){
-		table.rows[i].id = "Q" + question + "O" + i;
-		var editing = table.rows[i].cells[0].getElementsByTagName("input").length > 0;
-		if (editing){
-			table.rows[i].cells[0].getElementsByTagName("input")[0].id = "Q" + question + "O" + i + "input";
-		}
-		if (editing){
-			console.log("<button onclick = \"finishOptionEdit(" + question + ", " + i + ")\">Done</button>");
-			table.rows[i].cells[1].innerHTML = "<button onclick = \"finishOptionEdit(" + question + ", " + i + ")\">Done</button>";
-		} else {
-			table.rows[i].cells[1].innerHTML = "<button onclick = \"editOption(" + question + ", " + i + ")\">Edit</button>";
-		}
-		table.rows[i].cells[2].innerHTML = "<button onclick = \"deleteOption(" + question + ", " + i + ")\">Delete</button>";
+		correct_IDs(question, i);
+	}
+}
 
-		if (table.rows[i].cells[3].getElementsByTagName("button").length > 0) {
-			table.rows[i].cells[3].innerHTML = "<button onclick = \"moveUp(" + question + ", " + i + ")\">Up</button>"
-		}
+function correct_IDs(question, option){
+	var table = document.getElementById("Question"+question).getElementsByTagName("table")[0];
+	table.rows[option].id = "Q" + question + "O" + option;
+	var editing = table.rows[option].cells[0].getElementsByTagName("input").length > 0;
+	if (editing){
+		table.rows[option].cells[0].getElementsByTagName("input")[0].id = "Q" + question + "O" + option + "input";
+	}
+	if (editing){
+		console.log("<button onclick = \"finishOptionEdit(" + question + ", " + option + ")\">Done</button>");
+		table.rows[option].cells[1].innerHTML = "<button onclick = \"finishOptionEdit(" + question + ", " + option + ")\">Done</button>";
+	} else {
+		table.rows[option].cells[1].innerHTML = "<button onclick = \"editOption(" + question + ", " + option + ")\">Edit</button>";
+	}
+	table.rows[option].cells[2].innerHTML = "<button onclick = \"deleteOption(" + question + ", " + option + ")\">Delete</button>";
 
-		if (table.rows[i].cells[4].getElementsByTagName("button").length > 0) {
-			table.rows[i].cells[4].innerHTML = "<button onclick = \"moveDown(" + question + ", " + i + ")\">Down</button>"
-		}
+	if (table.rows[option].cells[3].getElementsByTagName("button").length > 0) {
+		table.rows[option].cells[3].innerHTML = "<button onclick = \"moveUp(" + question + ", " + option + ")\">Up</button>";
+	}
+
+	if (table.rows[option].cells[4].getElementsByTagName("button").length > 0) {
+		table.rows[option].cells[4].innerHTML = "<button onclick = \"moveDown(" + question + ", " + option + ")\">Down</button>";
 	}
 }
 
 function moveUp(question, option){
 	console.log("moveUp", question, option);
+	var row = document.getElementById("Q" + question + "O" + option);
+	var prev_row = document.getElementById("Q" + question + "O" + (option-1));
+	var row_innerHTML = row.innerHTML;
+	row.parentNode.deleteRow(option);
+	var new_row = prev_row.parentNode.insertRow(option-1);
+	new_row.innerHTML = row_innerHTML;
+	correct_IDs(question, option-1);
+	correct_IDs(question, option);
+	if (option-1 == 1){
+		new_row.cells[3].innerHTML = "";
+		prev_row.cells[3].innerHTML = "<button onclick = \"moveUp(" + question + ", " + option + ")\">Up</button>";
+	}
+	if (option == new_row.parentNode.rows.length - 2){
+		prev_row.cells[4].innerHTML = "";
+		new_row.cells[4].innerHTML = "<button onclick = \"moveDown(" + question + ", " + (option-1) + ")\">Down</button>";
+	}
 }
 
 function moveDown(question, option){
 	console.log("moveDown", question, option);
+	var row = document.getElementById("Q" + question + "O" + option);
+	var next_row = document.getElementById("Q" + question + "O" + (option+1));
+	var row_innerHTML = row.innerHTML;
+	row.parentNode.deleteRow(option);
+	var new_row = next_row.parentNode.insertRow(option+1);
+	new_row.innerHTML = row_innerHTML;
+	correct_IDs(question, option);
+	correct_IDs(question, option+1);
+	if (option == 1){
+		next_row.cells[3].innerHTML = "";
+		new_row.cells[3].innerHTML = "<button onclick = \"moveUp(" + question + ", " + (option+1) + ")\">Up</button>";
+	}
+	if (option+1 == new_row.parentNode.rows.length - 2){
+		new_row.cells[4].innerHTML = "";
+		next_row.cells[4].innerHTML = "<button onclick = \"moveDown(" + question + ", " + option + ")\">Down</button>";
+	}
 }
