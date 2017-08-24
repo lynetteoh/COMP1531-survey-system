@@ -7,6 +7,8 @@ from login import login_page
 from security import has_access
 from common import update
 from create import view_courses
+import json
+from fileIO import *
 
 @app.route("/")
 def index():
@@ -38,4 +40,14 @@ def edit_survey(course, semester):
 	if (not has_access(request.remote_addr)):
 		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
-	return render_template("edit_survey.html", course = course, semester = semester)
+	saved_questions = read_all_questions()
+	return render_template("edit_survey.html", course = course, semester = semester, saved_questions = saved_questions)
+
+@app.route("/save_question", methods=["POST"])
+def save_question():
+	questionText = request.form.get('question')
+	options = json.loads(request.form.get('options'))
+	multi = True if request.form.get('multi') == 'true' else False
+	write_question(questionText, options, multi)
+	print("ALL QUESTIONS:", read_all_questions())
+	return "Question saved successfully!"

@@ -1,0 +1,18 @@
+Question1 multi=True What's your favourite shrimp?
+Q1O1 Yes
+Q1O2 No
+Q1O3 Why?
+
+Question2 multi=False What's your favourite idea?
+Q2O1 Thinking creatively
+Q2O2 The number 42
+Q2O3 Imaginary numbers actually being useful
+Q2O4 The existence of Mr Sekaran
+
+Question3 multi=False A
+Q3O1 B
+Q3O2 Yes
+
+Question4 multi=False How do I get full marks?
+Q4O1 You can't
+Q4O2 You can't

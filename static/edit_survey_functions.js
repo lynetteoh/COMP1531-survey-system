@@ -70,7 +70,6 @@ function toggleRadio(question){
 	console.log("toggle", question);
 
 	button = document.getElementById("Question"+question).getElementsByTagName("table")[0].rows[0].getElementsByTagName("button")[0];
-	console.log(button);
 	if (button.innerHTML == "Choose one option"){
 		button.innerHTML = "Choose many options";
 	} else {
@@ -81,6 +80,42 @@ function toggleRadio(question){
 //Saves a question to the csv file
 function saveQuestion(question){
 	console.log("saving question", question);
+	var table = document.getElementById("Question"+question).getElementsByTagName("table")[0];
+	var optionList = [];
+	for (var i = 1; i < table.rows.length - 1; i++){
+		if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
+			optionList.push(table.rows[i].cells[0].innerHTML);
+		} else {
+			if (!confirm("Would you like to discard options currently being edited?")){
+				return;
+			}
+		}
+	}
+
+	var multi = true;
+	if (table.rows[0].getElementsByTagName("button")[0].innerHTML == "Choose one option"){
+		multi = false;
+	}
+
+	var questionText = table.rows[0].cells[0].getElementsByTagName("h3")[0].innerHTML;
+	questionText = questionText.substring(("Q." + question + ": ").length, questionText.length);
+
+	console.log("TEXT:", questionText);
+	console.log("OPTIONS:", JSON.stringify(optionList));
+	console.log("MULTI?", multi);
+
+	$.ajax({
+		type: "POST",
+		dataType: "text",
+		url: "/save_question",
+		data: {questionNum: question,
+			   question: questionText,
+			   options: JSON.stringify(optionList),
+			   multi: multi},
+		success: function callback(response){
+			alert(response);
+		}
+	});
 }
 
 //Adds an option to a question

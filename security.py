@@ -17,7 +17,7 @@ def login_success(username, password, ip_addr):
 
 def has_access(ip_addr):
 	if ip_addr in logged_in:
-		if logged_in[ip_addr] <= time.time() + 30: #30 mins after last action
+		if logged_in[ip_addr] <= time.time() + 1800: #30 mins after last action
 			return True
 	return False
 

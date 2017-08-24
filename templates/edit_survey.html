@@ -1,20 +1,61 @@
-<!doctype html>
-<html>
+{% extends "layout.html" %}
+{% block title %} Create Survey {% endblock %}
+{% block head %} 
+<script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}"> </script>
+<script>
+function toggleViewQuestions(){
+	questionsDiv = document.getElementById('saved_questions')
+	if (questionsDiv.style.visibility == 'visible'){
+		questionsDiv.style.visibility = 'hidden'
+	} else {
+		questionsDiv.style.visibility = 'visible'
+	}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<center>
+
+<h1> Create a survey for {{ course }} - {{ semester }} </h1>
+
+<div id="qSpace"> </div> <!-- Space for questions -->
+
+<button onclick="init_new_question()"> Add new Question </button>
+<br> <br>
+<button onclick="toggleViewQuestions()"> Add existing question </button>
 
 
-<head>
-	<title>Create Survey</title>
-	<script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}">
-	</script>
-</head>
+<div id="saved_questions" style = "visibility: hidden">
+	<table>
+	<tr>
+		<th> Question </th>
+		<th> Answers </th>
+		<th> Add </th>
+		<th> Delete </th>
+	</tr>
+	{% for question in saved_questions %}
+	<tr>
+		<td> {{ question['questionText'] }} </td>
+		<td> 
+			{% if question['multi'] == True %} Choose One:
+			{% else %} Choose Many:
+			{% endif %}
+			<div data-collapse>
+				<button>Show all...</button>
+				<ul>
+				{% for option in question['options'] %}
+					<li>{{ option }}</li>
+				{% endfor %}
+				</ul>
+			</div>
+		</td>
+		<td> <button> UNIMPLEMENTED </button> </td>
+		<td> <button> UNIMPLEMENTED </button> </td>
+	</tr>
+	{% endfor %}
+	</table>
+</div>
 
-<body><center>
-		<h1> Create a survey for {{ course }} - {{ semester }} </h1>
-
-		<div id="qSpace"> </div> <!-- Space for questions -->
-
-		<button onclick="init_new_question()"> Add new Question </button>
-</center></body>
-
-
-</html>
+</center>
+{% endblock %}
