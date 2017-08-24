@@ -65,6 +65,72 @@ function finish_new_question(saving){
 	}
 }
 
+function addExistingQuestion(questionID){
+	var qNum = 1; //Count all questions previously saved.
+	var allDivs = document.getElementsByTagName("div");
+	for (var i = 0; i < allDivs.length; i++){
+		if (allDivs[i].id.startsWith("Question")){
+			qNum++;
+		}
+	}
+
+	var questionDiv = document.createElement("div");
+	var divId = document.createAttribute("id");
+	divId.value = "Question".concat(qNum.toString());
+	console.log(divId.value);
+	questionDiv.setAttributeNode(divId);
+
+	var NUM_COLUMNS = 5;
+
+	var questionRow = document.getElementById('existingQuestion'+questionID);
+	var questionText = questionRow.cells[0].innerHTML;
+	var questionOptions = document.getElementById('Q'+questionID+'Options').getElementsByTagName('li')
+
+	questionDiv.innerHTML = "\n" +
+	"<table>\n" +
+	"<tr>\n" +
+	"	<th colspan = \"" + NUM_COLUMNS + "\">\n" +
+	"		<h3>Q." + qNum + ": " + questionText + "</h3>\n" +
+	"		<button onclick=\"toggleRadio(" + qNum + ")\">Choose one option</button>    \n" +
+	"		<button onclick=\"saveQuestion(" + qNum + ")\">Save Question</button></th>\n" +
+	"	</th>\n" +
+	"</tr>\n" +
+	"</table>\n";
+
+	for (var i = 0; i < questionOptions.length; i++){
+		var optionRow = questionDiv.getElementsByTagName("table")[0].insertRow(questionDiv.getElementsByTagName("table")[0].rows.length);
+		var rowCode  = "	<td>" + questionOptions[i].innerHTML + "</td>\n" +
+		"	<td><button onclick = \"editOption(" + qNum + ", " + (i + 1) + ")\">Edit</button> </td> \n" +
+		"	<td><button onclick = \"deleteOption(" + qNum + ", " + (i + 1) + ")\">Delete</button> </td>\n";
+		if (i == 0){
+			rowCode += "	<td></td>";
+		} else {
+			rowCode += "	<td><button onclick = \"moveUp(" + qNum + ", " + (i + 1) + ")\">Up</button></td>\n";
+		}
+		if (i == questionOptions.length - 1){
+			rowCode += "	<td></td>";
+		} else {
+			rowCode += "	<td><button onclick = \"moveDown(" + qNum + ", " + (i + 1) + ")\">Down</button></td>\n";
+		}
+		var rowId = document.createAttribute("id");
+		rowId.value = "Q"+qNum+"O"+(i+1);
+		optionRow.innerHTML = rowCode;
+		optionRow.setAttributeNode(rowId);
+	}
+
+	var finalRow = questionDiv.getElementsByTagName("table")[0].insertRow(questionDiv.getElementsByTagName("table")[0].rows.length);
+	finalRow.innerHTML = "	<td colspan = \"" + NUM_COLUMNS + "\"> <center> <button onclick=\"addOption(" + qNum + ")\">Add an option... </button> </center> </td>\n"
+	questionDiv.innerHTML += "<br><br><br>"
+
+	console.log(questionDiv);
+
+	document.getElementById("qSpace").appendChild(questionDiv);
+
+	if (questionRow.cells[1].getElementsByTagName('p')[0].innerHTML == "Choose Many:"){
+		toggleRadio(qNum);
+	}
+}
+
 //Toggles whether question n uses radio buttons or check boxes
 function toggleRadio(question){
 	console.log("toggle", question);
@@ -134,7 +200,7 @@ function addOption(question){
 	newRow.setAttributeNode(rowID);
 
 	newRow.innerHTML = "\n" +
-	"	<td><input id = \"Q" + question + "O" + (numOptions + 1) + "input\"> </td>" +
+	"	<td><input id = \"Q" + question + "O" + (numOptions + 1) + "input\"> </td>\n" +
 	"	<td><button onclick = \"finishOptionEdit(" + question + ", " + (numOptions + 1) + ")\">Add</button> </td> \n" +
 	"	<td><button onclick = \"deleteOption(" + question + ", " + (numOptions + 1) + ")\">Cancel</button> </td>\n" +
 	"	<td></td>\n" +

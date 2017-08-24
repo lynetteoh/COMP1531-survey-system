@@ -49,5 +49,4 @@ def save_question():
 	options = json.loads(request.form.get('options'))
 	multi = True if request.form.get('multi') == 'true' else False
 	write_question(questionText, options, multi)
-	print("ALL QUESTIONS:", read_all_questions())
 	return "Question saved successfully!"
