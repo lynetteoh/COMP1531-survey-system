@@ -21,7 +21,7 @@ function toggleViewQuestions(){
 
 <div id="qSpace"> </div> <!-- Space for questions -->
 
-<button onclick="init_new_question()"> Add new Question </button>
+<button onclick="init_new_question(); document.getElementById('saved_questions').style.visibility = 'hidden'"> Add new Question </button>
 <br> <br>
 <button onclick="toggleViewQuestions()"> Add existing question </button>
 
