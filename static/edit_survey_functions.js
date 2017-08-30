@@ -13,7 +13,7 @@ function init_new_question(){
 	"<button onclick = \"finish_new_question(true)\">Add question</button>\n" +
 	"<button onclick = \"finish_new_question(false)\">Cancel</button>\n";
 
-	document.getElementsByTagName("center")[0].appendChild(enclosingDiv);
+	document.getElementById("newQuestionZone").appendChild(enclosingDiv);
 }
 
 //Deletes the input box for adding a new question
@@ -129,6 +129,8 @@ function addExistingQuestion(questionID){
 	if (questionRow.cells[1].getElementsByTagName('p')[0].innerHTML == "Choose Many:"){
 		toggleRadio(qNum);
 	}
+
+	toggleViewQuestions();
 }
 
 //Toggles whether question n uses radio buttons or check boxes
@@ -178,6 +180,26 @@ function saveQuestion(question){
 			   question: questionText,
 			   options: JSON.stringify(optionList),
 			   multi: multi},
+		success: function callback(response){
+			alert(response);
+		}
+	});
+}
+
+function deleteExistingQuestion(id){
+	console.log("deleting question", id);
+	if (!confirm("Are you sure you want to delete this question permanently?")){
+		return;
+	}
+
+	row = document.getElementById("existingQuestion" + id);
+	row.parentNode.removeChild(row);
+
+	$.ajax({
+		type: "POST",
+		dataType: "text",
+		url: "/delete_question",
+		data: {id: id},
 		success: function callback(response){
 			alert(response);
 		}
@@ -313,4 +335,79 @@ function moveDown(question, option){
 		new_row.cells[4].innerHTML = "";
 		next_row.cells[4].innerHTML = "<button onclick = \"moveDown(" + question + ", " + option + ")\">Down</button>";
 	}
+}
+
+function moveQuestionUp(question){
+	console.log("Raise ", question)
+}
+
+function moveQuestionDown(question){
+	console.log("Lower ", question)
+}
+
+function publishSurvey(){
+	console.log("Publish...");
+	var survey = [];
+	var allDivs = document.getElementById("qSpace").getElementsByTagName("div");
+	console.log(allDivs.length);
+	for (var div = 0; div < allDivs.length; div++){
+		console.log(div);
+		if (allDivs[div].id.startsWith("Question")){
+			var question = parseInt(allDivs[div].id.substring(8, allDivs[div].id.length));
+
+			var table = document.getElementById(allDivs[div].id).getElementsByTagName("table")[0];
+			var optionList = [];
+			for (var i = 1; i < table.rows.length - 1; i++){
+				if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
+					optionList.push(table.rows[i].cells[0].innerHTML);
+				} else {
+					if (!confirm("Would you like to discard options currently being edited?")){
+						return;
+					}
+				}
+			}
+
+			var multi = true;
+			if (table.rows[0].getElementsByTagName("button")[0].innerHTML == "Choose one option"){
+				multi = false;
+			}
+
+			var questionText = table.rows[0].cells[0].getElementsByTagName("h3")[0].innerHTML;
+			questionText = questionText.substring(("Q." + question + ": ").length, questionText.length);
+
+			console.log("ID:", question);
+			console.log("TEXT:", questionText);
+			console.log("OPTIONS:", optionList);
+			console.log("MULTI?", multi);
+
+			survey.push({questionNum: question,
+				question: questionText,
+				options: optionList,
+				multi: multi})
+		}
+	}
+	if (survey.length == 0){
+		alert("Please add a question before publishing the survey");
+		return;
+	}
+
+	var url_pathname = window.location.pathname.split("/");
+	var course = url_pathname[url_pathname.length-2];
+	var semester = url_pathname[url_pathname.length-1];
+
+	$.ajax({
+		type: "POST",
+		dataType: "text",
+		url: "/publish_survey",
+		data: {surveyData: JSON.stringify(survey),
+			   semester: semester,
+			   course: course},
+		success: function callback(response){
+			if (response == 'Success'){
+				alert('Survey successfully published!\nSurvey can be found at: ' + window.location.hostname + window.location.pathname.replace('/create/', '/survey/'));
+			} else {
+				alert(response);
+			}
+		}
+	});
 }

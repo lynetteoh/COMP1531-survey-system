@@ -8,7 +8,8 @@ from security import has_access
 from common import update
 from create import view_courses
 import json
-from fileIO import *
+from questionIO import *
+from surveyIO import *
 
 @app.route("/")
 def index():
@@ -26,7 +27,8 @@ def home():
 	if (not has_access(request.remote_addr)):
 		return redirect("/login/@2Fhome")
 	update(request.remote_addr)
-	return render_template("home.html")
+	active_surveys = get_active_surveys()
+	return render_template("home.html", active_surveys = active_surveys)
 
 @app.route("/create")
 def create():
@@ -35,7 +37,7 @@ def create():
 	update(request.remote_addr)
 	return view_courses(request)
 
-@app.route("/create/<course>/<semester>", methods = ["GET", "POST"])
+@app.route("/create/<course>/<semester>")
 def edit_survey(course, semester):
 	if (not has_access(request.remote_addr)):
 		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
@@ -50,3 +52,28 @@ def save_question():
 	multi = True if request.form.get('multi') == 'true' else False
 	write_question(questionText, options, multi)
 	return "Question saved successfully!"
+
+@app.route("/delete_question", methods = ["POST"])
+def delete_question():
+	remove_question(request.form.get('id'))
+	return "Question deleted."
+
+@app.route("/publish_survey", methods = ["POST"])
+def publish_survey():
+	surveyData = json.loads(request.form.get('surveyData'))
+	semester = request.form.get('semester')
+	course = request.form.get('course')
+	print(surveyData, semester, course)
+	response = save_survey(course, semester, surveyData)
+	return response
+
+@app.route("/survey/<course>/<semester>", methods = ["POST", "GET"])
+def view_survey(course, semester):
+	if request.method == "POST":
+		print(request.form)
+		return "Thankyou for trying the survey system, responses are currently not being recorded."
+	survey_data = get_survey(course, semester)
+	if survey_data == []:
+		return render_template("surveyFail.html")
+	print(survey_data)
+	return render_template("survey.html", survey_data = survey_data, course = course, semester = semester)

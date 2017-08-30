@@ -9,7 +9,7 @@ def read_all_questions():
 			if current_question != None:
 				question_list.append(current_question)
 			line = line.strip().split(' ')
-			current_question = {'id': int(line[0][8:]), 'questionText': ' '.join(line[2:]), 'options': [], 'multi': line[1] == "multi=True"}
+			current_question = {'id': int(line[0][8:]), 'questionText': ' '.join(line[2:]), 'options': [], 'multi': line[1] == 'multi=True'}
 		elif (line.strip() != ''):
 			current_question['options'].append(' '.join(line.strip().split(' ')[1:]))
 	if current_question != None:
@@ -31,7 +31,7 @@ def remove_question(id):
 
 
 #return largest available id.
-def get_largest_id():
+def get_largest_question_id():
 	largest_id = 1 #Yes, I know, I'm starting my indexing from 1. Deal with it.
 	for line in open(QUESTIONS_FILENAME, 'r'):
 		if line.startswith('Question'):
@@ -41,7 +41,7 @@ def get_largest_id():
 	return largest_id
 
 def write_question(questionText, options, multi):
-	id = get_largest_id()
+	id = get_largest_question_id()
 
 	f = open(QUESTIONS_FILENAME, 'a+')
 	f.write('\n')

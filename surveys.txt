@@ -1,0 +1,25 @@
+BEGIN COMP9517 18s2
+Question1 multi=False  What's your favourite shrimp? 
+Q1O1 Yes
+Q1O2 No
+Q1O3 Why?
+Question2 multi=False What's your favourite idea?
+Q2O1 Thinking creatively
+Q2O2 The number 42
+Q2O3 Imaginary numbers actually being useful
+Q2O4 The existence of Mr Sekaran
+END COMP9517 18s2
+BEGIN COMP2041 17s2
+Question1 multi=False  What's your favourite shrimp? 
+Q1O1 Yes
+Q1O2 No
+Q1O3 Why?
+Question2 multi=True  How do I get full marks? 
+Q2O1 You can't
+Q2O2 You can't
+END COMP2041 17s2
+BEGIN COMP2041 17s1
+Question1 multi=True  How do I get full marks? 
+Q1O1 You can't
+Q1O2 You can't
+END COMP2041 17s1

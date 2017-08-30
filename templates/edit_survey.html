@@ -21,9 +21,12 @@ function toggleViewQuestions(){
 
 <div id="qSpace"> </div> <!-- Space for questions -->
 
+<button onclick="publishSurvey()"> Finish Survey and publish </button>
+
 <button onclick="init_new_question(); document.getElementById('saved_questions').style.visibility = 'hidden'"> Add new Question </button>
 <br> <br>
 <button onclick="toggleViewQuestions()"> Add existing question </button>
+<div id = "newQuestionZone"></div>
 
 
 <div id="saved_questions" style = "visibility: hidden">
@@ -53,7 +56,7 @@ function toggleViewQuestions(){
 			</div>
 		</td>
 		<td> <button onclick="addExistingQuestion({{question['id']}})"> Add question </button> </td>
-		<td> <button> UNIMPLEMENTED </button> </td>
+		<td> <button onclick="deleteExistingQuestion({{question['id']}})"> Delete question </button> </td>
 	</tr>
 	{% endfor %}
 	</table>

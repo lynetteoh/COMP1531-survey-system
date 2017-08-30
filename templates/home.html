@@ -5,7 +5,14 @@
 {% block content %}
 <center>
 		<h1> Admin Homepage </h1>
-		<p> Active surveys: NOT IMPLEMENTED </p>
-		<p> <a href = "/create">Create a new survey </a> <p>
+		<h3> Active surveys: </h3>
+		<table>
+		{% for course, semester in active_surveys %}
+			<tr>
+				<td> <a href = "/survey/{{course}}/{{semester}}">{{course}}: {{semester}}</a> </td>
+			</tr>
+		{% endfor %}
+		</table>
+		<p> <button onclick = "window.location.href='/create'">Create a new survey </button> <p>
 </center>
 {% endblock %}

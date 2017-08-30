@@ -9,9 +9,6 @@ Q2O2 The number 42
 Q2O3 Imaginary numbers actually being useful
 Q2O4 The existence of Mr Sekaran
 
-Question3 multi=False A
-Q3O1 B
-Q3O2 Yes
 
 Question4 multi=False How do I get full marks?
 Q4O1 You can't
