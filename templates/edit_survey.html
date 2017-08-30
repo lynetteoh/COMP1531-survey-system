@@ -38,19 +38,19 @@ function toggleViewQuestions(){
 		<th> Delete </th>
 	</tr>
 	{% for question in saved_questions %}
-	<tr id = "existingQuestion{{question['id']}}">
-		<td> {{ question['questionText'] }} </td>
+	<tr id = "existingQuestion{{question.id}}">
+		<td> {{ question.text }} </td>
 		<td> 
-			{% if question['multi'] == True %}
+			{% if question.multi == True %}
 				<p>Choose One:</p>
 			{% else %}
 				<p>Choose Many:</p>
 			{% endif %}
-			<button data-toggle="collapse" data-target="#Q{{question['id']}}Options">Show options...</button>
-			<div id = "Q{{question['id']}}Options" class="collapse">
+			<button data-toggle="collapse" data-target="#Q{{question.id}}Options">Show options...</button>
+			<div id = "Q{{question.id}}Options" class="collapse">
 				<ul>
-				{% for option in question['options'] %}
-					<li>{{ option }}</li>
+				{% for option in question.options %}
+					<li>{{ option.text }}</li>
 				{% endfor %}
 				</ul>
 			</div>

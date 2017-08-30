@@ -1,3 +1,5 @@
+from questionClass import Question, Option
+
 QUESTIONS_FILENAME = "questions.txt"
 
 #Significantly faster than looping over all ID's.
@@ -9,13 +11,15 @@ def read_all_questions():
 			if current_question != None:
 				question_list.append(current_question)
 			line = line.strip().split(' ')
-			current_question = {'id': int(line[0][8:]), 'questionText': ' '.join(line[2:]), 'options': [], 'multi': line[1] == 'multi=True'}
+			current_question = Question(id = int(line[0][8:]), text = ' '.join(line[2:]), multi = (line[1] == 'multi=True'))
 		elif (line.strip() != ''):
-			current_question['options'].append(' '.join(line.strip().split(' ')[1:]))
+			option = Option(id = int(line.split(' ')[0].split('O')[-1]), text = ' '.join(line.strip().split(' ')[1:]))
+			current_question.options.append(option)
 	if current_question != None:
 				question_list.append(current_question)
 	return question_list
 
+#removes a question with that id
 def remove_question(id):
 	file = open(QUESTIONS_FILENAME, 'r')
 	lines = file.readlines()
@@ -24,7 +28,7 @@ def remove_question(id):
 	file = open(QUESTIONS_FILENAME, 'w')
 
 	for line in lines:
-		if not (line.startswith('Question'+str(id)) or line.startswith('Q' + str(id))):
+		if not (line.startswith('Question'+str(id)) or line.startswith('Q' + str(id) + 'O')):
 			file.write(line)
 
 	file.close()
@@ -40,13 +44,9 @@ def get_largest_question_id():
 				largest_id += 1
 	return largest_id
 
-def write_question(questionText, options, multi):
-	id = get_largest_question_id()
-
-	f = open(QUESTIONS_FILENAME, 'a+')
-	f.write('\n')
-	f.write('Question' + str(id) + ' multi=' + str(multi) + ' ' + questionText + '\n')
-	for i, option in enumerate(options):
-		f.write('Q' + str(id) + 'O' + str(i+1) + ' ' + option + '\n')
-	f.close()
-	return id
+#writes question from a form to the questions file
+def write_question(form):
+	question = Question()
+	question.loadFromDict(form)
+	write_id = get_largest_question_id()
+	return question.saveToEndOfFile(QUESTIONS_FILENAME, write_id)

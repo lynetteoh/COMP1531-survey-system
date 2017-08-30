@@ -7,13 +7,13 @@
 <h1> Survey for {{ course }} {{ semester }} </h1>
 <form method = "POST">
 	{% for question in survey_data %}
-		<h3> Q.{{ question['id'] }}: {{ question['questionText'] }} </h3>
+		<h3> Q.{{ question.id }}: {{ question.text }} </h3>
 		<div style = "display: inline-block; text-align: left">
-		{% for i, option in question['options'] %}
-			{% if question['multi'] %}
-				<input type = "checkbox" name = "Q{{ question['questionNum'] }}" value = "O{{i+1}}">{{ option }}<br>
+		{% for option in question.options %}
+			{% if question.multi %}
+				<input type = "checkbox" name = "Q{{ question.id }}" value = "O{{option.id+1}}">{{ option.text }}<br>
 			{% else %}
-				<input type = "radio" name = "Q{{ question['questionNum'] }}" value = "O{{i+1}}">{{ option }}<br>
+				<input type = "radio" name = "Q{{ question.id }}" value = "O{{option.id+1}}">{{ option.text }}<br>
 			{% endif %}
 		{% endfor %}
 		</div>

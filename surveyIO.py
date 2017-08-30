@@ -1,14 +1,16 @@
+from questionClass import Question, Option
+
 SURVEY_FILENAME = "surveys.txt"
 
 def save_survey(course, semester, survey_data):
 	if (get_survey(course, semester) != []):
 		return 'Survey for that semester already exists'
-	file = open(SURVEY_FILENAME, 'a')
+	file = open(SURVEY_FILENAME, 'a+')
 	file.write('BEGIN ' + course + ' ' + semester + '\n')
-	for question in survey_data:
-		file.write('Question' + str(question['questionNum']) + ' multi=' + str(question['multi']) + ' ' + question['question'] + '\n')
-		for i, option in enumerate(question['options']):
-			file.write('Q' + str(question['questionNum']) + 'O' + str(i+1) + ' ' + option + '\n')
+	for data in survey_data:
+		question = Question()
+		question.loadFromDict(data)
+		file.write(str(question))
 	file.write('END ' + course + ' ' + semester + '\n')
 	file.close()
 
@@ -33,10 +35,10 @@ def get_survey(course, semester):
 				if current_question != None:
 					survey_data.append(current_question)
 				line = line.strip().split(' ')
-				current_question = {'id': int(line[0][8:]), 'questionText': ' '.join(line[2:]), 'options': [], 'multi': line[1] == 'multi=True'}
+				current_question = Question(id = int(line[0][8:]), text = ' '.join(line[2:]), multi = (line[1] == 'multi=True'))
 			elif (line.strip() != ''):
-				optionNum = int(line.split(' ')[0].split('O')[-1])
-				current_question['options'].append((optionNum, ' '.join(line.strip().split(' ')[1:])))
+				option = Option(id = int(line.split(' ')[0].split('O')[-1]), text = ' '.join(line.strip().split(' ')[1:]))
+				current_question.addOption(option)
 	return survey_data
 
 def get_active_surveys():

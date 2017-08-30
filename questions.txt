@@ -13,3 +13,7 @@ Q2O4 The existence of Mr Sekaran
 Question4 multi=False How do I get full marks?
 Q4O1 You can't
 Q4O2 You can't
+
+Question3 multi=False This?
+Q3O1 Works
+Q3O2 Doesn't work

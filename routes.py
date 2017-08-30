@@ -47,10 +47,9 @@ def edit_survey(course, semester):
 
 @app.route("/save_question", methods=["POST"])
 def save_question():
-	questionText = request.form.get('question')
-	options = json.loads(request.form.get('options'))
-	multi = True if request.form.get('multi') == 'true' else False
-	write_question(questionText, options, multi)
+	write_question({'questionText': request.form.get('questionText'),
+					'options': json.loads(request.form.get('options')),
+					'multi': True if request.form.get('multi') == 'true' else False})
 	return "Question saved successfully!"
 
 @app.route("/delete_question", methods = ["POST"])

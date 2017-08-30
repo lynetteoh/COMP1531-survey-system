@@ -177,7 +177,7 @@ function saveQuestion(question){
 		dataType: "text",
 		url: "/save_question",
 		data: {questionNum: question,
-			   question: questionText,
+			   questionText: questionText,
 			   options: JSON.stringify(optionList),
 			   multi: multi},
 		success: function callback(response){
@@ -381,7 +381,7 @@ function publishSurvey(){
 			console.log("MULTI?", multi);
 
 			survey.push({questionNum: question,
-				question: questionText,
+				questionText: questionText,
 				options: optionList,
 				multi: multi})
 		}
