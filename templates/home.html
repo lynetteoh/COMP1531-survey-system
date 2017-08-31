@@ -7,9 +7,16 @@
 		<h1> Admin Homepage </h1>
 		<h3> Active surveys: </h3>
 		<table>
+		<tr>
+			<th> <center> Course: Semester </center> </th>
+			<th> <center> Link  </center> </th>
+			<th> <center> Test </center> </th>
+		</tr>
 		{% for course, semester in active_surveys %}
 			<tr>
-				<td> <a href = "/survey/{{course}}/{{semester}}">{{course}}: {{semester}}</a> </td>
+				<td> {{course}}: {{semester}}   </td>
+				<td>   &lt;{{root}}survey/{{course}}/{{semester}}&gt;   </td>
+				<td>   <a href = "survey/{{course}}/{{semester}}"> Test as a respondent </a>   </td>
 			</tr>
 		{% endfor %}
 		</table>

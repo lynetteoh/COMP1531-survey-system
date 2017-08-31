@@ -28,14 +28,16 @@ def home():
 		return redirect("/login/@2Fhome")
 	update(request.remote_addr)
 	active_surveys = get_active_surveys()
-	return render_template("home.html", active_surveys = active_surveys)
+	print(request.url_root)
+	root = request.url_root
+	return render_template("home.html", active_surveys = active_surveys, root = root)
 
 @app.route("/create")
 def create():
 	if (not has_access(request.remote_addr)):
 		return redirect("/login/@2Fcreate")
 	update(request.remote_addr)
-	return view_courses(request)
+	return view_courses(request, get_active_surveys())
 
 @app.route("/create/<course>/<semester>")
 def edit_survey(course, semester):
