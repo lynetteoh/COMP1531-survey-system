@@ -30,36 +30,40 @@ function toggleViewQuestions(){
 
 
 <div id="saved_questions" style = "visibility: hidden">
-	<table>
-	<tr>
-		<th> Question </th>
-		<th> Answers </th>
-		<th> Add </th>
-		<th> Delete </th>
-	</tr>
-	{% for question in saved_questions %}
-	<tr id = "existingQuestion{{question.id}}">
-		<td> {{ question.text }} </td>
-		<td> 
-			{% if question.multi == True %}
-				<p>Choose One:</p>
-			{% else %}
-				<p>Choose Many:</p>
-			{% endif %}
-			<button data-toggle="collapse" data-target="#Q{{question.id}}Options">Show options...</button>
-			<div id = "Q{{question.id}}Options" class="collapse">
-				<ul>
-				{% for option in question.options %}
-					<li>{{ option.text }}</li>
-				{% endfor %}
-				</ul>
-			</div>
-		</td>
-		<td> <button onclick="addExistingQuestion({{question['id']}})"> Add question </button> </td>
-		<td> <button onclick="deleteExistingQuestion({{question['id']}})"> Delete question </button> </td>
-	</tr>
-	{% endfor %}
-	</table>
+	{% if saved_question != [] %}
+		<table>
+		<tr>
+			<th> Question </th>
+			<th> Answers </th>
+			<th> Add </th>
+			<th> Delete </th>
+		</tr>
+		{% for question in saved_questions %}
+		<tr id = "existingQuestion{{question.id}}">
+			<td> {{ question.text }} </td>
+			<td> 
+				{% if question.multi == True %}
+					<p>Choose One:</p>
+				{% else %}
+					<p>Choose Many:</p>
+				{% endif %}
+				<button data-toggle="collapse" data-target="#Q{{question.id}}Options">Show options...</button>
+				<div id = "Q{{question.id}}Options" class="collapse">
+					<ul>
+					{% for option in question.options %}
+						<li>{{ option.text }}</li>
+					{% endfor %}
+					</ul>
+				</div>
+			</td>
+			<td> <button onclick="addExistingQuestion({{question['id']}})"> Add question </button> </td>
+			<td> <button onclick="deleteExistingQuestion({{question['id']}})"> Delete question </button> </td>
+		</tr>
+		{% endfor %}
+		</table>
+	{% else %}
+		<p> No questions are saved, please add a new one </p>
+	{% endif %}
 </div>
 
 </center>
