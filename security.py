@@ -15,12 +15,19 @@ def login_success(username, password, ip_addr):
 		return "Success"
 	return "Password incorrect"
 
-def has_access(ip_addr):
+def has_access(ip_addr, overrideTime = False):
 	if ip_addr in logged_in:
-		if logged_in[ip_addr] <= time.time() + 1800: #30 mins after last action
+		if overrideTime or logged_in[ip_addr] >= time.time() - 1800: #30 mins after last action
 			return True
 	return False
 
 def update_time(ip_addr):
 	if ip_addr in logged_in:
 		logged_in[ip_addr] = time.time();
+
+def logout(ip_addr):
+	if ip_addr not in logged_in:
+		return "<h3><center>Already logged out</center></h3> <center><a href = '/'> Front Page </a> </center>"
+	else:
+		logged_in.pop(ip_addr)
+		return "<h3><center>Logged out</center></h3> <center><a href = '/'> Front Page </a> </center>"

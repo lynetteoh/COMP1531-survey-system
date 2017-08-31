@@ -23,3 +23,21 @@ Question1 multi=True  How do I get full marks?
 Q1O1 You can't
 Q1O2 You can't
 END COMP2041 17s1
+BEGIN COMP2511 18s1
+Question1 multi=True  How do I get full marks? 
+Q1O1 You can't
+Q1O2 You can't
+Question2 multi=True  This? 
+Q2O1 Works
+Q2O2 Doesn't work
+END COMP2511 18s1
+BEGIN COMP1927 17x1
+Question1 multi=True  How do I get full marks? 
+Q1O1 You can't
+Q1O2 You can't
+END COMP1927 17x1
+BEGIN COMP1927 16s2
+Question1 multi=True  This? 
+Q1O1 Works
+Q1O2 Doesn't work
+END COMP1927 16s2

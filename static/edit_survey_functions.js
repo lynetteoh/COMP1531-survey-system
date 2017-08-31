@@ -405,6 +405,7 @@ function publishSurvey(){
 		success: function callback(response){
 			if (response == 'Success'){
 				alert('Survey successfully published!\nSurvey can be found at: ' + window.location.hostname + window.location.pathname.replace('/create/', '/survey/'));
+				window.location.href = "/home";
 			} else {
 				alert(response);
 			}
