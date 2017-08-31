@@ -359,7 +359,8 @@ function publishSurvey(){
 			var optionList = [];
 			for (var i = 1; i < table.rows.length - 1; i++){
 				if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
-					optionList.push(table.rows[i].cells[0].innerHTML);
+					optionText = table.rows[i].cells[0].innerHTML;
+					optionList.push(optionText);
 				} else {
 					if (!confirm("Would you like to discard options currently being edited?")){
 						return;

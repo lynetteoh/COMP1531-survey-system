@@ -33,8 +33,15 @@ class Question:
 		if 'questionNum' in data:
 			self.id = data['questionNum']
 		self.text = data['questionText']
+		self.text = self.text.replace('&lt;', '<')
+		self.text = self.text.replace('&gt;', '>')
+		self.text = self.text.replace('&amp;', '&')
+
 		self.multi = data['multi']
 		for i, text in enumerate(data['options']):
+			text = text.replace('&lt;', '<')
+			text = text.replace('&gt;', '>')
+			text = text.replace('&amp;', '&')
 			option = Option(i, text)
 			self.options.append(option)
 
