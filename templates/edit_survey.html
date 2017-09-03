@@ -21,11 +21,14 @@ function toggleViewQuestions(){
 
 <div id="qSpace"> </div> <!-- Space for questions -->
 
-<button onclick="publishSurvey()"> Finish Survey and publish </button>
-
 <button onclick="init_new_question(); document.getElementById('saved_questions').style.visibility = 'hidden'"> Add new Question </button>
 <br> <br>
 <button onclick="toggleViewQuestions()"> Add existing question </button>
+<br> <br>
+<button onclick="publishSurvey()"> Finish Survey and publish </button>
+
+<button onclick="discardSurvey()"> Discard </button>
+
 <div id = "newQuestionZone"></div>
 
 

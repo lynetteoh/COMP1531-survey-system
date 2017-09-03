@@ -150,13 +150,14 @@ function saveQuestion(question){
 	console.log("saving question", question);
 	var table = document.getElementById("Question"+question).getElementsByTagName("table")[0];
 	var optionList = [];
+	if (table.getElementsByTagName("input").length != 0) {
+		if (!confirm("Saving will ignore options currently being edited.")){
+			return;
+		}
+	}
 	for (var i = 1; i < table.rows.length - 1; i++){
 		if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
 			optionList.push(table.rows[i].cells[0].innerHTML);
-		} else {
-			if (!confirm("Would you like to discard options currently being edited?")){
-				return;
-			}
 		}
 	}
 
@@ -345,10 +346,19 @@ function moveQuestionDown(question){
 	console.log("Lower ", question)
 }
 
+function discardSurvey(){
+	if (confirm('Warning: This will discard the current survey')){
+		window.location.href = '/home';
+	}
+}
+
 function publishSurvey(){
 	console.log("Publish...");
 	var survey = [];
 	var allDivs = document.getElementById("qSpace").getElementsByTagName("div");
+	if (!confirm("Are you sure you want to publish?\nPublishing will ignore options currently being edited, and make the survey available to the public.")){
+		return;
+	}
 	console.log(allDivs.length);
 	for (var div = 0; div < allDivs.length; div++){
 		console.log(div);
@@ -361,10 +371,6 @@ function publishSurvey(){
 				if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
 					optionText = table.rows[i].cells[0].innerHTML;
 					optionList.push(optionText);
-				} else {
-					if (!confirm("Would you like to discard options currently being edited?")){
-						return;
-					}
 				}
 			}
 

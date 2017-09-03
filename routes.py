@@ -10,6 +10,7 @@ from create import view_courses
 import json
 from questionIO import *
 from surveyIO import *
+from save_response import save_response
 
 @app.route("/")
 def index():
@@ -92,7 +93,7 @@ def view_survey(course, semester):
 
 	if request.method == "POST":
 		print(request.form)
-		return "Thankyou for trying the survey system, responses are currently not being recorded."
+		return save_response(course, semester, request.form)
 	survey_data = get_survey(course, semester)
 	if survey_data == []:
 		return render_template("surveyFail.html")
