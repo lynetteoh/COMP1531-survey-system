@@ -1,6 +1,14 @@
 {% extends "layout.html" %}
 {% block title %} Login {% endblock %}
-{% block head %} {% endblock %}
+{% block head %} 
+{% if attempt %}
+<script>
+window.onload = function() {
+	window.alert("Sorry, the username or password was wrong. Please try again.")
+}
+</script>
+{% endif %}
+{% endblock %}
 
 {% block content %}
 <center>
