@@ -69,3 +69,8 @@ BEGIN COMP1000 17s1
 Question1 multi=False <>&
 Q1O1 <>&
 END COMP1000 17s1
+BEGIN COMP9517 17s2
+Question1 multi=True do you like nuggets?
+Q1O1 I never eat nuggets
+Q1O2 I eat nuggets everyday
+END COMP9517 17s2

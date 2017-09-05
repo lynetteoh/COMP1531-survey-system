@@ -34,7 +34,7 @@ function toggleViewQuestions(){
 
 <div id="saved_questions" style = "visibility: hidden">
 	{% if saved_question != [] %}
-		<table>
+		<table calss = "savedQuestion">
 		<tr>
 			<th> Question </th>
 			<th> Answers </th>
@@ -43,8 +43,8 @@ function toggleViewQuestions(){
 		</tr>
 		{% for question in saved_questions %}
 		<tr id = "existingQuestion{{question.id}}">
-			<td> {{ question.text }} </td>
-			<td> 
+			<td style = "width: 30%"> {{ question.text }} </td>
+			<td style = "width: 40%"> 
 				{% if question.multi == True %}
 					<p>Choose One:</p>
 				{% else %}
@@ -54,13 +54,13 @@ function toggleViewQuestions(){
 				<div id = "Q{{question.id}}Options" class="collapse">
 					<ul>
 					{% for option in question.options %}
-						<li>{{ option.text }}</li>
+						<li style = "white-space: wrap">{{ option.text }}</li>
 					{% endfor %}
 					</ul>
 				</div>
 			</td>
-			<td> <button onclick="addExistingQuestion({{question['id']}})"> Add question </button> </td>
-			<td> <button onclick="deleteExistingQuestion({{question['id']}})"> Delete question </button> </td>
+			<td style = "width: 15%"> <button onclick="addExistingQuestion({{question['id']}})"> Add question </button> </td>
+			<td style = "width: 15%"> <button onclick="deleteExistingQuestion({{question['id']}})"> Delete question </button> </td>
 		</tr>
 		{% endfor %}
 		</table>
