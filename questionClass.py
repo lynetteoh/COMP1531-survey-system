@@ -11,13 +11,13 @@ class Question:
 		else:
 			self.options = options
 
-	def addOption(self, option):
+	def add_option(self, option):
 		self.options.append(option)
 
-	def toggleMulti(self):
+	def toggle_multi(self):
 		self.multi = not self.multi
 
-	def loadFromFile(self, filename, id):
+	def load_from_file(self, filename, id):
 		self.id = id
 		for line in open(filename, 'r'):
 			if line.startswith('Question' + str(id) + " "):
@@ -28,7 +28,7 @@ class Question:
 			elif line.startswith('Q' + str(id) + 'O'):
 				self.options.append(' '.join(line.strip().split(' ')[1:]))
 
-	def loadFromDict(self, data):
+	def load_from_dict(self, data):
 		print(data)
 		if 'questionNum' in data:
 			self.id = data['questionNum']
@@ -45,7 +45,7 @@ class Question:
 			option = Option(i, text)
 			self.options.append(option)
 
-	def saveToEndOfFile(self, filename, write_id):
+	def save_to_end_of_file(self, filename, write_id):
 		f = open(filename, 'a+')
 		f.write('\n')
 		print(self.multi)
