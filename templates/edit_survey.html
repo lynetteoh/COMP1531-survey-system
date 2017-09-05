@@ -3,7 +3,7 @@
 {% block head %} 
 <script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}"> </script>
 <script>
-function toggleViewQuestions(){
+function toggle_view_questions(){
 	questionsDiv = document.getElementById('saved_questions')
 	if (questionsDiv.style.visibility == 'visible'){
 		questionsDiv.style.visibility = 'hidden'
