@@ -3,6 +3,7 @@
 #Exports only function login_success
 
 import time
+from flask import redirect
 
 passwords = {"admin" : "adminPass"}
 logged_in = {}
@@ -26,8 +27,6 @@ def update_time(ip_addr):
 		logged_in[ip_addr] = time.time();
 
 def logout(ip_addr):
-	if ip_addr not in logged_in:
-		return "<h3><center>Already logged out</center></h3> <center><a href = '/'> Front Page </a> </center>"
-	else:
+	if ip_addr in logged_in:
 		logged_in.pop(ip_addr)
-		return "<h3><center>Logged out</center></h3> <center><a href = '/'> Front Page </a> </center>"
+	return redirect('/')
