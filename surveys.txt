@@ -74,3 +74,7 @@ Question1 multi=True do you like nuggets?
 Q1O1 I never eat nuggets
 Q1O2 I eat nuggets everyday
 END COMP9517 17s2
+BEGIN COMP2041 18s2
+Question1 multi=True  hi 
+Q1O1 hi
+END COMP2041 18s2

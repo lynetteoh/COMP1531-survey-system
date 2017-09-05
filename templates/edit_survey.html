@@ -23,11 +23,11 @@ function toggle_view_questions(){
 
 <button onclick="init_new_question(); document.getElementById('saved_questions').style.visibility = 'hidden'"> Add new Question </button>
 <br> <br>
-<button onclick="toggleViewQuestions()"> Add existing question </button>
+<button onclick="toggle_view_questions()"> Add existing question </button>
 <br> <br>
-<button onclick="publishSurvey()"> Finish Survey and publish </button>
+<button onclick="publish_survey()"> Finish Survey and publish </button>
 
-<button onclick="discardSurvey()"> Discard </button>
+<button onclick="discard_survey()"> Discard </button>
 
 <div id = "newQuestionZone"></div>
 
@@ -59,8 +59,8 @@ function toggle_view_questions(){
 					</ul>
 				</div>
 			</td>
-			<td style = "width: 15%"> <button onclick="addExistingQuestion({{question['id']}})"> Add question </button> </td>
-			<td style = "width: 15%"> <button onclick="deleteExistingQuestion({{question['id']}})"> Delete question </button> </td>
+			<td style = "width: 15%"> <button onclick="add_existing_question({{question['id']}})"> Add question </button> </td>
+			<td style = "width: 15%"> <button onclick="delete_existing_question({{question['id']}})"> Delete question </button> </td>
 		</tr>
 		{% endfor %}
 		</table>

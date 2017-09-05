@@ -9,7 +9,7 @@ def save_survey(course, semester, survey_data):
 	file.write('BEGIN ' + course + ' ' + semester + '\n')
 	for data in survey_data:
 		question = Question()
-		question.loadFromDict(data)
+		question.load_from_dict(data)
 		file.write(str(question))
 	file.write('END ' + course + ' ' + semester + '\n')
 	file.close()
@@ -38,7 +38,7 @@ def get_survey(course, semester):
 				current_question = Question(id = int(line[0][8:]), text = ' '.join(line[2:]), multi = (line[1] == 'multi=True'))
 			elif (line.strip() != ''):
 				option = Option(id = int(line.split(' ')[0].split('O')[-1]), text = ' '.join(line.strip().split(' ')[1:]))
-				current_question.addOption(option)
+				current_question.add_option(option)
 	return survey_data
 
 def get_active_surveys():

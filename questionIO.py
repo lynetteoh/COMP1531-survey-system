@@ -47,6 +47,6 @@ def get_largest_question_id():
 #writes question from a form to the questions file
 def write_question(form):
 	question = Question()
-	question.loadFromDict(form)
+	question.load_from_dict(form)
 	write_id = get_largest_question_id()
-	return question.saveToEndOfFile(QUESTIONS_FILENAME, write_id)
+	return question.save_to_end_of_file(QUESTIONS_FILENAME, write_id)

@@ -65,7 +65,7 @@ function finish_new_question(saving){
 	}
 }
 
-function addExistingQuestion(questionID){
+function add_existing_question(questionID){
 	var qNum = 1; //Count all questions previously saved.
 	var allDivs = document.getElementsByTagName("div");
 	for (var i = 0; i < allDivs.length; i++){
@@ -130,7 +130,7 @@ function addExistingQuestion(questionID){
 		toggleRadio(qNum);
 	}
 
-	toggleViewQuestions();
+	toggle_view_questions();
 }
 
 //Toggles whether question n uses radio buttons or check boxes
@@ -187,7 +187,7 @@ function saveQuestion(question){
 	});
 }
 
-function deleteExistingQuestion(id){
+function delete_existing_question(id){
 	console.log("deleting question", id);
 	if (!confirm("Are you sure you want to delete this question permanently?")){
 		return;
@@ -208,7 +208,7 @@ function deleteExistingQuestion(id){
 }
 
 //Adds an option to a question
-function addOption(question){
+function add_option(question){
 	console.log("adding option to question", question);
 	var questionDiv = document.getElementById("Question" + question);
 	var table = questionDiv.getElementsByTagName("table")[0];
@@ -346,13 +346,13 @@ function moveQuestionDown(question){
 	console.log("Lower ", question)
 }
 
-function discardSurvey(){
+function discard_survey(){
 	if (confirm('Warning: This will discard the current survey')){
 		window.location.href = '/home';
 	}
 }
 
-function publishSurvey(){
+function publish_survey(){
 	console.log("Publish...");
 	var survey = [];
 	var allDivs = document.getElementById("qSpace").getElementsByTagName("div");
