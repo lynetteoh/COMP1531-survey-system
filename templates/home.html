@@ -3,11 +3,18 @@
 {% block head %} {% endblock %}
 
 {% block content %}
+<div id='cssmenu'>
+<ul>
+	 <li><a href='/'>Home</a></li>
+	 <li><a href='/home'>Dashboard</a></li>
+	 <li style="float: right;"><a href ='/logout'>Logout</a><li>
+</ul>
+</div>
 <center>
 		<h1> Admin Homepage </h1>
 		<br>
 		<tr>
-		<button onclick="window.location.href = '/logout'" style="font-size: 150%;" > Logout </button>
+		<!--<button onclick="window.location.href = '/logout'" style="font-size: 150%;" > Logout </button>!-->
 		<h3 style="font-size: 200%;"> Active surveys: </h3>
 		<table>
 		<tr>

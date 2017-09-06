@@ -5,43 +5,11 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>{% block title %}{% endblock %} - UNSW Surveys</title>
     {% endblock %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/navi_bar.css') }}">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <style>
-      body{
-        background:-webkit-linear-gradient(left top, #D5ECFF, #DBD6FF);
-        background:-moz-linear-gradient(left top, #D5ECFF, #DBD6FF);
-        background:linear-gradient(left top, #D5ECFF, #DBD6FF);
-      }
-
-      button{
-        background-color: #C5B9ED;
-        text-align: center;
-        font-size: 16px;
-        border-style: solid;
-        border-color: #C5B9ED;
-        padding-left: 5px;
-        padding-right: 5px;
-      }
-
-      button:hover{
-        background-color: #E3D7FF;
-        transition-duration: 0.5s;
-        border-color: #C5B9ED;
-      }
-      a{
-        color: #3344CD;
-      }
-      a:hover{
-        text-decoration: none;
-        color: #551A8B;
-      }
-      a:active{
-        color: #EE0000;
-      }
-
-    </style>
   </head>
   <body>
     <div id="content">{% block content %}{% endblock %}</div>

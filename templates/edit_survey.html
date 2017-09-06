@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block title %} Create Survey {% endblock %}
-{% block head %} 
+{% block head %}
 <script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}"> </script>
 <script>
 function toggle_view_questions(){
@@ -15,9 +15,18 @@ function toggle_view_questions(){
 {% endblock %}
 
 {% block content %}
+<div id='cssmenu'>
+<ul>
+	 <li><a href='/'>Home</a></li>
+	 <li><a href='/home'>Dashboard</a></li>
+	 <li style="float: right;"><a href ='/logout'>Logout</a><li>
+</ul>
+</div>
+
 <center>
 
 <h1> Create a survey for {{ course }} - {{ semester }} </h1>
+</br>
 
 <div id="qSpace"> </div> <!-- Space for questions -->
 
@@ -38,13 +47,13 @@ function toggle_view_questions(){
 		<tr>
 			<th> Question </th>
 			<th> Answers </th>
-			<th> Add </th>
-			<th> Delete </th>
+			<th> Add Question</th>
+			<th> Delete Question </th>
 		</tr>
 		{% for question in saved_questions %}
 		<tr id = "existingQuestion{{question.id}}">
 			<td style = "width: 30%"> {{ question.text }} </td>
-			<td style = "width: 40%"> 
+			<td style = "width: 40%">
 				{% if question.multi == True %}
 					<p>Choose One:</p>
 				{% else %}
@@ -59,8 +68,8 @@ function toggle_view_questions(){
 					</ul>
 				</div>
 			</td>
-			<td style = "width: 15%"> <button onclick="add_existing_question({{question['id']}})"> Add question </button> </td>
-			<td style = "width: 15%"> <button onclick="delete_existing_question({{question['id']}})"> Delete question </button> </td>
+			<td style = "width: 15%"> <button onclick="add_existing_question({{question['id']}})"> Add</button> </td>
+			<td style = "width: 15%"> <button onclick="delete_existing_question({{question['id']}})"> Delete</button> </td>
 		</tr>
 		{% endfor %}
 		</table>

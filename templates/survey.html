@@ -3,6 +3,14 @@
 {% block head %} {% endblock %}
 
 {% block content %}
+<div id='cssmenu'>
+<ul>
+	 <li><a href='/'>Home</a></li>
+	 <li><a href='/home'>Dashboard</a></li>
+	 <li style="float: right;"><a href ='/logout'>Logout</a><li>
+</ul>
+</div>
+
 <center>
 <h1> Survey for {{ course }} {{ semester }} </h1>
 <form method = "POST">

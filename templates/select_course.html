@@ -3,20 +3,28 @@
 {% block head %} {% endblock %}
 
 {% block content %}
+<div id='cssmenu'>
+<ul>
+	 <li><a href='/'>Home</a></li>
+	 <li><a href='/home'>Dashboard</a></li>
+	 <li style="float: right;"><a href ='/'>Logout</a><li>
+</ul>
+</div>
 <center>
-<h1 style="font-size: 300%; color: pink;"> Select a course </h1>
+<h1 style="font-size: 350%; color: black;"> Select a course </h1>
+</br>
 {% if courses == [] %}
 	<p> No courses are available right now. </p>
 {% else %}
-	<table style = "width: 80%">
+	<table style = "width: 25%">
 	<tr>
-		<th style="font-size: 150%; text-align: right;">Course &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+		<th style="font-size: 150%; text-align: center;">Course &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 		<th style="font-size: 150%;">Year/Semester</th>
 	</tr >
 	{% for course in courses %}
 	<tr>
-		<td style="font-size: 150%; text-align: right;"><a href = "/create/{{course[0]}}/{{course[1]}}">{{course[0]}}</a> &nbsp;&nbsp;&nbsp;</td>
-		<td style="font-size: 150%; "> {{course[1]}} </td>
+		<td style="font-size: 150%; text-align: center;"><a href = "/create/{{course[0]}}/{{course[1]}}">{{course[0]}}</a> &nbsp;&nbsp;&nbsp;</td>
+		<td style="text-align: center; font-size: 150%; "> {{course[1]}} </td>
 	</tr>
 	{% endfor %}
 	</table>

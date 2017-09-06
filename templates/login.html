@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block title %} Login {% endblock %}
-{% block head %} 
+{% block head %}
 {% if attempt %}
 <script>
 window.onload = function() {
@@ -11,14 +11,22 @@ window.onload = function() {
 {% endblock %}
 
 {% block content %}
+<div id='cssmenu'>
+<ul>
+	 <li><a href='/'>Home</a></li>
+	 <li><a href='/home'>Dashboard</a></li>
+</ul>
+</div>
 <center>
 <h1> Login </h1>
 {% if page != None %}
 	<h3>Please login before you can access that page.</h3>
 {% endif %}
+</br>
 <form method = "POST">
-	Username: <input name = "username"/> <br>
-	Password: <input type = "password" name = "password"/> <br>
+	<b>Username: </b><input name = "username"/></br>
+	<b>Password: </b><input type = "password" name = "password"/></br>
+</br>
 	<button type = "submit" name = "loginButton">Login</button>
 </form>
 </center>
