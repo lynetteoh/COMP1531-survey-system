@@ -4,19 +4,19 @@
 
 {% block content %}
 <center>
-<h1> Select a course </h1>
+<h1 style="font-size: 300%; color: pink;"> Select a course </h1>
 {% if courses == [] %}
 	<p> No courses are available right now. </p>
 {% else %}
-	<table>
+	<table style = "width: 80%">
 	<tr>
-		<th>Course</th>
-		<th>Year/Semester</th>
-	</tr>
+		<th style="font-size: 150%;">Course</th>
+		<th style="font-size: 150%;">Year/Semester</th>
+	</tr >
 	{% for course in courses %}
 	<tr>
-		<td><a href = "/create/{{course[0]}}/{{course[1]}}">{{course[0]}} </a> </td>
-		<td> {{course[1]}} </td>
+		<td style="font-size: 150%;"><a href = "/create/{{course[0]}}/{{course[1]}}">{{course[0]}} </a> </td>
+		<td style="font-size: 150%;"> {{course[1]}} </td>
 	</tr>
 	{% endfor %}
 	</table>

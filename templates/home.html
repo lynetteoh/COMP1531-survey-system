@@ -5,22 +5,25 @@
 {% block content %}
 <center>
 		<h1> Admin Homepage </h1>
-		<button onclick="window.location.href = '/logout'"> Logout </button>
-		<h3> Active surveys: </h3>
+		<br>
+		<tr>
+		<button onclick="window.location.href = '/logout'" style="font-size: 150%;" > Logout </button>
+		<h3 style="font-size: 200%;"> Active surveys: </h3>
 		<table>
 		<tr>
-			<th> <center> Course: Semester </center> </th>
-			<th> <center> Link  </center> </th>
-			<th> <center> Test </center> </th>
+			<th style="font-size: 150%;"> <center> Course: Semester </center> </th>
+			<th style="font-size: 150%;"> <center> Link  </center> </th>
+			<th style="font-size: 150%;"> <center> Test </center> </th>
 		</tr>
 		{% for course, semester in active_surveys %}
 			<tr>
-				<td> {{course}}: {{semester}}   </td>
-				<td>   &lt;{{root}}survey/{{course}}/{{semester}}&gt;   </td>
-				<td>   <a href = "survey/{{course}}/{{semester}}"> Test as a respondent </a>   </td>
+				<td style="font-size: 150%;"> {{course}}: {{semester}}   </td>
+				<td style="font-size: 150%;">   &lt;{{root}}survey/{{course}}/{{semester}}&gt;   </td>
+				<td style="font-size: 150%;">   <a href = "survey/{{course}}/{{semester}}"> &nbsp; Test as a respondent </a>   </td>
 			</tr>
 		{% endfor %}
 		</table>
-		<p> <button onclick = "window.location.href='/create'">Create a new survey </button> <p>
+		<br>
+		<p> <button onclick = "window.location.href='/create'" style="font-size: 150%" >Create a new survey </button> <p>
 </center>
 {% endblock %}
