@@ -208,7 +208,7 @@ function delete_existing_question(id){
 }
 
 //Adds an option to a question
-function addOption(question){
+function add_option(question){
 	console.log("adding option to question", question);
 	var questionDiv = document.getElementById("Question" + question);
 	var table = questionDiv.getElementsByTagName("table")[0];
