@@ -2,9 +2,9 @@
 <html>
   <head>
     {% block head %}
+    {% endblock %}
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>{% block title %}{% endblock %} - UNSW Surveys</title>
-    {% endblock %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/navi_bar.css') }}">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
