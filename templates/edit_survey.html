@@ -44,22 +44,26 @@ Start: <input type = "date" id = "start">    End: <input type = "date" id = "end
 			<th> Delete Question </th>
 		</tr>
 		{% for question in saved_questions %}
-		<tr id = "existingQuestion{{question.id}}">
-			<td style = "width: 30%"> {{ question.text }} </td>
+		<tr id = "existingQuestion{{question.get_id()}}">
+			<td style = "width: 30%"> {{ question.get_question_text() }} </td>
 			<td style = "width: 40%">
-				{% if question.multi == True %}
-					<p>Choose One:</p>
+				{% if question.get_type() == 'text' %}
+					<p>Text</p>
 				{% else %}
-					<p>Choose Many:</p>
+					{% if question.get_type() == 'multi' %}
+						<p>Choose One:</p>
+					{% else %}
+						<p>Choose Many:</p>
+					{% endif %}
+					<button data-toggle="collapse" data-target="#Q{{question.get_id()}}Options">Show options...</button>
+					<div id = "Q{{question.get_id()}}Options" class="collapse">
+						<ul>
+						{% for option in question.get_options() %}
+							<li style = "white-space: wrap">{{ option }}</li>
+						{% endfor %}
+						</ul>
+					</div>
 				{% endif %}
-				<button data-toggle="collapse" data-target="#Q{{question.id}}Options">Show options...</button>
-				<div id = "Q{{question.id}}Options" class="collapse">
-					<ul>
-					{% for option in question.options %}
-						<li style = "white-space: wrap">{{ option.text }}</li>
-					{% endfor %}
-					</ul>
-				</div>
 			</td>
 			<td style = "width: 15%"> <button onclick="add_existing_question({{question['id']}})"> Add</button> </td>
 			<td style = "width: 15%"> <button onclick="delete_existing_question({{question['id']}})"> Delete</button> </td>

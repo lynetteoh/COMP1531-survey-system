@@ -1,69 +1,113 @@
 from questionIO import *
 from flask import Flask, redirect, render_template, request, url_for
+from databasing import db_execute, db_select
 
 class Question:
-	def __init__(self, id = -1, text = "", multi = False, options = None):
-		self.id = id
-		self.text = text
-		self.multi = multi
-		if options == None:
-			self.options = []
+	def __init__(self, id = -1, question_text = "", multi = False, initial_options = None, mandatory = False, text = False):
+		self._id = id
+		self._question_text = question_text
+		self._multi = multi
+		if initial_options == None:
+			self._options = []
 		else:
-			self.options = options
+			self._options = initial_options
+		self._mandatory = mandatory
+		self._text = text
 
 	def add_option(self, option):
-		self.options.append(option)
+		self._options.append(option)
+
+	def get_options(self):
+		return [i.text for i in self._options]
+
+	def get_type(self):
+		if self._text:
+			return 'text'
+		elif self._multi:
+			return 'multi'
+		else:
+			return 'single'
+
+	def get_question_text(self):
+		return self._question_text
+
+	def get_mandatory(self):
+		return self._mandatory
+
+	def get_id(self):
+		return self._id
 
 	def toggle_multi(self):
-		self.multi = not self.multi
+		self._multi = not self._multi
 
-	def load_from_file(self, filename, id):
-		self.id = id
-		for line in open(filename, 'r'):
-			if line.startswith('Question' + str(id) + " "):
-				line = line.strip().split(' ')
-				self.text = ' '.join(line[2:])
-				self.options = []
-				self.multi = (line[1] == 'multi=True')
-			elif line.startswith('Q' + str(id) + 'O'):
-				self.options.append(' '.join(line.strip().split(' ')[1:]))
+	def load_from_db(self, filename, id):
+		result = db_select(filename, """SELECT ID, QUESTION_TEXT, TEXT, OPTIONS, OPTIONSTART, MULTI, MANDATORY
+							   FROM QUESTIONS
+							   WHERE ID = """ + str(id))[0]
+		self._id = result[0]
+		self._question_text = result[1]
+		self._text = True if result[2] == 1 else False
+		self._multi = True if result[5] == 1 else False
+		self._mandatory = True if result[6] == 1 else False
+		options = []
+		if (type(result[4]) == int):
+			options = db_select(filename, """SELECT OPTION
+											 FROM OPTIONS
+											 WHERE ID >= """ + str(result[4]) + " AND ID < " + str(result[4] + result[3]))
+		for option in range(len(options)):
+			self._options.append(Option(option, options[option][0]))
 
 	def load_from_dict(self, data):
 		print(data)
 		if 'questionNum' in data:
-			self.id = data['questionNum']
-		self.text = data['questionText']
-		self.text = self.text.replace('&lt;', '<')
-		self.text = self.text.replace('&gt;', '>')
-		self.text = self.text.replace('&amp;', '&')
+			self._id = data['questionNum']
+		self._question_text = data['questionText']
+		self._question_text = self._question_text.replace('&lt;', '<')
+		self._question_text = self._question_text.replace('&gt;', '>')
+		self._question_text = self._question_text.replace('&amp;', '&')
 
-		self.multi = data['multi']
+		self._multi = data['multi']
 		for i, text in enumerate(data['options']):
 			text = text.replace('&lt;', '<')
 			text = text.replace('&gt;', '>')
 			text = text.replace('&amp;', '&')
 			option = Option(i, text)
-			self.options.append(option)
+			self._options.append(option)
+		self._text = data['text']
+		self._mandatory = data['mandatory']
 
-	def save_to_end_of_file(self, filename, write_id):
-		f = open(filename, 'a+')
-		f.write('\n')
-		print(self.multi)
-		print(self.text)
-		f.write('Question' + str(write_id) + ' multi=' + str(self.multi) + ' ' + self.text + '\n')
-		for i, option in enumerate(self.options):
-			f.write('Q' + str(write_id) + 'O' + str(i+1) + ' ' + option.text + '\n')
-
-		f.close()
-		return write_id
+	def write_to_db(self, filename):
+		max_option_id = max([i[0] for i in db_select(filename, "SELECT ID FROM OPTIONS")])
+		for i, option in enumerate(self._options):
+			print(i, option, max_option_id)
+			db_execute(filename, "INSERT INTO OPTIONS (ID, OPTION) VALUES ('{0}', '{1}')".format(str(i+max_option_id+1), option))
+		max_question_id = max([i[0] for i in db_select(filename, "SELECT ID FROM QUESTIONS")])
+		db_execute(filename, """INSERT INTO QUESTIONS (ID, QUESTION_TEXT, TEXT, OPTIONS, OPTIONSTART, MULTI, MANDATORY) 
+								VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')
+								""".format(str(max_question_id + 1), self._question_text, 1 if self._text else 0,
+										   str(len(self._options)), str(max_option_id + 1), 1 if self._multi else 0, 1 if self._mandatory else 0))
+		return max_question_id + 1
 
 	def __str__(self):
-		string = 'Question' + str(self.id) + ' multi=' + str(self.multi) + ' ' + self.text + '\n'
-		for i, option in enumerate(self.options):
-			string += 'Q' + str(self.id) + 'O' + str(i+1) + ' ' + option.text + '\n'
+		string = 'Question' + str(self._id) + ' multi=' + str(self._multi) + ' ' + self._question_text + '\n'
+		string += 'mandatory=' + str(self._mandatory) + ' text=' + str(self._text) + '\n'
+		for i, option in enumerate(self._options):
+			print(option.text)
+			string += 'Q' + str(self._id) + 'O' + str(i+1) + ' ' + option.text + '\n'
 		return string
 
 class Option:
 	def __init__(self, id = -1, text = ""):
-		self.id = id
-		self.text = text
+		self._id = id
+		self._text = text
+	def _get_id(self):
+		return self._id
+	def _set_id(self, id):
+		self._id = id
+	def _get_text(self):
+		return self._text
+	def _set_text(self, text):
+		self._text = text
+
+	id = property(_get_id, _set_id)
+	text = property(_get_text, _set_text)
