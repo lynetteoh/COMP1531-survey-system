@@ -11,11 +11,8 @@ def view_courses(request, active_surveys):
 		reader = csv.reader(csv_in)
 		first_line_read = False
 		for row in reader:
-			if not first_line_read:
-				first_line_read = True
-			else:
-				if len(row) == 1:
-					row = row[0].split(" ")
-					if (row[0], row[1]) not in active_surveys:
-						courses.append(row)
+			if len(row) == 1:
+				row = row[0].split(" ")
+			if (row[0], row[1]) not in active_surveys:
+				courses.append(row)
 	return render_template("select_course.html", courses = courses)

@@ -2,16 +2,6 @@
 {% block title %} Create Survey {% endblock %}
 {% block head %}
 <script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}"> </script>
-<script>
-function toggle_view_questions(){
-	questionsDiv = document.getElementById('saved_questions')
-	if (questionsDiv.style.visibility == 'visible'){
-		questionsDiv.style.visibility = 'hidden'
-	} else {
-		questionsDiv.style.visibility = 'visible'
-	}
-}
-</script>
 {% endblock %}
 
 {% block content %}
@@ -26,7 +16,10 @@ function toggle_view_questions(){
 <center>
 
 <h1> Create a survey for {{ course }} - {{ semester }} </h1>
-</br>
+<h3> Choose a start and end date (dd/mm/yyyy): </h3>
+Start: <input type = "date" id = "start">    End: <input type = "date" id = "end">
+<br>
+<br>
 
 <div id="qSpace"> </div> <!-- Space for questions -->
 
@@ -34,7 +27,7 @@ function toggle_view_questions(){
 <br> <br>
 <button onclick="toggle_view_questions()"> Add existing question </button>
 <br> <br>
-<button onclick="publish_survey()"> Finish Survey and publish </button>
+<button onclick="publish_survey()"> Open survey for staff review </button>
 
 <button onclick="discard_survey()"> Discard </button>
 

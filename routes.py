@@ -11,6 +11,7 @@ import json
 from questionIO import *
 from surveyIO import *
 from save_response import save_response
+from securityClasses import Admin, Staff, Student
 
 @app.route("/")
 def index():
@@ -20,16 +21,20 @@ def index():
 @app.route("/login", methods = ["GET", "POST"])
 @app.route("/login/<page>", methods=["GET", "POST"])
 def login(page = None):
-	if (has_access(request.remote_addr)):
-		return redirect("/home")
+	if (has_access(request.remote_addr, Admin)):
+		return redirect("/adminHome")
+	if (has_access(request.remote_addr, Student)):
+		return redirect("/studentHome")
+	if (has_access(request.remote_addr, Staff)):
+		return redirect("/staffHome")
 	update(request.remote_addr)
 	
 	return login_page(request, page)
 
-@app.route("/home")
+@app.route("/adminHome")
 def home():
-	if (not has_access(request.remote_addr)):
-		return redirect("/login/@2Fhome")
+	if (not has_access(request.remote_addr, Admin)):
+		return redirect("/login/@2FadminHome")
 	update(request.remote_addr)
 
 	active_surveys = get_active_surveys()
@@ -37,9 +42,23 @@ def home():
 	root = request.url_root
 	return render_template("home.html", active_surveys = active_surveys, root = root)
 
+@app.route("/studentHome")
+def studentHome():
+	if (not has_access(request.remote_addr, Student)):
+		return redirect("/login/@2FstudentHome")
+	update(request.remote_addr)
+	return render_template("studentHome.html")
+
+@app.route("/staffHome")
+def staffHome():
+	if (not has_access(request.remote_addr, Staff)):
+		return redirect("/login/@2FstaffHome")
+	update(request.remote_addr)
+	return render_template("staffHome.html")
+
 @app.route("/create")
 def create():
-	if (not has_access(request.remote_addr)):
+	if (not has_access(request.remote_addr, Admin)):
 		return redirect("/login/@2Fcreate")
 	update(request.remote_addr)
 
@@ -47,7 +66,7 @@ def create():
 
 @app.route("/create/<course>/<semester>")
 def edit_survey(course, semester):
-	if (not has_access(request.remote_addr)):
+	if (not has_access(request.remote_addr, Admin)):
 		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 
@@ -56,18 +75,20 @@ def edit_survey(course, semester):
 
 @app.route("/save_question", methods=["POST"])
 def save_question():
-	if (not has_access(request.remote_addr, overrideTime = True)):
+	if (not has_access(request.remote_addr, Admin, overrideTime = True)):
 		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 
 	write_question({'questionText': request.form.get('questionText'),
 					'options': json.loads(request.form.get('options')),
-					'multi': True if request.form.get('multi') == 'true' else False})
+					'multi': True if request.form.get('multi') == 'true' else False,
+					'text': request.form.get('text'),
+					'mandatory': request.form.get('mandatory')})
 	return "Question saved successfully!"
 
 @app.route("/delete_question", methods = ["POST"])
 def delete_question():
-	if (not has_access(request.remote_addr, overrideTime = True)):
+	if (not has_access(request.remote_addr, Admin, overrideTime = True)):
 		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 
@@ -76,7 +97,7 @@ def delete_question():
 
 @app.route("/publish_survey", methods = ["POST"])
 def publish_survey():
-	if (not has_access(request.remote_addr, overrideTime = True)):
+	if (not has_access(request.remote_addr, Admin, overrideTime = True)):
 		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 

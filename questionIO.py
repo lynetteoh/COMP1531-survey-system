@@ -37,11 +37,12 @@ def remove_question(id):
 #return largest available id.
 def get_largest_question_id():
 	largest_id = 1 #Yes, I know, I'm starting my indexing from 1. Deal with it.
+	id_list = []
 	for line in open(QUESTIONS_FILENAME, 'r'):
 		if line.startswith('Question'):
-			cur_id = int(line.split(' ')[0][8:])
-			if (largest_id == cur_id):
-				largest_id += 1
+			id_list.append(int(line.split(' ')[0][8:]))
+	while largest_id in id_list:
+		largest_id += 1;
 	return largest_id
 
 #writes question from a form to the questions file

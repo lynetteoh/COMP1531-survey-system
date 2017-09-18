@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect
-from security import login_success
+from security import login_user
 from securityClasses import Admin, Staff, Student
 
 
@@ -20,10 +20,14 @@ def login_page(request, page):
 		if type(user) is Admin:
 			if page:
 				return redirect(page.replace("@2F", "/"))
-			return redirect("/home") #Admin Homepage
+			return redirect("/adminHome") #Admin Homepage
 		elif type(user) is Staff:
-			return redirect("/home") #Staff Homepage
+			if page:
+				return redirect(page.replace("@2F", "/"))
+			return redirect("/staffHome") #Staff Homepage
 		elif type(user) is Student:
-			return redirect("/home") #Student Homepage
+			if page:
+				return redirect(page.replace("@2F", "/"))
+			return redirect("/studentHome") #Student Homepage
 		else:
 			return "Something went wrong"

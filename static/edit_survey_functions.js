@@ -1,5 +1,15 @@
 //Javascript functions
 
+//Toggles visibility of existing questions
+function toggle_view_questions(){
+	questionsDiv = document.getElementById('saved_questions')
+	if (questionsDiv.style.visibility == 'visible'){
+		questionsDiv.style.visibility = 'hidden'
+	} else {
+		questionsDiv.style.visibility = 'visible'
+	}
+}
+
 //Initialises the input box for adding a new question
 function init_new_question(){
 	var enclosingDiv = document.createElement("div");
@@ -52,11 +62,13 @@ function finish_new_question(saving){
 		"	<th colspan = \"" + NUM_COLUMNS + "\">\n" +
 		"		<h3>Q." + qNum + ": " + questionText + "</h3>\n" +
 		"		<button onclick=\"toggleRadio(" + qNum + ")\">Choose one option</button>    \n" +
+		"		<button onclick=\"toggleMandatory(" + qNum + ")\" style = 'color: #FF0000'>Mandatory</button>    \n" +
 		"		<button onclick=\"saveQuestion(" + qNum + ")\">Save Question</button></th>\n" +
 		"	</th>\n" +
 		"</tr>\n" +
 		"<tr>\n" +
-		"	<td colspan = \"" + NUM_COLUMNS + "\"> <center> <button onclick=\"addOption(" + qNum + ")\">Add an option... </button> </center> </td>\n" +
+		"	<td colspan = \"" + NUM_COLUMNS + "\"> <center> <button onclick=\"addOption(" + qNum + ")\">Add an option... </button>    \n" +
+		"   <button onclick = \"toggleText(" + qNum + ")\">Multiple Choice</button> </center> </td>\n" +
 		"</tr>\n" +
 		"</table>\n"+
 		"<br> <br> <br>\n";
@@ -92,6 +104,7 @@ function add_existing_question(questionID){
 	"	<th colspan = \"" + NUM_COLUMNS + "\">\n" +
 	"		<h3>Q." + qNum + ": " + questionText + "</h3>\n" +
 	"		<button onclick=\"toggleRadio(" + qNum + ")\">Choose one option</button>    \n" +
+	"		<button onclick=\"toggleMandatory(" + qNum + ")\" style=\"color:#FF0000\">Mandatory</button>    \n" +
 	"		<button onclick=\"saveQuestion(" + qNum + ")\">Save Question</button></th>\n" +
 	"	</th>\n" +
 	"</tr>\n" +
@@ -114,12 +127,16 @@ function add_existing_question(questionID){
 		}
 		var rowId = document.createAttribute("id");
 		rowId.value = "Q"+qNum+"O"+(i+1);
+		var rowClass = document.createAttribute("class");
+		rowClass.value = "collapse in";
+		optionRow.setAttributeNode(rowClass);
 		optionRow.innerHTML = rowCode;
 		optionRow.setAttributeNode(rowId);
 	}
 
 	var finalRow = questionDiv.getElementsByTagName("table")[0].insertRow(questionDiv.getElementsByTagName("table")[0].rows.length);
-	finalRow.innerHTML = "	<td colspan = \"" + NUM_COLUMNS + "\"> <center> <button onclick=\"addOption(" + qNum + ")\">Add an option... </button> </center> </td>\n"
+	finalRow.innerHTML = "	<td colspan = \"" + NUM_COLUMNS + "\"> <center> <button onclick=\"addOption(" + qNum + ")\">Add an option... </button>    \n" +
+						 " 		<button onclick = \"toggleText(" + qNum + ")\">Multiple Choice</button> </center> </td>\n"
 	questionDiv.innerHTML += "<br><br><br>"
 
 	console.log(questionDiv);
@@ -131,6 +148,21 @@ function add_existing_question(questionID){
 	}
 
 	toggle_view_questions();
+}
+
+//Toggles whether a question is mandatory
+function toggleMandatory(question){
+	console.log("toggleMan", question);
+	var table = document.getElementById("Question"+question).getElementsByTagName("table")[0];
+
+	button = table.rows[0].getElementsByTagName("button")[1];
+	if (button.innerHTML == "Mandatory"){
+		button.innerHTML = "Optional";
+		button.style.color = "#000000";
+	} else {
+		button.innerHTML = "Mandatory";
+		button.style.color = "#FF0000";
+	}
 }
 
 //Toggles whether question n uses radio buttons or check boxes
@@ -149,15 +181,22 @@ function toggleRadio(question){
 function saveQuestion(question){
 	console.log("saving question", question);
 	var table = document.getElementById("Question"+question).getElementsByTagName("table")[0];
-	var optionList = [];
-	if (table.getElementsByTagName("input").length != 0) {
-		if (!confirm("Saving will ignore options currently being edited.")){
-			return;
-		}
+	var text = false;
+	if (table.rows[table.rows.length-1].getElementsByTagName("button")[1].innerHTML == 'Text Input'){
+		text = true;
 	}
-	for (var i = 1; i < table.rows.length - 1; i++){
-		if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
-			optionList.push(table.rows[i].cells[0].innerHTML);
+	var optionList = [];
+	if (!text) {
+		if (table.getElementsByTagName("input").length != 0) {
+			if (!confirm("Saving will ignore options currently being edited.")){
+				return;
+			}
+		}
+
+		for (var i = 1; i < table.rows.length - 1; i++){
+			if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
+				optionList.push(table.rows[i].cells[0].innerHTML);
+			}
 		}
 	}
 
@@ -166,21 +205,32 @@ function saveQuestion(question){
 		multi = false;
 	}
 
+	var mandatory = false;
+	if (table.rows[0].getElementsByTagName("button")[1].innerHTML == "Mandatory"){
+		mandatory = true;
+	}
+
 	var questionText = table.rows[0].cells[0].getElementsByTagName("h3")[0].innerHTML;
 	questionText = questionText.substring(("Q." + question + ": ").length, questionText.length);
 
-	console.log("TEXT:", questionText);
+	console.log("QTEXT:", questionText);
 	console.log("OPTIONS:", JSON.stringify(optionList));
 	console.log("MULTI?", multi);
+	console.log("TEXT?", text);
+	console.log("Mandatory?", mandatory);
 
 	$.ajax({
 		type: "POST",
 		dataType: "text",
 		url: "/save_question",
-		data: {questionNum: question,
-			   questionText: questionText,
-			   options: JSON.stringify(optionList),
-			   multi: multi},
+		data: {
+			questionNum: question,
+			questionText: questionText,
+			options: JSON.stringify(optionList),
+			multi: multi,
+			text: text,
+			mandatory: mandatory
+		},
 		success: function callback(response){
 			alert(response);
 		}
@@ -221,6 +271,10 @@ function addOption(question){
 	var rowID = document.createAttribute("id");
 	rowID.value = "Q" + question + "O" + (numOptions + 1);
 	newRow.setAttributeNode(rowID);
+
+	var rowClass = document.createAttribute("class");
+	rowClass.value = "collapse in";
+	newRow.setAttributeNode(rowClass);
 
 	newRow.innerHTML = "\n" +
 	"	<td><input id = \"Q" + question + "O" + (numOptions + 1) + "input\"> </td>\n" +
@@ -271,6 +325,31 @@ function deleteOption(question, option){
 	//Update all subsequent id's (what a hassle >.<)
 	for (var i = option; i < table.rows.length - 1; i++){
 		correct_IDs(question, i);
+	}
+}
+
+function toggleText(question){
+	var table = document.getElementById("Question"+question).getElementsByTagName("table")[0];
+	console.log(table);
+	var button = table.rows[table.rows.length-1].getElementsByTagName("button")[1];
+	var multiButton = table.rows[0].getElementsByTagName("button")[0];
+	var addOptionButton = table.rows[table.rows.length-1].getElementsByTagName("button")[0];
+	console.log(button);
+	if (button.innerHTML == "Multiple Choice"){
+		button.innerHTML = "Text Input";
+		for (var i = 1; i < table.rows.length - 1; i++){
+			console.log(table.rows[i])
+			table.rows[i].className = "collapse"
+		}
+		multiButton.disabled = true;
+		addOptionButton.disabled = true;
+	} else {
+		button.innerHTML = "Multiple Choice";
+		for (var i = 1; i < table.rows.length - 1; i++){
+			table.rows[i].className = "collapse in"
+		}
+		multiButton.disabled = false;
+		addOptionButton.disabled = false;
 	}
 }
 
@@ -356,7 +435,7 @@ function publish_survey(){
 	console.log("Publish...");
 	var survey = [];
 	var allDivs = document.getElementById("qSpace").getElementsByTagName("div");
-	if (!confirm("Are you sure you want to publish?\nPublishing will ignore options currently being edited, and make the survey available to the public.")){
+	if (!confirm("Are you sure you want to publish?\nPublishing will ignore options currently being edited, and make the survey available to staff for review.")){
 		return;
 	}
 	console.log(allDivs.length);
@@ -366,17 +445,28 @@ function publish_survey(){
 			var question = parseInt(allDivs[div].id.substring(8, allDivs[div].id.length));
 
 			var table = document.getElementById(allDivs[div].id).getElementsByTagName("table")[0];
+			var text = false;
+			if (table.rows[table.rows.length-1].getElementsByTagName("button")[1].innerHTML == 'Text Input'){
+				text = true;
+			}
 			var optionList = [];
-			for (var i = 1; i < table.rows.length - 1; i++){
-				if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
-					optionText = table.rows[i].cells[0].innerHTML;
-					optionList.push(optionText);
+			if (!text) {
+				for (var i = 1; i < table.rows.length - 1; i++){
+					if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
+						optionText = table.rows[i].cells[0].innerHTML;
+						optionList.push(optionText);
+					}
 				}
 			}
 
 			var multi = true;
 			if (table.rows[0].getElementsByTagName("button")[0].innerHTML == "Choose one option"){
 				multi = false;
+			}
+
+			var mandatory = false;
+			if (table.rows[0].getElementsByTagName("button")[1].innerHTML == "Mandatory"){
+				mandatory = true;
 			}
 
 			var questionText = table.rows[0].cells[0].getElementsByTagName("h3")[0].innerHTML;
@@ -386,11 +476,17 @@ function publish_survey(){
 			console.log("TEXT:", questionText);
 			console.log("OPTIONS:", optionList);
 			console.log("MULTI?", multi);
+			console.log("TEXT?", text);
+			console.log("MANTATORY:", mandatory);
 
-			survey.push({questionNum: question,
+			survey.push({
+				questionNum: question,
 				questionText: questionText,
 				options: optionList,
-				multi: multi})
+				multi: multi,
+				text: text,
+				mandatory: mandatory
+			});
 		}
 	}
 	if (survey.length == 0){
@@ -398,11 +494,30 @@ function publish_survey(){
 		return;
 	}
 
+	var start = document.getElementById('start').value;
+	var end = document.getElementById('end').value;
+	if (start == '' || end == ''){
+		alert("Please specify the start and end dates for this survey.");
+		return;
+	}
+
+	if (start.includes('/') && end.includes('/')){
+		start = start.split('/')[2] + '-' + start.split('/')[1] + '-' + start.split('/')[0];
+		end = end.split('/')[2] + '-' + end.split('/')[1] + '-' + end.split('/')[0];
+	}
+
+	if (!date_lte(start, end)){
+		alert("The closing date for the survey must be on or after the starting date.");
+		return;
+	}
+
 	var url_pathname = window.location.pathname.split("/");
 	var course = url_pathname[url_pathname.length-2];
 	var semester = url_pathname[url_pathname.length-1];
 
-	$.ajax({
+
+
+	/*$.ajax({
 		type: "POST",
 		dataType: "text",
 		url: "/publish_survey",
@@ -417,5 +532,25 @@ function publish_survey(){
 				alert(response);
 			}
 		}
-	});
+	});*/
+}
+
+//Compares two dates to see if a is less than or equal to b.
+function date_lte(a, b){
+	if (parseInt(a.split('-')[0]) < parseInt(b.split('-')[0])){
+		return true;
+	}
+	if (parseInt(a.split('-')[0]) > parseInt(b.split('-')[0])){
+		return false;
+	}
+	if (parseInt(a.split('-')[1]) < parseInt(b.split('-')[1])){
+		return true;
+	}
+	if (parseInt(a.split('-')[1]) > parseInt(b.split('-')[1])){
+		return false;
+	}
+	if (parseInt(a.split('-')[2]) <= parseInt(b.split('-')[2])){
+		return true;
+	}
+	return false;
 }

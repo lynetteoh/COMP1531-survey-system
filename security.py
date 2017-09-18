@@ -19,7 +19,7 @@ def find_user(zID):
 			return user
 	return None
 
-
+print("Loading accounts data...")
 #Loading users - done on startup.
 with open(PASSWORD_FILE,'r') as csv_in:
 	reader = csv.reader(csv_in)
@@ -40,39 +40,33 @@ with open(ENROLMENTS_FILE,'r') as csv_in:
 		user = find_user(zID)
 		course = find_course(name, semester)
 		user.enrol(course)
-
-for account in ACCOUNTS:
-	print(type(account), account.zID, account.password)
+print("Loading complete.")
 
 logged_in = {}
-
-###DEPRICATED FUNCTION
-def login_success(username, password, ip_addr):
-	if (username not in passwords):
-		return "User not found"
-	if passwords[username] == password:
-		logged_in[ip_addr] = time.time()
-		return "Success"
-	return "Password incorrect"
 
 def login_user(zID, password, ip_addr):
 	user = find_user(zID)
 	if user.login(zID, password):
-		logged_in[ip_addr] = time.time()
+		logged_in[ip_addr] = user
+		print(zID, "logged in", "["+str(time.time())+"]",
+			  "(Admin)" if type(user) == Admin else ("(Student)" if type(user) == Student else "(Staff)"))
 		return user
 	return None
 
-def has_access(ip_addr, overrideTime = False):
+def has_access(ip_addr, level, overrideTime = False):
 	if ip_addr in logged_in:
-		if overrideTime or logged_in[ip_addr] >= time.time() - 1800: #30 mins after last action
-			return True
+		if level == type(logged_in[ip_addr]) or type(logged_in[ip_addr]) == Admin:
+			if overrideTime or logged_in[ip_addr].last_activity >= time.time() - 1800: #30 mins after last action
+				return True
 	return False
 
 def update_time(ip_addr):
 	if ip_addr in logged_in:
-		logged_in[ip_addr] = time.time();
+		logged_in[ip_addr].last_activity = time.time();
 
 def logout(ip_addr):
 	if ip_addr in logged_in:
+		print(zID, "logged out", "["+str(time.time())+"]",
+			  "(Admin)" if type(logged_in[ip_addr]) == Admin else ("(Student)" if type(logged_in[ip_addr]) == Student else "(Staff)"))
 		logged_in.pop(ip_addr)
 	return redirect('/')
