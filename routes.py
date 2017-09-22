@@ -37,7 +37,7 @@ def home():
 		return redirect("/login/@2FadminHome")
 	update(request.remote_addr)
 
-	active_surveys = get_active_surveys()
+	active_surveys = get_surveys()
 	print(request.url_root)
 	root = request.url_root
 	return render_template("home.html", active_surveys = active_surveys, root = root)
@@ -62,7 +62,17 @@ def create():
 		return redirect("/login/@2Fcreate")
 	update(request.remote_addr)
 
-	return view_courses(request, get_active_surveys())
+	return view_courses(request, get_surveys())
+
+@app.route("/review_questions")
+def review_saved_questions():
+	if (not has_access(request.remote_addr, Admin)):
+		return redirect("/login/@2Freview_questions")
+	update(request.remote_addr)
+
+	saved_questions = read_all_questions()
+	return render_template("viewQuestions.html", saved_questions = saved_questions)
+
 
 @app.route("/create/<course>/<semester>")
 def edit_survey(course, semester):
@@ -76,14 +86,15 @@ def edit_survey(course, semester):
 @app.route("/save_question", methods=["POST"])
 def save_question():
 	if (not has_access(request.remote_addr, Admin, overrideTime = True)):
-		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
+		return redirect("/login/@2Fcreate")
 	update(request.remote_addr)
 
 	write_question({'questionText': request.form.get('questionText'),
 					'options': json.loads(request.form.get('options')),
-					'multi': True if request.form.get('multi') == 'true' else False,
+					'multi': request.form.get('multi'),
 					'text': request.form.get('text'),
-					'mandatory': request.form.get('mandatory')})
+					'mandatory': request.form.get('mandatory'),
+					'saved_id': request.form.get('saved_id')})
 	return "Question saved successfully!"
 
 @app.route("/delete_question", methods = ["POST"])
@@ -98,14 +109,9 @@ def delete_question():
 @app.route("/publish_survey", methods = ["POST"])
 def publish_survey():
 	if (not has_access(request.remote_addr, Admin, overrideTime = True)):
-		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
+		return redirect("/login/@2Fcreate@2F" + request.form['course'] + "@2F" + request.form['semester'])
 	update(request.remote_addr)
-
-	surveyData = json.loads(request.form.get('surveyData'))
-	semester = request.form.get('semester')
-	course = request.form.get('course')
-	print(surveyData, semester, course)
-	response = save_survey(course, semester, surveyData)
+	response = save_survey(request.form)
 	return response
 
 @app.route("/survey/<course>/<semester>", methods = ["POST", "GET"])
@@ -115,11 +121,10 @@ def view_survey(course, semester):
 	if request.method == "POST":
 		print(request.form)
 		return save_response(course, semester, request.form)
-	survey_data = get_survey(course, semester)
-	if survey_data == []:
+	survey = get_survey(course, semester)
+	if survey == None:
 		return render_template("surveyFail.html")
-	print(survey_data)
-	return render_template("survey.html", survey_data = survey_data, course = course, semester = semester)
+	return render_template("survey.html", survey = survey)
 
 @app.route("/logout")
 def logout_page():

@@ -1,7 +1,7 @@
 import sqlite3
 
 def db_execute(database, expression):
-	print(expression)
+	print(' '.join([x.strip() for x in expression.split(' ')]))
 	connection = sqlite3.connect(database)
 	cursorObj = connection.cursor()
 
@@ -10,7 +10,7 @@ def db_execute(database, expression):
 	cursorObj.close()
 
 def db_select(database, query):
-	print(query)
+	print(' '.join([x.strip() for x in query.split(' ')]))
 	connection = sqlite3.connect(database)
 	cursorObj = connection.cursor()
 

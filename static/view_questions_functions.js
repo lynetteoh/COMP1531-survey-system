@@ -1,15 +1,3 @@
-//Javascript functions
-
-//Toggles visibility of existing questions
-function toggle_view_questions(){
-	questionsDiv = document.getElementById('saved_questions')
-	if (questionsDiv.style.visibility == 'visible'){
-		questionsDiv.style.visibility = 'hidden'
-	} else {
-		questionsDiv.style.visibility = 'visible'
-	}
-}
-
 //Initialises the input box for adding a new question
 function init_new_question(){
 	var enclosingDiv = document.createElement("div");
@@ -56,6 +44,7 @@ function finish_new_question(saving){
 		console.log(divId.value);
 		questionDiv.setAttributeNode(divId);
 		questionDiv.setAttributeNode(savedID);
+		questionDiv.savedID = -1;
 
 		var NUM_COLUMNS = 5;
 
@@ -63,7 +52,7 @@ function finish_new_question(saving){
 		"<table>\n" +
 		"<tr>\n" +
 		"	<th colspan = \"" + NUM_COLUMNS + "\">\n" +
-		"		<h3>Q." + qNum + ": " + questionText + "</h3>\n" +
+		"		<input id = \"questionText\" value = \"" + questionText + "\"> <br>\n" +
 		"		<button onclick=\"toggleRadio(" + qNum + ")\">Choose one option</button>    \n" +
 		"		<button onclick=\"toggleMandatory(" + qNum + ")\" style = 'color: #FF0000'>Mandatory</button>    \n" +
 		"		<button onclick=\"saveQuestion(" + qNum + ")\">Save Question</button></th>\n" +
@@ -77,6 +66,18 @@ function finish_new_question(saving){
 		"<br> <br> <br>\n";
 
 		document.getElementById("qSpace").appendChild(questionDiv);
+
+		toggle_view_questions();
+	}
+}
+
+//Toggles visibility of existing questions
+function toggle_view_questions(){
+	questionsDiv = document.getElementById('saved_questions')
+	if (questionsDiv.style.visibility == 'visible'){
+		questionsDiv.style.visibility = 'hidden'
+	} else {
+		questionsDiv.style.visibility = 'visible'
 	}
 }
 
@@ -97,6 +98,7 @@ function add_existing_question(questionID){
 	console.log(divId.value);
 	questionDiv.setAttributeNode(divId);
 	questionDiv.setAttributeNode(savedID);
+	questionDiv.savedID = questionID;
 
 	var NUM_COLUMNS = 5;
 
@@ -108,7 +110,7 @@ function add_existing_question(questionID){
 	"<table>\n" +
 	"<tr>\n" +
 	"	<th colspan = \"" + NUM_COLUMNS + "\">\n" +
-	"		<h3>Q." + qNum + ": " + questionText + "</h3>\n" +
+	"		<input id = \"questionText\" value = \"" + questionText + "\"> <br> \n" +
 	"		<button onclick=\"toggleRadio(" + qNum + ")\">Choose one option</button>    \n" +
 	"		<button onclick=\"toggleMandatory(" + qNum + ")\" style=\"color:#FF0000\">Mandatory</button>    \n" +
 	"		<button onclick=\"saveQuestion(" + qNum + ")\">Update Question</button></th>\n" +
@@ -193,7 +195,7 @@ function saveQuestion(question){
 	}
 	var optionList = [];
 	if (!text) {
-		if (table.getElementsByTagName("input").length != 0) {
+		if (table.getElementsByTagName("input").length != 1) {
 			if (!confirm("Saving will ignore options currently being edited.")){
 				return;
 			}
@@ -216,10 +218,9 @@ function saveQuestion(question){
 		mandatory = true;
 	}
 
-	var questionText = table.rows[0].cells[0].getElementsByTagName("h3")[0].innerHTML;
-	questionText = questionText.substring(("Q." + question + ": ").length, questionText.length);
+	var questionText = document.getElementById("questionText").value;
 
-	var saved_id = table.parentNode.savedID
+	var saved_id = table.parentNode.savedID;
 
 	console.log("QTEXT:", questionText);
 	console.log("OPTIONS:", JSON.stringify(optionList));
@@ -239,10 +240,11 @@ function saveQuestion(question){
 			multi: multi,
 			text: text,
 			mandatory: mandatory,
-			saved_id: saved_id
+			saved_id: saved_id,
 		},
 		success: function callback(response){
 			alert(response);
+			window.location.href = "/review_questions";
 		}
 	});
 }
@@ -425,143 +427,4 @@ function moveDown(question, option){
 		new_row.cells[4].innerHTML = "";
 		next_row.cells[4].innerHTML = "<button onclick = \"moveDown(" + question + ", " + option + ")\">Down</button>";
 	}
-}
-
-function moveQuestionUp(question){
-	console.log("Raise ", question)
-}
-
-function moveQuestionDown(question){
-	console.log("Lower ", question)
-}
-
-function discard_survey(){
-	if (confirm('Warning: This will discard the current survey')){
-		window.location.href = '/adminHome';
-	}
-}
-
-function publish_survey(){
-	console.log("Publish...");
-	var survey = [];
-	var allDivs = document.getElementById("qSpace").getElementsByTagName("div");
-	if (!confirm("Are you sure you want to publish?\nPublishing will ignore options currently being edited, and make the survey available to staff for review.")){
-		return;
-	}
-	console.log(allDivs.length);
-	for (var div = 0; div < allDivs.length; div++){
-		console.log(div);
-		if (allDivs[div].id.startsWith("Question")){
-			var question = parseInt(allDivs[div].id.substring(8, allDivs[div].id.length));
-
-			var table = document.getElementById(allDivs[div].id).getElementsByTagName("table")[0];
-			var text = false;
-			if (table.rows[table.rows.length-1].getElementsByTagName("button")[1].innerHTML == 'Text Input'){
-				text = true;
-			}
-			var optionList = [];
-			if (!text) {
-				for (var i = 1; i < table.rows.length - 1; i++){
-					if (table.rows[i].cells[0].getElementsByTagName("input").length == 0) {
-						optionText = table.rows[i].cells[0].innerHTML;
-						optionList.push(optionText);
-					}
-				}
-			}
-
-			var multi = true;
-			if (table.rows[0].getElementsByTagName("button")[0].innerHTML == "Choose one option"){
-				multi = false;
-			}
-
-			var mandatory = false;
-			if (table.rows[0].getElementsByTagName("button")[1].innerHTML == "Mandatory"){
-				mandatory = true;
-			}
-
-			var questionText = table.rows[0].cells[0].getElementsByTagName("h3")[0].innerHTML;
-			questionText = questionText.substring(("Q." + question + ": ").length, questionText.length);
-
-			console.log("ID:", question);
-			console.log("TEXT:", questionText);
-			console.log("OPTIONS:", optionList);
-			console.log("MULTI?", multi);
-			console.log("TEXT?", text);
-			console.log("MANTATORY:", mandatory);
-
-			survey.push({
-				questionNum: question,
-				questionText: questionText,
-				options: optionList,
-				multi: multi,
-				text: text,
-				mandatory: mandatory
-			});
-		}
-	}
-	if (survey.length == 0){
-		alert("Please add a question before publishing the survey");
-		return;
-	}
-
-	var start = document.getElementById('start').value;
-	var end = document.getElementById('end').value;
-	if (start == '' || end == ''){
-		alert("Please specify the start and end dates for this survey.");
-		return;
-	}
-
-	if (start.includes('/') && end.includes('/')){
-		start = start.split('/')[2] + '-' + start.split('/')[1] + '-' + start.split('/')[0];
-		end = end.split('/')[2] + '-' + end.split('/')[1] + '-' + end.split('/')[0];
-	}
-
-	if (!date_lte(start, end)){
-		alert("The closing date for the survey must be on or after the starting date.");
-		return;
-	}
-
-	var url_pathname = window.location.pathname.split("/");
-	var course = url_pathname[url_pathname.length-2];
-	var semester = url_pathname[url_pathname.length-1];
-
-
-	$.ajax({
-		type: "POST",
-		dataType: "text",
-		url: "/publish_survey",
-		data: {surveyData: JSON.stringify(survey),
-			   semester: semester,
-			   course: course,
-			   start: start,
-			   end: end},
-		success: function callback(response){
-			if (response == 'Success'){
-				alert('Survey successfully published!\nSurvey can be found at: ' + window.location.hostname + window.location.pathname.replace('/create/', '/survey/'));
-				window.location.href = "/login";
-			} else {
-				alert(response);
-			}
-		}
-	});
-}
-
-//Compares two dates to see if a is less than or equal to b.
-function date_lte(a, b){
-	if (parseInt(a.split('-')[0]) < parseInt(b.split('-')[0])){
-		return true;
-	}
-	if (parseInt(a.split('-')[0]) > parseInt(b.split('-')[0])){
-		return false;
-	}
-	if (parseInt(a.split('-')[1]) < parseInt(b.split('-')[1])){
-		return true;
-	}
-	if (parseInt(a.split('-')[1]) > parseInt(b.split('-')[1])){
-		return false;
-	}
-	if (parseInt(a.split('-')[2]) <= parseInt(b.split('-')[2])){
-		return true;
-	}
-	return false;
 }

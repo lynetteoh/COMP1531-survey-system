@@ -1,7 +1,7 @@
 from questionClass import Question, Option
 from databasing import db_execute, db_select
 
-QUESTIONS_FILENAME = "questions.db"
+QUESTIONS_FILENAME = "data.db"
 
 #Significantly faster than looping over all ID's.
 def read_all_questions():
@@ -16,20 +16,16 @@ def read_all_questions():
 #removes a question with that id
 ###DEPRECATED FUNCTION
 def remove_question(id):
-	file = open(QUESTIONS_FILENAME, 'r')
-	lines = file.readlines()
-	file.close()
-
-	file = open(QUESTIONS_FILENAME, 'w')
-
-	for line in lines:
-		if not (line.startswith('Question'+str(id)) or line.startswith('Q' + str(id) + 'O')):
-			file.write(line)
-
-	file.close()
+	question = Question()
+	question.load_from_db(QUESTIONS_FILENAME)
+	question.turn_invisible()
+	question.update_db(QUESTIONS_FILENAME)
 
 #writes question from a form to the questions file
 def write_question(form):
 	question = Question()
 	question.load_from_dict(form)
-	return question.write_to_db(QUESTIONS_FILENAME)
+	if int(form['saved_id']) != -1:
+		return question.update_db(QUESTIONS_FILENAME, int(form['saved_id']))
+	else:
+		return question.write_to_db(QUESTIONS_FILENAME)

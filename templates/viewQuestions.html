@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
-{% block title %} Create Survey {% endblock %}
+{% block title %} Saved Questions {% endblock %}
 {% block head %}
-<script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}"> </script>
+<script src = "{{ url_for('static', filename = 'view_questions_functions.js') }}"> </script>
 {% endblock %}
 
 {% block content %}
@@ -15,26 +15,11 @@
 
 <center>
 
-<h1> Create a survey for {{ course }} - {{ semester }} </h1>
-<h3> Choose a start and end date (dd/mm/yyyy): </h3>
-Start: <input type = "date" id = "start">    End: <input type = "date" id = "end">
-<br>
-<br>
+<h1> Saved Questions </h1>
 
-<div id="qSpace"> </div> <!-- Space for questions -->
+<div id="qSpace"> </div>
 
-<button onclick="init_new_question(); document.getElementById('saved_questions').style.visibility = 'hidden'"> Add new Question </button>
-<br> <br>
-<button onclick="toggle_view_questions()"> Add existing question </button>
-<br> <br>
-<button onclick="publish_survey()"> Open survey for staff review </button>
-
-<button onclick="discard_survey()"> Discard </button>
-
-<div id = "newQuestionZone"></div>
-
-
-<div id="saved_questions" style = "visibility: hidden">
+<div id="saved_questions" style = "visibility: visible">
 	{% if saved_questions != [] %}
 		<table>
 		<tr>
@@ -65,14 +50,25 @@ Start: <input type = "date" id = "start">    End: <input type = "date" id = "end
 					</div>
 				{% endif %}
 			</td>
-			<td style = "width: 15%"> <button onclick="add_existing_question({{question.get_id()}})"> Add</button> </td>
-			<td style = "width: 15%"> <button onclick="delete_existing_question({{question.get_id()}})"> Delete</button> </td>
+			<td style = "width: 15%"> <button onclick="add_existing_question({{question.get_id()}})">Edit</button> </td>
+			<td style = "width: 15%"> <button onclick="delete_existing_question({{question.get_id()}})">Delete</button> </td>
 		</tr>
 		{% endfor %}
 		</table>
 	{% else %}
 		<p> No questions are saved, please add a new one </p>
 	{% endif %}
+
+<br>
+<br>
+
+<p> <button onclick="init_new_question();" style="font-size: 150%"> Add new Question </button> </p>
+
+<div id = "newQuestionZone"></div>
+<br>
+
+<p> <button onclick="window.location.href = '/adminHome'"> Return Home </button> </p>
+
 </div>
 
 </center>

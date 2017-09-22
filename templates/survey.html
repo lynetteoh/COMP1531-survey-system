@@ -12,10 +12,10 @@
 </div>
 
 <center>
-<h1> Survey for {{ course }} {{ semester }} </h1>
+<h1> Survey for {{ survey.course.name }} {{ survey.course.semester }} </h1>
 <form method = "POST">
-	{% for question in survey_data %}
-		<h3> Q.{{ question.id }}: {{ question.text }} </h3>
+	{% for question in survey.questions %}
+		<h3> Q.{{ question.get_id() }}: {{ question.get_question_text() }} </h3>
 		<div style = "display: inline-block; text-align: left">
 		{% for option in question.options %}
 			{% if question.multi %}
