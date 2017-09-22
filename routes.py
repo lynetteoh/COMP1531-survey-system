@@ -37,10 +37,13 @@ def home():
 		return redirect("/login/@2FadminHome")
 	update(request.remote_addr)
 
-	active_surveys = get_surveys()
+	review_surveys = get_surveys(state = 0)
+	active_surveys = get_surveys(state = 1)
+	closed_surveys = get_surveys(state = 2)
 	print(request.url_root)
 	root = request.url_root
-	return render_template("home.html", active_surveys = active_surveys, root = root)
+	return render_template("home.html", review_surveys = review_surveys, active_surveys = active_surveys,
+		                                closed_surveys = closed_surveys, root = root)
 
 @app.route("/studentHome")
 def studentHome():
@@ -54,7 +57,14 @@ def staffHome():
 	if (not has_access(request.remote_addr, Staff)):
 		return redirect("/login/@2FstaffHome")
 	update(request.remote_addr)
-	return render_template("staffHome.html")
+
+	review_surveys = get_surveys(state = 0)
+	active_surveys = get_surveys(state = 1)
+	closed_surveys = get_surveys(state = 2)
+	print(request.url_root)
+	root = request.url_root
+	return render_template("staffHome.html", review_surveys = review_surveys, active_surveys = active_surveys,
+		                                	 closed_surveys = closed_surveys, root = root)
 
 @app.route("/create")
 def create():

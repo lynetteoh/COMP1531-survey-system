@@ -14,20 +14,58 @@
 		<h1> Staff Homepage </h1>
 		<br>
 		<tr>
-		<h3 style="font-size: 200%;"> Active surveys: </h3>
-		<table>
-		<tr>
-			<th style="font-size: 150%;"> <center> Course: Semester </center> </th>
-			<th style="font-size: 150%;"> <center> Link  </center> </th>
-			<th style="font-size: 150%;"> <center> Test </center> </th>
-		</tr>
-		{% for survey in active_surveys %}
+		{% if review_surveys %}
+			<h3 style="font-size: 200%;"> Surveys in review: </h3>
+			<table>
 			<tr>
-				<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
-				<td style="font-size: 150%;">   &lt;{{root}}survey/{{survey.course.name}}/{{survey.course.semester}}&gt;   </td>
-				<td style="font-size: 150%;">   <a href = "survey/{{survey.course.name}}/{{survey.course.semester}}"> &nbsp; Test as a respondent </a>   </td>
+				<th style="font-size: 150%;"> <center> Course: Semester </center> </th>
+				<th style="font-size: 150%;"> <center> Link  </center> </th>
+				<th style="font-size: 150%;"> <center> Test </center> </th>
 			</tr>
-		{% endfor %}
-		</table>
+			{% for survey in review_surveys %}
+				<tr>
+					<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
+					<td style="font-size: 150%;">   &lt;{{root}}survey/{{survey.course.name}}/{{survey.course.semester}}&gt;   </td>
+					<td style="font-size: 150%;">   <a href = "survey/{{survey.course.name}}/{{survey.course.semester}}"> &nbsp; Test as a respondent </a>   </td>
+				</tr>
+			{% endfor %}
+			</table>
+		{% endif %}
+
+		{% if active_surveys %}
+			<h3 style="font-size: 200%;"> Active surveys: </h3>
+			<table>
+			<tr>
+				<th style="font-size: 150%;"> <center> Course: Semester </center> </th>
+				<th style="font-size: 150%;"> <center> Link  </center> </th>
+				<th style="font-size: 150%;"> <center> Test </center> </th>
+			</tr>
+			{% for survey in active_surveys %}
+				<tr>
+					<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
+					<td style="font-size: 150%;">   &lt;{{root}}survey/{{survey.course.name}}/{{survey.course.semester}}&gt;   </td>
+					<td style="font-size: 150%;">   <a href = "survey/{{survey.course.name}}/{{survey.course.semester}}"> &nbsp; Test as a respondent </a>   </td>
+				</tr>
+			{% endfor %}
+			</table>
+		{% endif %}
+
+		{% if closed_surveys %}
+			<h3 style="font-size: 200%;"> Closed surveys: </h3>
+			<table>
+			<tr>
+				<th style="font-size: 150%;"> <center> Course: Semester </center> </th>
+				<th style="font-size: 150%;"> <center> Link  </center> </th>
+				<th style="font-size: 150%;"> <center> Test </center> </th>
+			</tr>
+			{% for survey in closed_surveys %}
+				<tr>
+					<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
+					<td style="font-size: 150%;">   &lt;{{root}}survey/{{survey.course.name}}/{{survey.course.semester}}&gt;   </td>
+					<td style="font-size: 150%;">   <a href = "survey/{{survey.course.name}}/{{survey.course.semester}}"> &nbsp; Test as a respondent </a>   </td>
+				</tr>
+			{% endfor %}
+			</table>
+		{% endif %}
 </center>
 {% endblock %}
