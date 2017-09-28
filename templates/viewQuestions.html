@@ -29,6 +29,7 @@
 			<th> Delete Question </th>
 		</tr>
 		{% for question in saved_questions %}
+		{% if question.get_visible() %}
 		<tr id = "existingQuestion{{question.get_id()}}">
 			<td style = "width: 30%">{{question.get_question_text()}}</td>
 			<td style = "width: 40%">
@@ -53,6 +54,7 @@
 			<td style = "width: 15%"> <button onclick="add_existing_question({{question.get_id()}})">Edit</button> </td>
 			<td style = "width: 15%"> <button onclick="delete_existing_question({{question.get_id()}})">Delete</button> </td>
 		</tr>
+		{% endif %}
 		{% endfor %}
 		</table>
 	{% else %}

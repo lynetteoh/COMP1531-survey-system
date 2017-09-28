@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+{% block title %} Review Survey {% endblock %}
+{% block head %}
+<script src = "{{ url_for('static', filename = 'review_survey_functions.js') }}"> </script>
+{% endblock %}
+
+{% block content %}
+<div id='cssmenu'>
+<ul>
+	 <li><a href='/'>Home</a></li>
+	 <li><a href='/home'>Dashboard</a></li>
+	 <li style="float: right;"><a href ='/logout'>Logout</a><li>
+</ul>
+</div>
+
+<center>
+
+<h1> Review survey for {{ survey.course.name }} - {{ survey.course.semester }} </h1>
+
+<p> Survey has been recommended to be open from {{ survey.start }} to {{ survey.end }}. </p>
+<p> This is not enforced, and it will be up to you to contact the system admin to close the survey. </p>
+
+<br>
+
+<p> You may view the questions chosen so far, and add/remove any optional ones: </p>
+
+<div id = "qspace">
+
+	{% for qNum in range(num_questions) %}
+	<table id = "Question{{survey.questions[qNum].get_id()}}">
+		<tr>
+			<th>Q.{{qNum+1}}: {{ survey.questions[qNum].get_question_text() }}<br>
+			{% if survey.questions[qNum].get_mandatory() %}
+				<b>Mandatory</b>
+			{% else %}
+				<b>Optional</b> <button onclick = "deleteQuestion({{survey.questions[qNum].get_id()}})"> Delete </button>
+			{% endif %}
+			{% if survey.questions[qNum].get_type() == 'text' %}
+				<i>Text response</i>
+			{% elif survey.questions[qNum].get_type() == 'multi' %}
+				<i>Choose many:</i>
+			{% else %}
+				<i>Choose one:</i>
+			{% endif %}
+			</th>
+		</tr>
+
+		{% for option in survey.questions[qNum].get_options() %}
+		<tr>
+			<td>{{ option }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% endfor %}
+
+</div>
+
+<h3> Extra Optional Questions: </h3>
+
+<table id = "optional_questions">
+	<tr>
+		<th> Question </th>
+		<th> Answers </th>
+		<th> Add Question</th>
+	</tr>
+{% for question in extra_questions %}
+	<tr id = "existingQuestion{{question.get_id()}}">
+		<td style = "width: 30%">{{question.get_question_text()}}</td>
+		<td style = "width: 40%">
+			{% if question.get_type() == 'text' %}
+				<p>Text</p>
+			{% else %}
+				{% if question.get_type() == 'multi' %}
+					<p>Choose Many:</p>
+				{% else %}
+					<p>Choose One:</p>
+				{% endif %}
+				<button data-toggle="collapse" data-target="#Q{{question.get_id()}}Options">Show options...</button>
+				<div id = "Q{{question.get_id()}}Options" class="collapse">
+					<ul>
+					{% for option in question.get_options() %}
+						<li style = "white-space: wrap">{{option}}</li>
+					{% endfor %}
+					</ul>
+				</div>
+			{% endif %}
+		</td>
+		<td style = "width: 15%"> <button onclick="addQuestion({{question.get_id()}})"> Add </button> </td>
+	</tr>
+{% endfor %}
+</table>
+
+<br>
+
+<button onclick = "if (confirm('Warning: This will discard current changes')){ window.location.href = '/adminHome';}"> Discard </button>
+
+{% endblock %}

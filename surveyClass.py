@@ -70,7 +70,7 @@ class Survey:
 										FROM SURVEYS
 										WHERE COURSE = "{0}" AND SEMESTER = "{1}" """.format(name, semester))
 		if result:
-			self.load_from_db(self, filename, result[0][0])
+			self.load_from_db(filename, result[0][0])
 			return self
 		else:
 			return None

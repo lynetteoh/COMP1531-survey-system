@@ -44,6 +44,7 @@ Start: <input type = "date" id = "start">    End: <input type = "date" id = "end
 			<th> Delete Question </th>
 		</tr>
 		{% for question in saved_questions %}
+		{% if question.get_visible() %}
 		<tr id = "existingQuestion{{question.get_id()}}">
 			<td style = "width: 30%">{{question.get_question_text()}}</td>
 			<td style = "width: 40%">
@@ -68,6 +69,7 @@ Start: <input type = "date" id = "start">    End: <input type = "date" id = "end
 			<td style = "width: 15%"> <button onclick="add_existing_question({{question.get_id()}})"> Add</button> </td>
 			<td style = "width: 15%"> <button onclick="delete_existing_question({{question.get_id()}})"> Delete</button> </td>
 		</tr>
+		{% endif %}
 		{% endfor %}
 		</table>
 	{% else %}

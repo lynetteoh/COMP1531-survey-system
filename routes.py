@@ -52,20 +52,6 @@ def studentHome():
 	update(request.remote_addr)
 	return render_template("studentHome.html")
 
-@app.route("/staffHome")
-def staffHome():
-	if (not has_access(request.remote_addr, Staff)):
-		return redirect("/login/@2FstaffHome")
-	update(request.remote_addr)
-
-	review_surveys = get_surveys(state = 0)
-	active_surveys = get_surveys(state = 1)
-	closed_surveys = get_surveys(state = 2)
-	print(request.url_root)
-	root = request.url_root
-	return render_template("staffHome.html", review_surveys = review_surveys, active_surveys = active_surveys,
-		                                	 closed_surveys = closed_surveys, root = root)
-
 @app.route("/create")
 def create():
 	if (not has_access(request.remote_addr, Admin)):
@@ -123,6 +109,44 @@ def publish_survey():
 	update(request.remote_addr)
 	response = save_survey(request.form)
 	return response
+
+@app.route("/staffHome")
+def staffHome():
+	if (not has_access(request.remote_addr, Staff)):
+		return redirect("/login/@2FstaffHome")
+	update(request.remote_addr)
+
+	review_surveys = get_surveys(state = 0)
+	active_surveys = get_surveys(state = 1)
+	closed_surveys = get_surveys(state = 2)
+	print(request.url_root)
+	root = request.url_root
+	return render_template("staffHome.html", review_surveys = review_surveys, active_surveys = active_surveys,
+		                                	 closed_surveys = closed_surveys, root = root)
+
+@app.route("/review/<course>/<semester>")
+def reviewSurvey(course, semester):
+	if (not has_access(request.remote_addr, Staff)):
+		return redirect("/login/@2Freview@2F" + course + "@2F" + semester)
+	update(request.remote_addr)
+
+	survey = get_survey(course, semester)
+	num_questions = len(survey.questions)
+	all_questions = read_all_questions()
+	extra_questions = []
+	for question in all_questions:
+		matches = False
+		for survey_question in survey.questions:
+			if question.matches(survey_question):
+				matches = True
+				break
+		if not matches and question.get_visible() and not question.get_mandatory():
+			extra_questions.append(question)
+	print(extra_questions)
+	num_extra_questions = len(extra_questions)
+
+	return render_template("reviewSurvey.html", survey = survey, num_questions = num_questions,
+												extra_questions = extra_questions, num_extra_questions = num_extra_questions)
 
 @app.route("/survey/<course>/<semester>", methods = ["POST", "GET"])
 def view_survey(course, semester):

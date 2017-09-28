@@ -21,10 +21,10 @@ class Question:
 	def get_options(self):
 		return [i.text for i in self._options]
 
-	def get_visible():
+	def get_visible(self):
 		return self._visible
 
-	def turn_invisible():
+	def turn_invisible(self):
 		self._visible = False
 
 	def get_type(self):
