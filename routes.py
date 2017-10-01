@@ -128,6 +128,10 @@ def staffHome():
 
 @app.route("/open_survey/<course>/<semester>")
 def openSurvey(course, semester):
+	if (not has_access(request.remote_addr, Staff)):
+		return redirect("/login/@open_survey@2F" + course + "@2F" + semester)
+	update(request.remote_addr)
+
 	survey = Survey()
 	survey.load_course_from_db(DATABASE_FILENAME, course, semester)
 	db_execute(DATABASE_FILENAME, 'UPDATE SURVEYS SET STATE = "1" WHERE ID = ' + str(survey.id))
@@ -185,10 +189,14 @@ def view_survey(course, semester):
 	if request.method == "POST":
 		print(request.form)
 		return save_response(course, semester, request.form)
-	survey = get_survey(course, semester)
+
+	survey = Survey()
+	survey = survey.load_course_from_db(DATABASE_FILENAME, course, semester)
+	numQuestions = len(survey.questions)
+
 	if survey == None:
 		return render_template("surveyFail.html")
-	return render_template("survey.html", survey = survey)
+	return render_template("survey.html", survey = survey, numQuestions = numQuestions)
 
 @app.route("/logout")
 def logout_page():

@@ -14,17 +14,21 @@
 <center>
 <h1> Survey for {{ survey.course.name }} {{ survey.course.semester }} </h1>
 <form method = "POST">
-	{% for question in survey.questions %}
-		<h3> Q.{{ question.get_id() }}: {{ question.get_question_text() }} </h3>
-		<div style = "display: inline-block; text-align: left">
-		{% for option in question.options %}
-			{% if question.multi %}
-				<input type = "checkbox" name = "Q{{ question.id }}" value = "O{{option.id+1}}">{{ option.text }}<br>
-			{% else %}
-				<input type = "radio" name = "Q{{ question.id }}" value = "O{{option.id+1}}">{{ option.text }}<br>
-			{% endif %}
-		{% endfor %}
-		</div>
+	{% for question in range(numQuestions) %}
+		<h3> Q.{{ question+1 }}: {{ survey.questions[question].get_question_text() }} </h3>
+		{% if survey.questions[question].get_type() == 'text' %}
+			<input type = "text" id = "TextBox{{survey.questions[question].get_id()}}">
+		{% else %}
+			<div style = "display: inline-block; text-align: left">
+			{% for option in survey.questions[question].get_options() %}
+				{% if survey.questions[question].get_type() == 'multi' %}
+					<input type = "checkbox" name = "Q{{ survey.questions[question].get_id() }}" value = "{{option}}">{{option}}<br>
+				{% else %}
+					<input type = "radio" name = "Q{{ survey.questions[question].get_id() }}" value = "{{option}}">{{option}}<br>
+				{% endif %}
+			{% endfor %}
+			</div>
+		{% endif %}
 		<br>
 		<br>
 	{% endfor %}
