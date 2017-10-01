@@ -20,11 +20,13 @@
 			<tr>
 				<th style="font-size: 150%;"> <center> Course: Semester </center> </th>
 				<th style="font-size: 150%;"> <center> Review </center> </th>
+				<th style="font-size: 150%;"> <center> Open Survey </center> </th>
 			</tr>
 			{% for survey in review_surveys %}
 				<tr>
 					<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
 					<td style="font-size: 150%;"> <button onclick = "window.location.href = '/review/{{survey.course.name}}/{{survey.course.semester}}'"> Review </button> </td>
+					<td style="font-size: 150%;"> <button onclick = "window.location.href = '/open_survey/{{survey.course.name}}/{{survey.course.semester}}'"> Open Survey </button> </td>
 				</tr>
 			{% endfor %}
 			</table>

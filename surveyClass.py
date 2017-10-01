@@ -6,6 +6,7 @@ import datetime
 
 class Survey:
 	def __init__(self, start = '', end = '', state = 0, course = None, questions = None):
+		self._id = -1
 		self._start = start
 		self._end = end
 		self._state = state
@@ -36,12 +37,17 @@ class Survey:
 		return self._questions
 	def _set_questions(self, questions):
 		self._questions = questions
+	def _get_id(self):
+		return self._id
+	def _set_id(self, id):
+		self._id = id
 
 	start = property(_get_start, _set_start)
 	end = property(_get_end, _set_end)
 	state = property(_get_state, _set_state)
 	course = property(_get_course, _set_course)
 	questions = property(_get_questions, _set_questions)
+	id = property(_get_id, _set_id)
 
 	#Public functions
 	def load_from_db(self, filename, id):

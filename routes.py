@@ -126,6 +126,13 @@ def staffHome():
 	return render_template("staffHome.html", review_surveys = review_surveys, active_surveys = active_surveys,
 		                                	 closed_surveys = closed_surveys, root = root)
 
+@app.route("/open_survey/<course>/<semester>")
+def openSurvey(course, semester):
+	survey = Survey()
+	survey.load_course_from_db(DATABASE_FILENAME, course, semester)
+	db_execute(DATABASE_FILENAME, 'UPDATE SURVEYS SET STATE = "1" WHERE ID = ' + str(survey.id))
+	return redirect('/staffHome')
+
 @app.route("/review/<course>/<semester>")
 def reviewSurvey(course, semester):
 	if (not has_access(request.remote_addr, Staff)):
