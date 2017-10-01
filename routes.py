@@ -13,6 +13,8 @@ from surveyIO import *
 from save_response import save_response
 from securityClasses import Admin, Staff, Student
 
+DATABASE_FILENAME = "data.db"
+
 @app.route("/")
 def index():
 	update(request.remote_addr)
@@ -147,6 +149,27 @@ def reviewSurvey(course, semester):
 
 	return render_template("reviewSurvey.html", survey = survey, num_questions = num_questions,
 												extra_questions = extra_questions, num_extra_questions = num_extra_questions)
+
+@app.route("/commit_review", methods = ["POST"])
+def commit_review():
+	if (not has_access(request.remote_addr, Staff, overrideTime = True)):
+		return redirect("/login/@2Fcommit_review")
+	update(request.remote_addr)
+
+	print(request.form)
+
+	survey = Survey()
+	survey.load_course_from_db(DATABASE_FILENAME, request.form.get('course'), request.form.get('semester'))
+	survey.questions = []
+
+	for questionId in json.loads(request.form.get('ids')):
+		question = Question()
+		question.load_from_db(DATABASE_FILENAME, questionId)
+		survey.questions.append(question)
+
+	survey.update_db(DATABASE_FILENAME)
+
+	return "Success"
 
 @app.route("/survey/<course>/<semester>", methods = ["POST", "GET"])
 def view_survey(course, semester):

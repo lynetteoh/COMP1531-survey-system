@@ -122,14 +122,14 @@ class Survey:
 		return max_survey_id+1
 
 	def update_db(self, filename):
-		storedIds = [x[0] for x in db_select(filename, "SELECT QUESTIONID FROM INCLUDE WHERE SURVEYID = " + surveyId)]
+		storedIds = [x[0] for x in db_select(filename, "SELECT QUESTIONID FROM INCLUDE WHERE SURVEYID = " + str(self._id))]
 		for i in range(min(len(storedIds), len(self._questions))):
 			if storedIds[i] != self._questions[i].get_id():
 				db_execute(filename, 'UPDATE INCLUDE SET QUESTIONID = "{0}" WHERE QUESTIONID = {1} AND SURVEYID = {2}'.format(
 									  self._questions[i].get_id(), storedIds[i], self._id))
-		
+
 		for i in range(len(storedIds), len(self._questions)):
-			db_execute(filename, 'INSERT INTO INCLUDE (SURVEYID, QUESTIONID) VALUES ("{0}", "{1}")'.format(self._questions[i].get_id(), self._id))
+			db_execute(filename, 'INSERT INTO INCLUDE (SURVEYID, QUESTIONID) VALUES ("{0}", "{1}")'.format(self._id, self._questions[i].get_id()))
 
 		for i in range(len(self._questions), len(storedIds)):
 			db_execute(filename, 'DELETE FROM INCLUDE WHERE SURVEYID = {0} AND QUESTIONID = {1}'.format(self._id, storedIds[i]))

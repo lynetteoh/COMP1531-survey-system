@@ -97,3 +97,29 @@ function addQuestion(question) {
 
 	document.getElementById('qspace').appendChild(table);
 }
+
+function updateSurvey() {
+	var qspace = document.getElementById("qspace");
+	var tables = qspace.getElementsByTagName("table");
+
+	var ids = [];
+	for (var i = 0; i < tables.length; i++) {
+		ids.push(parseInt(tables[i].id.substring(8, tables[i].id.length)))
+	}
+
+	var url_pathname = window.location.pathname.split("/");
+	var course = url_pathname[url_pathname.length-2];
+	var semester = url_pathname[url_pathname.length-1];
+
+	$.ajax({
+		type: "POST",
+		dataType: "text",
+		url: "/commit_review",
+		data: {ids: JSON.stringify(ids),
+			   semester: semester,
+			   course: course},
+		success: function callback(response){
+			window.location.href = '/adminHome';
+		}
+	});
+}
