@@ -60,6 +60,11 @@ def has_access(ip_addr, level, overrideTime = False):
 				return True
 	return False
 
+def get_user(ip_addr):
+	if ip_addr not in logged_in:
+		return None
+	return logged_in[ip_addr]
+
 def update_time(ip_addr):
 	if ip_addr in logged_in:
 		logged_in[ip_addr].last_activity = time.time();

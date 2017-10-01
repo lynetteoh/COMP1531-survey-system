@@ -17,7 +17,7 @@
 	{% for question in range(numQuestions) %}
 		<h3> Q.{{ question+1 }}: {{ survey.questions[question].get_question_text() }} </h3>
 		{% if survey.questions[question].get_type() == 'text' %}
-			<input type = "text" id = "TextBox{{survey.questions[question].get_id()}}">
+			<input type = "text" name = "TextBox{{survey.questions[question].get_id()}}">
 		{% else %}
 			<div style = "display: inline-block; text-align: left">
 			{% for option in survey.questions[question].get_options() %}
