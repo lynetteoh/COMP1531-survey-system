@@ -1,21 +1,39 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
+from databasing import db_select, db_execute
+from security import get_user
 import os
 
-def save_response(course, semester, form):
+def save_response(filename, survey, request):
+	user = get_user(request.remote_addr)
+	print(":", request.form)
+	print("USER:", user.zID)
 	try:
-		file = open('responses/'+course+'__'+semester+'.txt', 'a+')
-	except FileNotFoundError:
-		file = open('responses/'+course+'__'+semester+'.txt', 'w+')
-		file.close()
-		file = open('responses/'+course+'__'+semester+'.txt', 'a+')
-	file.write('New Response\n')
-	question = 1
-	response = ' '.join(form.getlist('Q'+str(question)))
-	while response != '':
-		print("Writing", response)
-		file.write('Q' + str(question) + '    ' + response + '\n')
-		response = ' '.join(form.getlist('Q'+str(question)))
-		question += 1
-	file.close()
-
-	return "Thankyou for trying the survey system, responses are currently not being processed, but your response was recorded.";
+		write_id = max([int(x[0]) for x in db_select(filename, "SELECT ID FROM RESPONSES")]) + 1
+	except ValueError:
+		write_id = 1
+	for question in survey.questions:
+		if question.get_type() == 'text':
+			response = request.form.get('TextBox' + str(question.get_id()))
+			print("Question, id =", question.get_id(), "Text,  Value:", response)
+			db_execute(filename, """INSERT INTO RESPONSES (ID, ZID, RESPONSE, QUESTIONID, SURVEYID)
+											 VALUES ("{0}", "{1}", "{2}", "{3}", "{4}")""".format(
+											 write_id, user.zID, response, question.get_id(), survey.id)
+					   )
+			write_id += 1
+		elif question.get_type() == 'single':
+			response = request.form.get('Q' + str(question.get_id()))
+			print("Question, id =", question.get_id(), "Single,  Value:", response)
+			db_execute(filename, """INSERT INTO RESPONSES (ID, ZID, RESPONSE, QUESTIONID, SURVEYID)
+											 VALUES ("{0}", "{1}", "{2}", "{3}", "{4}")""".format(
+											 write_id, user.zID, response, question.get_id(), survey.id)
+					   )
+			write_id += 1
+		else:
+			print("Question, id =", question.get_id(), "Multi,  Value:", request.form.getlist('Q' + str(question.get_id())))
+			for response in request.form.getlist('Q' + str(question.get_id())):
+				db_execute(filename, """INSERT INTO RESPONSES (ID, ZID, RESPONSE, QUESTIONID, SURVEYID)
+											 VALUES ("{0}", "{1}", "{2}", "{3}", "{4}")""".format(
+											 write_id, user.zID, response, question.get_id(), survey.id)
+					   )
+				write_id += 1
+	return redirect('/login')

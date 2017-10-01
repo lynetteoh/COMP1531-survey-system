@@ -190,39 +190,7 @@ def view_survey(course, semester):
 	survey = survey.load_course_from_db(DATABASE_FILENAME, course, semester)
 
 	if request.method == "POST":
-		user = get_user(request.remote_addr)
-		print(":", request.form)
-		print("USER:", user.zID)
-		try:
-			write_id = max([int(x[0]) for x in db_select(DATABASE_FILENAME, "SELECT ID FROM RESPONSES")]) + 1
-		except ValueError:
-			write_id = 1
-		for question in survey.questions:
-			if question.get_type() == 'text':
-				response = request.form.get('TextBox' + str(question.get_id()))
-				print("Question, id =", question.get_id(), "Text,  Value:", response)
-				db_execute(DATABASE_FILENAME, """INSERT INTO RESPONSES (ID, ZID, RESPONSE, QUESTIONID, SURVEYID)
-												 VALUES ("{0}", "{1}", "{2}", "{3}", "{4}")""".format(
-												 write_id, user.zID, response, question.get_id(), survey.id)
-						   )
-				write_id += 1
-			elif question.get_type() == 'single':
-				response = request.form.get('Q' + str(question.get_id()))
-				print("Question, id =", question.get_id(), "Single,  Value:", response)
-				db_execute(DATABASE_FILENAME, """INSERT INTO RESPONSES (ID, ZID, RESPONSE, QUESTIONID, SURVEYID)
-												 VALUES ("{0}", "{1}", "{2}", "{3}", "{4}")""".format(
-												 write_id, user.zID, response, question.get_id(), survey.id)
-						   )
-				write_id += 1
-			else:
-				print("Question, id =", question.get_id(), "Multi,  Value:", request.form.getlist('Q' + str(question.get_id())))
-				for response in request.form.getlist('Q' + str(question.get_id())):
-					db_execute(DATABASE_FILENAME, """INSERT INTO RESPONSES (ID, ZID, RESPONSE, QUESTIONID, SURVEYID)
-												 VALUES ("{0}", "{1}", "{2}", "{3}", "{4}")""".format(
-												 write_id, user.zID, response, question.get_id(), survey.id)
-						   )
-					write_id += 1
-		return redirect('/login')
+		return save_response(DATABASE_FILENAME, survey, request)
 
 	numQuestions = len(survey.questions)
 
