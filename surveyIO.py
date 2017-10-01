@@ -16,7 +16,6 @@ def save_survey(survey_data):
 
 	return 'Success'
 
-
 def get_survey(course, semester):
 	survey = Survey()
 	survey = survey.load_course_from_db(SURVEY_FILENAME, course, semester)
