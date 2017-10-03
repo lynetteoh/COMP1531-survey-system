@@ -52,7 +52,15 @@ def studentHome():
 	if (not has_access(request.remote_addr, Student)):
 		return redirect("/login/@2FstudentHome")
 	update(request.remote_addr)
-	return render_template("studentHome.html")
+
+	user = get_user(request.remote_addr)
+	all_active_surveys = get_surveys(state = 1)
+	active_surveys = []
+	for survey in all_active_surveys:
+		if user.is_enrolled_in(survey.course) and not user.has_responded_to(survey):
+			active_surveys.append(survey)
+
+	return render_template("studentHome.html", active_surveys = active_surveys)
 
 @app.route("/create")
 def create():

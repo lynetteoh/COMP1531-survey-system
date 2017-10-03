@@ -3,6 +3,29 @@
 {% block head %} {% endblock %}
 
 {% block content %}
-<h1> Welcome to the student homepage!</h1>
-Under construction...
+<div id='cssmenu'>
+<ul>
+	 <li><a href='/'>Home</a></li>
+	 <li><a href='/home'>Dashboard</a></li>
+	 <li style="float: right;"><a href ='/logout'>Logout</a><li>
+</ul>
+</div>
+
+<center>
+		<h1> Student Homepage </h1>
+		<br>
+		<br>
+
+		{% if active_surveys %}
+			<h3 style="font-size: 200%;"> Your surveys: </h3>
+			<table>
+			{% for survey in active_surveys %}
+				<tr>
+					<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
+					<td style="font-size: 150%;"> <button onclick = "window.location.href = '/survey/{{survey.course.name}}/{{survey.course.semester}}'"> Complete </button> </td>
+			{% endfor %}
+			</table>
+		{% endif %}
+
+		<button onclick = "window.location.href = '/studentResults/';"> View Closed Survey Results </button>
 {% endblock %}

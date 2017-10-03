@@ -1,4 +1,5 @@
 import time
+from databasing import db_select, db_execute
 
 class User:
 	#zID, Password, Login Function
@@ -46,6 +47,15 @@ class Student(User):
 		for c in range(len(self._enrolled_courses)):
 			if self._enrolled_courses[c] == course:
 				self._enrolled_courses.pop(c)
+
+	def is_enrolled_in(self, course):
+		return course in self._enrolled_courses
+
+	def has_responded_to(self, filename, survey):
+		result = db_select(filename, """SELECT ID FROM RESPONSES WHERE ZID = {0} AND SURVEYID = {1}""".format(self._zID, survey.id))
+		if len(result) > 0:
+			return True
+		return False
 
 class Staff(User):
 	#Private functions
