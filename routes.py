@@ -57,7 +57,7 @@ def studentHome():
 	all_active_surveys = get_surveys(state = 1)
 	active_surveys = []
 	for survey in all_active_surveys:
-		if user.is_enrolled_in(survey.course) and not user.has_responded_to(survey):
+		if user.is_enrolled_in(survey.course) and not user.has_responded_to(DATABASE_FILENAME, survey):
 			active_surveys.append(survey)
 
 	return render_template("studentHome.html", active_surveys = active_surveys)
