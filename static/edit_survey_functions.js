@@ -521,10 +521,14 @@ function publish_survey(){
 		return;
 	}
 
+	if (!date_in_future(start) || !date_in_future(end)){
+		alert("The starting date is in the past");
+		return;
+	}
+
 	var url_pathname = window.location.pathname.split("/");
 	var course = url_pathname[url_pathname.length-2];
 	var semester = url_pathname[url_pathname.length-1];
-
 
 	$.ajax({
 		type: "POST",
@@ -544,6 +548,27 @@ function publish_survey(){
 			}
 		}
 	});
+}
+
+function date_in_future(a){
+
+	//----
+	//Code taken from <https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript>
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+
+	if(dd<10) {
+	    dd = '0'+dd
+	} 
+
+	if(mm<10) {
+	    mm = '0'+mm
+	} 
+	//----
+
+	return (date_lte(yyyy+'-'+mm+'-'+dd, a))
 }
 
 //Compares two dates to see if a is less than or equal to b.

@@ -74,4 +74,4 @@ def logout(ip_addr):
 		print(zID, "logged out", "["+str(time.time())+"]",
 			  "(Admin)" if type(logged_in[ip_addr]) == Admin else ("(Student)" if type(logged_in[ip_addr]) == Student else "(Staff)"))
 		logged_in.pop(ip_addr)
-	return redirect('/')
+	return redirect('/login')
