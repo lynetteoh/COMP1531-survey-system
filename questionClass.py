@@ -121,8 +121,8 @@ class Question:
 			max_question_id = 0
 		else:
 			max_question_id = max(question_ids)
-		db_execute(filename, """INSERT INTO QUESTIONS (ID, QUESTION_TEXT, TEXT, MULTI, MANDATORY, VISIBLE) 
-								VALUES ("{0}", "{1}", "{2}", "{3}", "{4}", "0")
+		db_execute(filename, """INSERT INTO QUESTIONS (ID, QUESTION_TEXT, TEXT, MULTI, MANDATORY, VISIBLE)
+								VALUES ("{0}", "{1}", "{2}", "{3}", "{4}", "{5}")
 								""".format(str(max_question_id + 1), self._question_text, 1 if self._text else 0,
 										   1 if self._multi else 0, 1 if self._mandatory else 0, 1 if self._visible else 0))
 

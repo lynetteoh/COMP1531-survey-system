@@ -25,6 +25,7 @@
 		<tr>
 			<th> Question </th>
 			<th> Answers </th>
+			<th> Type </th>
 			<th> Add Question</th>
 			<th> Delete Question </th>
 		</tr>
@@ -32,7 +33,7 @@
 		{% if question.get_visible() %}
 		<tr id = "existingQuestion{{question.get_id()}}">
 			<td style = "width: 30%">{{question.get_question_text()}}</td>
-			<td style = "width: 40%">
+			<td style = "width: 30%">
 				{% if question.get_type() == 'text' %}
 					<p>Text</p>
 				{% else %}
@@ -51,6 +52,11 @@
 					</div>
 				{% endif %}
 			</td>
+			{% if question.get_mandatory() %}
+				<td style = "width: 10%"><p style = "color: #FF0000">Mandatory</p></td>
+			{% else %}
+				<td style = "width: 10%"><p style = "color: #000000">Optional</p></td>
+			{% endif %}
 			<td style = "width: 15%"> <button onclick="add_existing_question({{question.get_id()}})">Edit</button> </td>
 			<td style = "width: 15%"> <button onclick="delete_existing_question({{question.get_id()}})">Delete</button> </td>
 		</tr>

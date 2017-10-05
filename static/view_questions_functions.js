@@ -55,7 +55,6 @@ function finish_new_question(saving){
 		"		<input id = \"questionText\" value = \"" + questionText + "\"> <br>\n" +
 		"		<button onclick=\"toggleRadio(" + qNum + ")\">Choose one option</button>    \n" +
 		"		<button onclick=\"toggleMandatory(" + qNum + ")\" style = 'color: #FF0000'>Mandatory</button>    \n" +
-		"		<button onclick=\"saveQuestion(" + qNum + ")\">Save Question</button></th>\n" +
 		"	</th>\n" +
 		"</tr>\n" +
 		"<tr>\n" +
@@ -63,7 +62,8 @@ function finish_new_question(saving){
 		"   <button onclick = \"toggleText(" + qNum + ")\">Multiple Choice</button> </center> </td>\n" +
 		"</tr>\n" +
 		"</table>\n"+
-		"<br> <br> <br>\n";
+		"<br><br> <button onclick=\"saveQuestion(" + qNum + ")\" style = \"font-size: 150%\">Save Question</button> <br> <br>\n" +
+		"<button onclick = \"window.location.reload(true);\">Cancel</button>\n";
 
 		document.getElementById("qSpace").appendChild(questionDiv);
 
@@ -104,7 +104,17 @@ function add_existing_question(questionID){
 
 	var questionRow = document.getElementById('existingQuestion'+questionID);
 	var questionText = questionRow.cells[0].innerHTML;
-	var questionOptions = document.getElementById('Q'+questionID+'Options').getElementsByTagName('li')
+	var questionOptions = [];
+
+	var type = 'text';
+	if (document.getElementById('Q'+questionID+'Options')) {
+		var questionOptions = document.getElementById('Q'+questionID+'Options').getElementsByTagName('li');
+		if (questionRow.cells[1].getElementsByTagName("p")[0].innerHTML == "Choose Many:"){
+			type = 'multi';
+		} else {
+			type = 'single';
+		}
+	}
 
 	questionDiv.innerHTML = "\n" +
 	"<table>\n" +
@@ -113,10 +123,11 @@ function add_existing_question(questionID){
 	"		<input id = \"questionText\" value = \"" + questionText + "\"> <br> \n" +
 	"		<button onclick=\"toggleRadio(" + qNum + ")\">Choose one option</button>    \n" +
 	"		<button onclick=\"toggleMandatory(" + qNum + ")\" style=\"color:#FF0000\">Mandatory</button>    \n" +
-	"		<button onclick=\"saveQuestion(" + qNum + ")\">Update Question</button></th>\n" +
 	"	</th>\n" +
 	"</tr>\n" +
-	"</table>\n";
+	"</table>\n" +
+	"<br><br> <button onclick=\"saveQuestion(" + qNum + ")\" style = \"font-size: 150%\">Update Question</button> <br> <br>\n" +
+	"<button onclick = \"window.location.reload(true);\">Cancel</button>\n";
 
 	for (var i = 0; i < questionOptions.length; i++){
 		var optionRow = questionDiv.getElementsByTagName("table")[0].insertRow(questionDiv.getElementsByTagName("table")[0].rows.length);
@@ -151,8 +162,16 @@ function add_existing_question(questionID){
 
 	document.getElementById("qSpace").appendChild(questionDiv);
 
-	if (questionRow.cells[1].getElementsByTagName('p')[0].innerHTML == "Choose Many:"){
+	if (type == 'multi') {
 		toggleRadio(qNum);
+	}
+
+	if (type == 'text') {
+		toggleText(qNum);
+	}
+
+	if (questionRow.cells[2].getElementsByTagName("p")[0].innerHTML == "Optional") {
+		toggleMandatory(qNum);
 	}
 
 	toggle_view_questions();
@@ -244,7 +263,7 @@ function saveQuestion(question){
 		},
 		success: function callback(response){
 			alert(response);
-			window.location.href = "/review_questions";
+			window.location.reload(true);
 		}
 	});
 }
