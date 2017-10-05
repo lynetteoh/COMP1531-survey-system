@@ -46,6 +46,8 @@ logged_in = {}
 
 def login_user(zID, password, ip_addr):
 	user = find_user(zID)
+	if user == None:
+		return None
 	if user.login(zID, password):
 		logged_in[ip_addr] = user
 		print(zID, "logged in", "["+str(time.time())+"]",
