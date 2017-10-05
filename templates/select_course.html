@@ -17,13 +17,13 @@
 {% else %}
 	<table style = "width: 25%">
 	<tr>
-		<th style="font-size: 150%; text-align: center;">Course &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+		<th style="font-size: 150%; text-align: center;">Course &nbsp;&nbsp;&nbsp;</th>
 		<th style="font-size: 150%;">Year/Semester</th>
 	</tr >
 	{% for course in courses %}
 	<tr>
-		<td style="font-size: 150%; text-align: center;"><a href = "/create/{{course[0]}}/{{course[1]}}">{{course[0]}}</a> &nbsp;&nbsp;&nbsp;</td>
-		<td style="text-align: center; font-size: 150%; "> {{course[1]}} </td>
+		<td style="font-size: 150%; text-align: center;"><a href = "/create/{{course.name}}/{{course.semester}}">{{course.name}}</a> &nbsp;&nbsp;&nbsp;</td>
+		<td style="text-align: center; font-size: 150%; "> {{course.semester}} </td>
 	</tr>
 	{% endfor %}
 	</table>
