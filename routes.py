@@ -137,13 +137,24 @@ def staffHome():
 @app.route("/open_survey/<course>/<semester>")
 def openSurvey(course, semester):
 	if (not has_access(request.remote_addr, Staff)):
-		return redirect("/login/@open_survey@2F" + course + "@2F" + semester)
+		return redirect("/login/@2Fopen_survey@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 
 	survey = Survey()
 	survey.load_course_from_db(DATABASE_FILENAME, course, semester)
 	db_execute(DATABASE_FILENAME, 'UPDATE SURVEYS SET STATE = "1" WHERE ID = ' + str(survey.id))
 	return redirect('/staffHome')
+
+@app.route("/close_survey/<course>/<semester>")
+def closeSurvey(course, semester):
+	if (not has_access(request.remote_addr, Staff)):
+		return redirect("/login/@2Fclose_survey@2F" + course + "@2F" + semester)
+	update(request.remote_addr)
+
+	survey = Survey()
+	survey.load_course_from_db(DATABASE_FILENAME, course, semester)
+	db_execute(DATABASE_FILENAME, 'UPDATE SURVEYS SET STATE = "2" WHERE ID = ' + str(survey.id))
+	return redirect('/login')
 
 @app.route("/review/<course>/<semester>")
 def reviewSurvey(course, semester):

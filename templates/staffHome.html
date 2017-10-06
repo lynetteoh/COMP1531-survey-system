@@ -35,15 +35,15 @@
 			<h3 style="font-size: 200%;"> Active surveys: </h3>
 			<table>
 			<tr>
-				<th style="font-size: 150%;"> <center> Course: Semester </center> </th>
-				<th style="font-size: 150%;"> <center> Link  </center> </th>
-				<th style="font-size: 150%;"> <center> Test </center> </th>
+				<th style="font-size: 150%;"> <center> Course </center> </th>
+				<th style="font-size: 150%;"> <center> Semester  </center> </th>
+				<th style="font-size: 150%;"> <center> Close Survey </center> </th>
 			</tr>
 			{% for survey in active_surveys %}
 				<tr>
-					<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
-					<td style="font-size: 150%;">   &lt;{{root}}survey/{{survey.course.name}}/{{survey.course.semester}}&gt;   </td>
-					<td style="font-size: 150%;">   <a href = "survey/{{survey.course.name}}/{{survey.course.semester}}"> &nbsp; Test as a respondent </a>   </td>
+					<td style="font-size: 150%;"> {{survey.course.name}}   </td>
+					<td style="font-size: 150%;">   {{survey.course.semester}}   </td>
+					<td style="font-size: 150%;">   <button onclick = "window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}'"> Close Survey </button>   </td>
 				</tr>
 			{% endfor %}
 			</table>
@@ -53,15 +53,15 @@
 			<h3 style="font-size: 200%;"> Closed surveys: </h3>
 			<table>
 			<tr>
-				<th style="font-size: 150%;"> <center> Course: Semester </center> </th>
-				<th style="font-size: 150%;"> <center> Link  </center> </th>
-				<th style="font-size: 150%;"> <center> Test </center> </th>
+				<th style="font-size: 150%;"> <center> Course </center> </th>
+				<th style="font-size: 150%;"> <center> Semester  </center> </th>
+				<th style="font-size: 150%;"> <center> Results </center> </th>
 			</tr>
 			{% for survey in closed_surveys %}
 				<tr>
-					<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
-					<td style="font-size: 150%;">   &lt;{{root}}survey/{{survey.course.name}}/{{survey.course.semester}}&gt;   </td>
-					<td style="font-size: 150%;">   <a href = "survey/{{survey.course.name}}/{{survey.course.semester}}"> &nbsp; Test as a respondent </a>   </td>
+					<td style="font-size: 150%;"> {{survey.course.name}}   </td>
+					<td style="font-size: 150%;">   {{survey.course.semester}}   </td>
+					<td style="font-size: 150%;">   <button onclick = "window.location.href = '/results/{{survey.course.name}}/{{survey.course.semester}}'"> View Results </button>   </td>
 				</tr>
 			{% endfor %}
 			</table>

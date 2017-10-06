@@ -39,6 +39,7 @@
 				<th style="font-size: 150%;"> <center> Course </center> </th>
 				<th style="font-size: 150%;"> <center> Semester </center> </th>
 				<th style="font-size: 150%;"> <center> Metrics </center> </th>
+				<th style="font-size: 150%;"> <center> Close </center> </th>
 			</tr>
 			{% for survey in active_surveys %}
 				<tr>
@@ -47,6 +48,7 @@
 					<td style="font-size: 150%;">
 						<button onclick = "window.location.href = '/metrics/{{survey.course.name}}/{{survey.course.semester}}';"> View Metrics </button>
 					</td>
+					<td style="font-size: 150%;">   <td style="font-size: 150%;">   <button onclick = "window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}'"> Close Survey </button>   </td>
 				</tr>
 			{% endfor %}
 			</table>

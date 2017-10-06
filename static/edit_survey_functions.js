@@ -216,6 +216,11 @@ function saveQuestion(question){
 		mandatory = true;
 	}
 
+	if (!text && optionList.length == 0){
+		alert("A multiple choice question must have options!");
+		return;
+	}
+
 	var questionText = table.rows[0].cells[0].getElementsByTagName("h3")[0].innerHTML;
 	questionText = questionText.substring(("Q." + question + ": ").length, questionText.length);
 
@@ -477,6 +482,11 @@ function publish_survey(){
 			var mandatory = false;
 			if (table.rows[0].getElementsByTagName("button")[1].innerHTML == "Mandatory"){
 				mandatory = true;
+			}
+
+			if (!text && optionList.length == 0){
+				alert("Question " + question + " is a multiple choice question, but it has no options!");
+				return;
 			}
 
 			var questionText = table.rows[0].cells[0].getElementsByTagName("h3")[0].innerHTML;

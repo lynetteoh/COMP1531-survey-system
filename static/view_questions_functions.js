@@ -241,6 +241,11 @@ function saveQuestion(question){
 
 	var saved_id = table.parentNode.savedID;
 
+	if (!text && optionList.length == 0){
+		alert("A multiple choice question must have options!");
+		return;
+	}
+
 	console.log("QTEXT:", questionText);
 	console.log("OPTIONS:", JSON.stringify(optionList));
 	console.log("MULTI?", multi);
