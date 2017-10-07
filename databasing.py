@@ -1,16 +1,33 @@
 import sqlite3
 
-def db_execute(database, expression):
-	print(' '.join([x.strip() for x in expression.split(' ')]))
+silent_prints = 0
+
+def db_execute(database, expression, silent = False):
+	global silent_prints
+	if not silent:
+		print(' '.join([x.strip() for x in expression.split(' ')]))
+	else:
+		silent_prints += 1
+		if silent_prints % 50 == 0:
+			print('.', end = ('' if silent_prints % 500 != 0 else '\n'))
 	connection = sqlite3.connect(database)
 	cursorObj = connection.cursor()
 
-	cursorObj.execute(expression)
+	try:
+		cursorObj.execute(expression)
+	except sqlite3.IntegrityError:
+		pass
 	connection.commit()
 	cursorObj.close()
 
-def db_select(database, query):
-	print(' '.join([x.strip() for x in query.split(' ')]))
+def db_select(database, query, silent = False):
+	global silent_prints
+	if not silent:
+		print(' '.join([x.strip() for x in query.split(' ')]))
+	else:
+		silent_prints += 1
+		if silent_prints % 50 == 0:
+			print('.', end = ('' if silent_prints % 500 != 0 else '\n'))
 	connection = sqlite3.connect(database)
 	cursorObj = connection.cursor()
 
