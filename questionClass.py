@@ -1,4 +1,3 @@
-from questionIO import *
 from flask import Flask, redirect, render_template, request, url_for
 from databasing import db_execute, db_select
 

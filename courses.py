@@ -15,13 +15,13 @@ with open(COURSE_LISTING,'r') as csv_in:
 print("Courses loaded.")
 
 def find_course(name, semester):
-	result = db_select(DATABASE_FILENAME, 'SELECT NAME, SEMESTER FROM COURSES WHERE NAME = {0} AND SEMESTER = {1}'.format(
+	result = db_select(DATABASE_FILENAME, 'SELECT NAME, SEMESTER FROM COURSES WHERE NAME = "{0}" AND SEMESTER = "{1}"'.format(
 							name, semester
 						))
 	if len(result) == []:
 		return None
 
-	course = Course(name, semester, survey = get_survey(name, semester))
+	course = Course(name, semester)
 	return course
 
 def get_all_courses():

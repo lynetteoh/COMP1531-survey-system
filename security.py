@@ -17,7 +17,7 @@ PASSWORD_FILE = "passwords.csv"
 
 print("Loading accounts data into database...")
 #Loading users - done on startup.
-db_execute(DATABASE_FILENAME, 'INSERT INTO PASSWORDS (ZID, PASSWORD, ROLE) VALUES ("admin", "adminPass", "admin")')
+db_execute(DATABASE_FILENAME, 'INSERT INTO PASSWORDS (ZID, PASSWORD, ROLE) VALUES ("1", "adminPass", "admin")')
 with open(PASSWORD_FILE,'r') as csv_in:
 	reader = csv.reader(csv_in)
 	for zID, password, user_type in reader:
@@ -36,8 +36,13 @@ print("Loading complete.")
 logged_in = {}
 
 def login_user(zID, password, ip_addr):
+	try:
+		int(zID)
+	except:
+		return None
 	results = db_select(DATABASE_FILENAME, 'SELECT PASSWORD, ROLE FROM PASSWORDS WHERE ZID = ' + str(zID))
 	if len(results) == 0:
+		print('No user found with that zID')
 		return None
 	actual_password, role = results[0]
 
