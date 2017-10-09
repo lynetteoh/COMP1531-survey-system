@@ -15,22 +15,26 @@ DATABASE_FILENAME = "data.db"
 ENROLMENTS_FILE = "enrolments.csv"
 PASSWORD_FILE = "passwords.csv"
 
-print("Loading accounts data into database...")
+print("Checking accounts data matches database...")
 #Loading users - done on startup.
 db_execute(DATABASE_FILENAME, 'INSERT INTO PASSWORDS (ZID, PASSWORD, ROLE) VALUES ("1", "adminPass", "admin")')
 with open(PASSWORD_FILE,'r') as csv_in:
+	existing_values = db_select(DATABASE_FILENAME, 'SELECT ZID, PASSWORD, ROLE FROM PASSWORDS')
 	reader = csv.reader(csv_in)
 	for zID, password, user_type in reader:
-		db_execute(DATABASE_FILENAME, 'INSERT INTO PASSWORDS (ZID, PASSWORD, ROLE) VALUES ("{0}", "{1}", "{2}")'.format(
-						zID, password, user_type
-				   ), silent = True)
+		if (int(zID), password, user_type) not in existing_values:
+			db_execute(DATABASE_FILENAME, 'INSERT INTO PASSWORDS (ZID, PASSWORD, ROLE) VALUES ("{0}", "{1}", "{2}")'.format(
+							zID, password, user_type
+					   ))
 #Enrolling students - done on startup.
 with open(ENROLMENTS_FILE,'r') as csv_in:
+	existing_values = db_select(DATABASE_FILENAME, 'SELECT ZID, COURSE, SEMESTER FROM ENROLMENTS')
 	reader = csv.reader(csv_in)
 	for zID, name, semester in reader:
-		db_execute(DATABASE_FILENAME, 'INSERT INTO ENROLMENTS (ZID, COURSE, SEMESTER) VALUES ("{0}", "{1}", "{2}")'.format(
-						zID, name, semester
-				   ), silent = True)
+		if (int(zID), name, semester) not in existing_values:
+			db_execute(DATABASE_FILENAME, 'INSERT INTO ENROLMENTS (ZID, COURSE, SEMESTER) VALUES ("{0}", "{1}", "{2}")'.format(
+							zID, name, semester
+					   ))
 print("Loading complete.")
 
 logged_in = {}

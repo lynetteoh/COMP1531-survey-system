@@ -7,11 +7,13 @@ COURSE_LISTING = 'courses.csv'
 DATABASE_FILENAME = 'data.db'
 
 #Read in courses
-print("Loading courses...")
+print("Checking courses match database...")
 with open(COURSE_LISTING,'r') as csv_in:
+	existing_values = db_select(DATABASE_FILENAME, 'SELECT NAME, SEMESTER FROM COURSES')
 	reader = csv.reader(csv_in)
 	for name, semester in reader:
-		db_execute(DATABASE_FILENAME, 'INSERT INTO COURSES (NAME, SEMESTER) VALUES ("{0}", "{1}")'.format(name, semester), silent = True)
+		if (name, semester) not in existing_values:
+			db_execute(DATABASE_FILENAME, 'INSERT INTO COURSES (NAME, SEMESTER) VALUES ("{0}", "{1}")'.format(name, semester))
 print("Courses loaded.")
 
 def find_course(name, semester):
