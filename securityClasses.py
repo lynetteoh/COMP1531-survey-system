@@ -49,7 +49,10 @@ class Student(User):
 				self._enrolled_courses.pop(c)
 
 	def is_enrolled_in(self, course):
-		return course in self._enrolled_courses
+		for enrolled_course in self._enrolled_courses:
+			if enrolled_course.matches(course.name, course.semester):
+				return True
+		return False
 
 	def has_responded_to(self, filename, survey):
 		result = db_select(filename, """SELECT ID FROM RESPONSES WHERE ZID = {0} AND SURVEYID = {1}""".format(self._zID, survey.id))
