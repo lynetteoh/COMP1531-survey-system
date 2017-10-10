@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block title %} Admin Homepage {% endblock %}
-{% block head %} {% endblock %}
+{% block head %}
+<script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}"> </script>
+{% endblock %}
 
 {% block content %}
 <div id='cssmenu'>
@@ -22,11 +24,13 @@
 			<tr>
 				<th style="font-size: 150%;"> <center> Course </center> </th>
 				<th style="font-size: 150%;"> <center> Semester  </center> </th>
+				<th style="font-size: 150%;"> <center> Open Survey </center> </th>
 			</tr>
 			{% for survey in review_surveys %}
 				<tr>
 					<td style="font-size: 150%;"> {{survey.course.name}}   </td>
 					<td style="font-size: 150%;"> {{survey.course.semester}}   </td>
+					<td style="font-size: 150%;"> <button onclick = "window.location.href = '/open_survey/{{survey.course.name}}/{{survey.course.semester}}'"> Open Survey </button> </td>
 				</tr>
 			{% endfor %}
 			</table>
@@ -48,7 +52,7 @@
 					<td style="font-size: 150%;">
 						<button onclick = "window.location.href = '/metrics/{{survey.course.name}}/{{survey.course.semester}}';"> View Metrics </button>
 					</td>
-					<td style="font-size: 150%;">   <td style="font-size: 150%;">   <button onclick = "window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}'"> Close Survey </button>   </td>
+					<td style="font-size: 150%;">  <button onclick = "if (!date_in_future({{survey.end}})) {window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}';} else { alert('Survey cannot be closed until {{survey.end}}'); }"> Close Survey </button>   </td>
 				</tr>
 			{% endfor %}
 			</table>

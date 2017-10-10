@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block title %} Staff Homepage {% endblock %}
-{% block head %} {% endblock %}
+{% block head %}
+<script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}"> </script>
+{% endblock %}
 
 {% block content %}
 <div id='cssmenu'>
@@ -43,7 +45,7 @@
 				<tr>
 					<td style="font-size: 150%;"> {{survey.course.name}}   </td>
 					<td style="font-size: 150%;">   {{survey.course.semester}}   </td>
-					<td style="font-size: 150%;">   <button onclick = "window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}'"> Close Survey </button>   </td>
+					<td style="font-size: 150%;">   <button onclick = "if (!date_in_future({{survey.end}})) {window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}';} else { alert('Survey cannot be closed until {{survey.end}}'); }"> Close Survey </button>   </td>
 				</tr>
 			{% endfor %}
 			</table>
