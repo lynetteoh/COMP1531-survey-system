@@ -18,7 +18,7 @@ DATABASE_FILENAME = "data.db"
 @app.route("/")
 def index():
 	update(request.remote_addr)
-	return render_template("index.html")
+	return redirect("/login")
 
 @app.route("/login", methods = ["GET", "POST"])
 @app.route("/login/<page>", methods=["GET", "POST"])
@@ -143,7 +143,7 @@ def openSurvey(course, semester):
 	survey = Survey()
 	survey.load_course_from_db(DATABASE_FILENAME, course, semester)
 	db_execute(DATABASE_FILENAME, 'UPDATE SURVEYS SET STATE = "1" WHERE ID = ' + str(survey.id))
-	return redirect('/login')
+	return redirect('/staffHome')
 
 @app.route("/close_survey/<course>/<semester>")
 def closeSurvey(course, semester):
