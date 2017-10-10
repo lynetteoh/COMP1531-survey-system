@@ -2,6 +2,11 @@
 taken from : http://cssmenumaker.com/menu/flat-tabbed-menu
 */
 @import url(http://fonts.googleapis.com/css?family=Raleway);
+#cssmenu img{
+  padding: 0px 100px 0px 25px;
+  float:left;
+}
+
 #cssmenu,
 #cssmenu ul,
 #cssmenu ul li,
@@ -28,15 +33,19 @@ taken from : http://cssmenumaker.com/menu/flat-tabbed-menu
 }
 #cssmenu {
   width: auto;
-  border-bottom: 3px solid transparent;
+  border-bottom: 1px solid transparent;
   font-family: Raleway, sans-serif;
   line-height: 1;
 }
 #cssmenu ul {
-  background: #ffffff;
+  background: #a393ff;
+  padding: 5px;
+
 }
 #cssmenu > ul > li {
-  float: left;
+  float: right;
+
+
 }
 #cssmenu.align-center > ul {
   font-size: 0;
@@ -55,11 +64,11 @@ taken from : http://cssmenumaker.com/menu/flat-tabbed-menu
 }
 #cssmenu > ul > li > a {
   z-index: 2;
-  padding: 18px 25px 12px 25px;
-  font-size: 15px;
+  padding: 12px 25px 12px 25px;
+  font-size: 16px;
   font-weight: 400;
   text-decoration: none;
-  color: #444444;
+  color: #ffffff;
   -webkit-transition: all .2s ease;
   -moz-transition: all .2s ease;
   -ms-transition: all .2s ease;
@@ -70,7 +79,7 @@ taken from : http://cssmenumaker.com/menu/flat-tabbed-menu
 #cssmenu > ul > li.active > a,
 #cssmenu > ul > li:hover > a,
 #cssmenu > ul > li > a:hover {
-  color: black;
+  color: white;
 }
 
 #cssmenu > ul > li > a:after {
@@ -97,6 +106,5 @@ taken from : http://cssmenumaker.com/menu/flat-tabbed-menu
 #cssmenu > ul > li.active > a:after,
 #cssmenu > ul > li:hover > a:after,
 #cssmenu > ul > li > a:hover:after {
-  background: #DBDFFF;
-  color: black;
+  background: #9b8bf4;
 }

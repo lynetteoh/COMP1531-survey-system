@@ -1,21 +1,26 @@
-body{
+
+      /*body{
         background:-webkit-linear-gradient(left top, #DBD6FF,#D6DFFF);
         background:-moz-linear-gradient(left top, #DBD6FF,#D6DFFF);
         background:linear-gradient(left top, #DBD6FF,#D6DFFF);
-      }
+      }*/
 
       button{
-        background-color: #C5B9ED;
+        background-color: #b6aaff;
+        display: inline-block;
         text-align: center;
         font-weight: bold;
         font-size: 16px;
-        border-style: solid;
-        border-color: #C5B9ED;
+        border:none;
         padding-left: 15px;
         padding-right: 15px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+       
       }
 
-      input[type=text], input[type=password]{
+     /*input[type=text], input[type=password]{
         width: 20%;
         padding: 5px;
         margin: 8px 0;
@@ -23,15 +28,16 @@ body{
         border: 1px solid #ccc;
         border-radius: 4px;
         box-sizing: border-box;
-      }
+      }*/
 
       button:hover{
-        background-color: #E3D7FF;
+        background-color: #c1b7ff;
         transition-duration: 0.5s;
-        border-color: #C5B9ED;
+        border:none;       
+        
       }
       
-      a{
+      /*a{
         color: #3344CD;
       }
       
@@ -42,4 +48,4 @@ body{
 
       a:active{
         color: #EE0000;
-      }
+      }*/
