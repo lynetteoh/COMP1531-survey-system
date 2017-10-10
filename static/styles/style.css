@@ -30,13 +30,16 @@ body{
         transition-duration: 0.5s;
         border-color: #C5B9ED;
       }
+      
       a{
         color: #3344CD;
       }
+      
       a:hover{
         text-decoration: none;
         color: #551A8B;
       }
+
       a:active{
         color: #EE0000;
       }
