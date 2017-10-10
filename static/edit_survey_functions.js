@@ -153,6 +153,10 @@ function add_existing_question(questionID){
 		toggleRadio(qNum);
 	}
 
+	if (questionRow.cells[2].getElementsByTagName('p')[0].innerHTML == "Optional"){
+		toggleMandatory(qNum);
+	}
+
 	toggle_view_questions();
 }
 
