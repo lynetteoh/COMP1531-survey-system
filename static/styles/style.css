@@ -10,7 +10,7 @@
         display: inline-block;
         text-align: center;
         font-weight: bold;
-        font-size: 16px;
+        font-size: 14px;
         border:none;
         padding-left: 15px;
         padding-right: 15px;
@@ -35,6 +35,28 @@
         transition-duration: 0.5s;
         border:none;       
         
+      }
+
+      table {
+        margin: 10px auto;
+      }
+
+
+      tr > th{
+        padding:5px 10px 5px 10px;
+        background: #c1b7ff;
+        text-align: center;
+        font-size: 18px;
+      }
+
+      tr > td{
+        padding:3px 15px 5px 15px ;
+        border: 4px solid #fff;
+        background: #f8f8f8;
+        text-align: center;
+        width: auto;
+        font-size: 14px;
+
       }
       
       /*a{
