@@ -46,7 +46,7 @@
 				<tr>
 					<td> {{survey.course.name}}   </td>
 					<td>   {{survey.course.semester}}   </td>
-					<td>   <button onclick = "if (!date_in_future({{survey.end}})) {window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}';} else { alert('Survey cannot be closed until {{survey.end}}'); }"> Close Survey </button>   </td>
+					<td>   <button onclick = "if (!date_in_future('{{survey.end}}')) {window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}';} else { alert('Survey cannot be closed until {{survey.end}}'); }"> Close Survey </button>   </td>
 				</tr>
 			{% endfor %}
 			</table>
