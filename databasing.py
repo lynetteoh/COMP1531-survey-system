@@ -16,7 +16,7 @@ def db_execute(database, expression, silent = False):
 	try:
 		cursorObj.execute(expression)
 	except sqlite3.IntegrityError:
-		pass
+		print('Database execution failed, uniqueness of Primary Keys has been violated >:(')
 	connection.commit()
 	cursorObj.close()
 
