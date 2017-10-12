@@ -17,9 +17,9 @@ def read_all_questions():
 ###DEPRECATED FUNCTION
 def remove_question(id):
 	question = Question()
-	question.load_from_db(QUESTIONS_FILENAME)
+	question.load_from_db(QUESTIONS_FILENAME, id)
 	question.turn_invisible()
-	question.update_db(QUESTIONS_FILENAME)
+	question.update_db(QUESTIONS_FILENAME, id)
 
 #writes question from a form to the questions file
 def write_question(form):
