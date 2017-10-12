@@ -10,20 +10,20 @@
 </ul>
 </div>
 <center>
-<h1 style="font-size: 350%; color: black;"> Select a course </h1>
+<h1 > Select a course </h1>
 </br>
 {% if courses == [] %}
 	<p> No courses are available right now. </p>
 {% else %}
-	<table style = "width: 25%">
+	<table >
 	<tr>
-		<th style="font-size: 150%; text-align: center;">Course &nbsp;&nbsp;&nbsp;</th>
-		<th style="font-size: 150%;">Year/Semester</th>
+		<th >Course &nbsp;&nbsp;&nbsp;</th>
+		<th >Year/Semester</th>
 	</tr >
 	{% for course in courses %}
 	<tr>
-		<td style="font-size: 150%; text-align: center;"><a href = "/create/{{course.name}}/{{course.semester}}">{{course.name}}</a> &nbsp;&nbsp;&nbsp;</td>
-		<td style="text-align: center; font-size: 150%; "> {{course.semester}} </td>
+		<td ><a href = "/create/{{course.name}}/{{course.semester}}">{{course.name}}</a> &nbsp;&nbsp;&nbsp;</td>
+		<td s> {{course.semester}} </td>
 	</tr>
 	{% endfor %}
 	</table>

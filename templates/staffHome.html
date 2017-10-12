@@ -17,54 +17,54 @@
 		<br>
 		<br>
 		{% if review_surveys %}
-			<h3 style="font-size: 200%;"> Surveys in review: </h3>
+			<h2> Surveys in review: </h2>
 			<table>
 			<tr>
-				<th style="font-size: 150%;"> <center> Course: Semester </center> </th>
-				<th style="font-size: 150%;"> <center> Review </center> </th>
-				<th style="font-size: 150%;"> <center> Open Survey </center> </th>
+				<th> <center> Course: Semester </center> </th>
+				<th> <center> Review </center> </th>
+				<th> <center> Open Survey </center> </th>
 			</tr>
 			{% for survey in review_surveys %}
 				<tr>
-					<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
-					<td style="font-size: 150%;"> <button onclick = "window.location.href = '/review/{{survey.course.name}}/{{survey.course.semester}}'"> Review </button> </td>
-					<td style="font-size: 150%;"> <button onclick = "window.location.href = '/open_survey/{{survey.course.name}}/{{survey.course.semester}}'"> Open Survey </button> </td>
+					<td> {{survey.course.name}}: {{survey.course.semester}}   </td>
+					<td> <button onclick = "window.location.href = '/review/{{survey.course.name}}/{{survey.course.semester}}'"> Review </button> </td>
+					<td> <button onclick = "window.location.href = '/open_survey/{{survey.course.name}}/{{survey.course.semester}}'"> Open Survey </button> </td>
 				</tr>
 			{% endfor %}
 			</table>
 		{% endif %}
 
 		{% if active_surveys %}
-			<h3 style="font-size: 200%;"> Active surveys: </h3>
+			<h2> Active surveys: </h2>
 			<table>
 			<tr>
-				<th style="font-size: 150%;"> <center> Course </center> </th>
-				<th style="font-size: 150%;"> <center> Semester  </center> </th>
-				<th style="font-size: 150%;"> <center> Close Survey </center> </th>
+				<th> <center> Course </center> </th>
+				<th> <center> Semester  </center> </th>
+				<th> <center> Close Survey </center> </th>
 			</tr>
 			{% for survey in active_surveys %}
 				<tr>
-					<td style="font-size: 150%;"> {{survey.course.name}}   </td>
-					<td style="font-size: 150%;">   {{survey.course.semester}}   </td>
-					<td style="font-size: 150%;">   <button onclick = "if (!date_in_future({{survey.end}})) {window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}';} else { alert('Survey cannot be closed until {{survey.end}}'); }"> Close Survey </button>   </td>
+					<td> {{survey.course.name}}   </td>
+					<td>   {{survey.course.semester}}   </td>
+					<td>   <button onclick = "if (!date_in_future({{survey.end}})) {window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}';} else { alert('Survey cannot be closed until {{survey.end}}'); }"> Close Survey </button>   </td>
 				</tr>
 			{% endfor %}
 			</table>
 		{% endif %}
 
 		{% if closed_surveys %}
-			<h3 style="font-size: 200%;"> Closed surveys: </h3>
+			<h2> Closed surveys: </h2>
 			<table>
 			<tr>
-				<th style="font-size: 150%;"> <center> Course </center> </th>
-				<th style="font-size: 150%;"> <center> Semester  </center> </th>
-				<th style="font-size: 150%;"> <center> Results </center> </th>
+				<th> <center> Course </center> </th>
+				<th> <center> Semester  </center> </th>
+				<th> <center> Results </center> </th>
 			</tr>
 			{% for survey in closed_surveys %}
 				<tr>
-					<td style="font-size: 150%;"> {{survey.course.name}}   </td>
-					<td style="font-size: 150%;">   {{survey.course.semester}}   </td>
-					<td style="font-size: 150%;">   <button onclick = "window.location.href = '/results/{{survey.course.name}}/{{survey.course.semester}}'"> View Results </button>   </td>
+					<td> {{survey.course.name}}   </td>
+					<td>   {{survey.course.semester}}   </td>
+					<td>   <button onclick = "window.location.href = '/results/{{survey.course.name}}/{{survey.course.semester}}'"> View Results </button>   </td>
 				</tr>
 			{% endfor %}
 			</table>

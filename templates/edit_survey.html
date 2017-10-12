@@ -47,8 +47,8 @@ Start: <input type = "date" id = "start">    End: <input type = "date" id = "end
 		{% for question in saved_questions %}
 		{% if question.get_visible() %}
 		<tr id = "existingQuestion{{question.get_id()}}">
-			<td style = "width: 30%">{{question.get_question_text()}}</td>
-			<td style = "width: 30%">
+			<td >{{question.get_question_text()}}</td>
+			<td>
 				{% if question.get_type() == 'text' %}
 					<p>Text</p>
 				{% else %}
@@ -68,12 +68,12 @@ Start: <input type = "date" id = "start">    End: <input type = "date" id = "end
 				{% endif %}
 			</td>
 			{% if question.get_mandatory() %}
-				<td style = "width: 10%"><p style = "color: #FF0000">Mandatory</p></td>
+				<td><p style = "color: #FF0000">Mandatory</p></td>
 			{% else %}
-				<td style = "width: 10%"><p style = "color: #000000">Optional</p></td>
+				<td><p style = "color: #000000">Optional</p></td>
 			{% endif %}
-			<td style = "width: 15%"> <button onclick="add_existing_question({{question.get_id()}})"> Add</button> </td>
-			<td style = "width: 15%"> <button onclick="delete_existing_question({{question.get_id()}})"> Delete</button> </td>
+			<td> <button onclick="add_existing_question({{question.get_id()}})"> Add</button> </td>
+			<td> <button onclick="delete_existing_question({{question.get_id()}})"> Delete</button> </td>
 		</tr>
 		{% endif %}
 		{% endfor %}

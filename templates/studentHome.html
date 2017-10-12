@@ -17,12 +17,12 @@
 		<br>
 
 		{% if active_surveys %}
-			<h3 style="font-size: 200%;"> Your surveys: </h3>
+			<h2> Your surveys: </h2>
 			<table>
 			{% for survey in active_surveys %}
 				<tr>
-					<td style="font-size: 150%;"> {{survey.course.name}}: {{survey.course.semester}}   </td>
-					<td style="font-size: 150%;"> <button onclick = "window.location.href = '/survey/{{survey.course.name}}/{{survey.course.semester}}'"> Complete </button> </td>
+					<td> {{survey.course.name}}: {{survey.course.semester}}   </td>
+					<td> <button onclick = "window.location.href = '/survey/{{survey.course.name}}/{{survey.course.semester}}'"> Complete </button> </td>
 			{% endfor %}
 			</table>
 		{% endif %}

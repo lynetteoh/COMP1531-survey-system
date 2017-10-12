@@ -66,8 +66,8 @@
 	</tr>
 {% for question in extra_questions %}
 	<tr id = "existingQuestion{{question.get_id()}}">
-		<td style = "width: 30%">{{question.get_question_text()}}</td>
-		<td style = "width: 40%">
+		<td>{{question.get_question_text()}}</td>
+		<td>
 			{% if question.get_type() == 'text' %}
 				<p>Text</p>
 			{% else %}
@@ -86,7 +86,7 @@
 				</div>
 			{% endif %}
 		</td>
-		<td style = "width: 15%"> <button onclick="addQuestion({{question.get_id()}})"> Add </button> </td>
+		<td> <button onclick="addQuestion({{question.get_id()}})"> Add </button> </td>
 	</tr>
 {% endfor %}
 </table>
