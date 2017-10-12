@@ -142,7 +142,7 @@ def openSurvey(course, semester):
 	survey = Survey()
 	survey.load_course_from_db(DATABASE_FILENAME, course, semester)
 	db_execute(DATABASE_FILENAME, 'UPDATE SURVEYS SET STATE = "1" WHERE ID = ' + str(survey.id))
-	return redirect('/staffHome')
+	return redirect('/login')
 
 @app.route("/close_survey/<course>/<semester>")
 def closeSurvey(course, semester):

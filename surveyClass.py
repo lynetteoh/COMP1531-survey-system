@@ -113,6 +113,7 @@ class Survey:
 								""".format(str(max_survey_id + 1), str(self._start), str(self._end), self._course.name, self._course.semester,
 										   str(self._state)))
 
+		i = 1
 		for question in self._questions:
 			exists = False
 			for existing_question in existing_questions:
@@ -124,6 +125,7 @@ class Survey:
 				write_id = question.write_to_db(filename)
 				db_execute(filename, """INSERT INTO INCLUDE (SURVEYID, QUESTIONID)
 										VALUES ("{0}", "{1}", "{2}")""".format(str(max_survey_id + 1), str(write_id), i+1))
+			i += 1
 		
 		return max_survey_id+1
 
