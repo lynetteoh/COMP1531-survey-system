@@ -40,6 +40,7 @@ print("Loading complete.")
 logged_in = {}
 
 def login_user(zID, password, ip_addr):
+	zID = zID.replace('z', '')
 	try:
 		int(zID)
 	except:
