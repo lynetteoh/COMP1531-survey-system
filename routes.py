@@ -36,7 +36,7 @@ def login(page = None):
 @app.route("/adminHome")
 def home():
 	if (not has_access(request.remote_addr, Admin)):
-		return redirect("/login/@2FadminHome")
+		return redirect("/login")
 	update(request.remote_addr)
 
 	review_surveys = get_surveys(state = 0)
@@ -50,7 +50,7 @@ def home():
 @app.route("/studentHome")
 def studentHome():
 	if (not has_access(request.remote_addr, Student)):
-		return redirect("/login/@2FstudentHome")
+		return redirect("/login")
 	update(request.remote_addr)
 
 	user = get_user(request.remote_addr)
@@ -95,13 +95,12 @@ def save_question():
 		return redirect("/login/@2Fcreate")
 	update(request.remote_addr)
 
-	write_question({'questionText': request.form.get('questionText'),
+	return str(write_question({'questionText': request.form.get('questionText'),
 					'options': json.loads(request.form.get('options')),
 					'multi': request.form.get('multi'),
 					'text': request.form.get('text'),
 					'mandatory': request.form.get('mandatory'),
-					'saved_id': request.form.get('saved_id')})
-	return "Question saved successfully!"
+					'saved_id': request.form.get('saved_id')}))
 
 @app.route("/delete_question", methods = ["POST"])
 def delete_question():
@@ -123,7 +122,7 @@ def publish_survey():
 @app.route("/staffHome")
 def staffHome():
 	if (not has_access(request.remote_addr, Staff)):
-		return redirect("/login/@2FstaffHome")
+		return redirect("/login")
 	update(request.remote_addr)
 
 	review_surveys = get_surveys(state = 0)

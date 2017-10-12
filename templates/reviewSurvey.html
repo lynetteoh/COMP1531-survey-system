@@ -29,12 +29,13 @@
 	{% for qNum in range(num_questions) %}
 	<table id = "Question{{survey.questions[qNum].get_id()}}">
 		<tr>
-			<th>Q.{{qNum+1}}: {{ survey.questions[qNum].get_question_text() }}<br>
+			<th style = "text-align: center"><h3>Q.{{qNum+1}}: {{ survey.questions[qNum].get_question_text() }}</h3>
 			{% if survey.questions[qNum].get_mandatory() %}
 				<b>Mandatory</b>
 			{% else %}
 				<b>Optional</b> <button onclick = "deleteQuestion({{survey.questions[qNum].get_id()}})"> Delete </button>
 			{% endif %}
+			<br>
 			{% if survey.questions[qNum].get_type() == 'text' %}
 				<i>Text response</i>
 			{% elif survey.questions[qNum].get_type() == 'multi' %}
@@ -47,7 +48,7 @@
 
 		{% for option in survey.questions[qNum].get_options() %}
 		<tr>
-			<td>{{ option }}</td>
+			<td style="text-align: center">{{ option }}</td>
 		</tr>
 		{% endfor %}
 	</table>

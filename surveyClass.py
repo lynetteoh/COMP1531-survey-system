@@ -63,7 +63,7 @@ class Survey:
 		self._course = find_course(result[3], result[4])
 		self._course.survey = self
 		self._questions = []
-		qids = [x[0] for x in db_select(filename, """SELECT QUESTIONID FROM INCLUDE WHERE SURVEYID = """ + str(id))]
+		qids = [x[0] for x in db_select(filename, """SELECT QUESTIONID FROM INCLUDE WHERE SURVEYID = """ + str(id) + " ORDER BY POSITION")]
 		for qid in qids:
 			newQuestion = Question()
 			newQuestion.load_from_db(filename, qid)
@@ -117,25 +117,17 @@ class Survey:
 			exists = False
 			for existing_question in existing_questions:
 				if not exists and question.matches(existing_question):
-					db_execute(filename, """INSERT INTO INCLUDE (SURVEYID, QUESTIONID)
-											VALUES ("{0}", "{1}")""".format(str(max_survey_id + 1), str(existing_question.get_id())))
+					db_execute(filename, """INSERT INTO INCLUDE (SURVEYID, QUESTIONID, POSITION)
+											VALUES ("{0}", "{1}", "{2}")""".format(str(max_survey_id + 1), str(existing_question.get_id()), i+1))
 					exists = True
 			if not exists:
 				write_id = question.write_to_db(filename)
 				db_execute(filename, """INSERT INTO INCLUDE (SURVEYID, QUESTIONID)
-										VALUES ("{0}", "{1}")""".format(str(max_survey_id + 1), str(write_id)))
+										VALUES ("{0}", "{1}", "{2}")""".format(str(max_survey_id + 1), str(write_id), i+1))
 		
 		return max_survey_id+1
 
 	def update_db(self, filename):
-		storedIds = [x[0] for x in db_select(filename, "SELECT QUESTIONID FROM INCLUDE WHERE SURVEYID = " + str(self._id))]
-		for i in range(min(len(storedIds), len(self._questions))):
-			if storedIds[i] != self._questions[i].get_id():
-				db_execute(filename, 'UPDATE INCLUDE SET QUESTIONID = "{0}" WHERE QUESTIONID = {1} AND SURVEYID = {2}'.format(
-									  self._questions[i].get_id(), storedIds[i], self._id))
-
-		for i in range(len(storedIds), len(self._questions)):
-			db_execute(filename, 'INSERT INTO INCLUDE (SURVEYID, QUESTIONID) VALUES ("{0}", "{1}")'.format(self._id, self._questions[i].get_id()))
-
-		for i in range(len(self._questions), len(storedIds)):
-			db_execute(filename, 'DELETE FROM INCLUDE WHERE SURVEYID = {0} AND QUESTIONID = {1}'.format(self._id, storedIds[i]))
+		db_execute(filename, 'DELETE FROM INCLUDE WHERE SURVEYID = {0}'.format(self._id))
+		for i in range(len(self._questions)):
+			db_execute(filename, 'INSERT INTO INCLUDE (SURVEYID, QUESTIONID, POSITION) VALUES ("{0}", "{1}", "{2}")'.format(self._id, self._questions[i].get_id(), i+1))

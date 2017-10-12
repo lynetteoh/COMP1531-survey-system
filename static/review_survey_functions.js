@@ -9,7 +9,7 @@ function deleteQuestion(question) {
 			count ++;
 		}
 	}
-	var questionText = table.rows[0].cells[0].innerHTML.split("<br>")[0].split(': ')[1];
+	var questionText = table.rows[0].cells[0].getElementsByTagName('h3')[0].innerHTML.split(': ')[1];
 	console.log(questionText);
 	var type = table.rows[0].cells[0].getElementsByTagName("i")[0].innerHTML;
 	console.log(type);
@@ -19,8 +19,8 @@ function deleteQuestion(question) {
 	}
 	console.log(options);
 	table.parentNode.removeChild(table);
-	for (var other_table = count - 1; other_table < tables.length - 1; other_table ++) {
-		tables[other_table].innerHTML.replace("Q." + (other_table + 2) + ":", "Q." + (other_table + 1) + ":");
+	for (var other_table = count - 1; other_table < tables.length; other_table ++) {
+		tables[other_table].innerHTML = tables[other_table].innerHTML.replace("Q." + (other_table + 2) + ":", "Q." + (other_table + 1) + ":");
 	}
 
 	var newRow = document.getElementById('optional_questions').insertRow(document.getElementById('optional_questions').rows.length);
@@ -73,8 +73,8 @@ function addQuestion(question) {
 	table.setAttributeNode(tableId);
 
 	var tableCode = "<tr>\n" +
-	"<th>Q." + (document.getElementById('qspace').getElementsByTagName("table").length + 1) + ": " + questionText + "<br>\n" +
-	"<b>Optional</b> <button onclick = \"deleteQuestion(" + question + ")\"> Delete </button>\n";
+	"<th><center><h3>Q." + (document.getElementById('qspace').getElementsByTagName("table").length + 1) + ": " + questionText + "</h3>\n" +
+	"<b>Optional</b> <button onclick = \"deleteQuestion(" + question + ")\"> Delete </button><br>\n";
 
 	if (type == "Text"){
 		tableCode += "<i>Text response</i>\n";
@@ -84,12 +84,12 @@ function addQuestion(question) {
 		tableCode += "<i>Choose one:</i>\n";
 	}
 
-	tableCode += "</th>\n" +
+	tableCode += "</center></th>\n" +
 	"</tr>\n";
 
 	for (var i = 0; i < options.length; i++){
 		tableCode += "<tr>\n" +
-		"<td>" + options[i] + "</td>\n" +
+		"<td style=\"text-align:center\">" + options[i] + "</td>\n" +
 		"</tr>\n";
 	}
 

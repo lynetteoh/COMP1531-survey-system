@@ -102,7 +102,11 @@ function add_existing_question(questionID){
 
 	var questionRow = document.getElementById('existingQuestion'+questionID);
 	var questionText = questionRow.cells[0].innerHTML;
-	var questionOptions = document.getElementById('Q'+questionID+'Options').getElementsByTagName('li')
+	var questionOptions = [];
+	if (questionRow.cells[1].getElementsByTagName('p')[0].innerHTML != "Text"){
+		questionOptions = document.getElementById('Q'+questionID+'Options').getElementsByTagName('li');
+	}
+	
 
 	questionDiv.innerHTML = "\n" +
 	"<table>\n" +
@@ -155,6 +159,10 @@ function add_existing_question(questionID){
 
 	if (questionRow.cells[2].getElementsByTagName('p')[0].innerHTML == "Optional"){
 		toggleMandatory(qNum);
+	}
+
+	if (questionRow.cells[1].getElementsByTagName('p')[0].innerHTML == "Text"){
+		toggleText(qNum);
 	}
 
 	toggle_view_questions();
@@ -228,7 +236,10 @@ function saveQuestion(question){
 	var questionText = table.rows[0].cells[0].getElementsByTagName("h3")[0].innerHTML;
 	questionText = questionText.substring(("Q." + question + ": ").length, questionText.length);
 
-	var saved_id = table.parentNode.savedID
+	var saved_id = table.parentNode.getAttribute('savedID');
+	if (saved_id == undefined) {
+		saved_id = -1;
+	}
 
 	console.log("QTEXT:", questionText);
 	console.log("OPTIONS:", JSON.stringify(optionList));
@@ -251,7 +262,15 @@ function saveQuestion(question){
 			saved_id: saved_id
 		},
 		success: function callback(response){
-			alert(response);
+			num = parseInt(response);
+			if (!isNaN(num)){
+				alert('Question saved successfully!');
+				var savedID = document.createAttribute("savedID");
+				savedID.value = num;
+				table.parentNode.setAttributeNode(savedID);
+			} else {
+				alert(response);
+			}
 		}
 	});
 }
@@ -555,7 +574,7 @@ function publish_survey(){
 			   end: end},
 		success: function callback(response){
 			if (response == 'Success'){
-				alert('Survey successfully published!\nSurvey can be found at: ' + window.location.hostname + window.location.pathname.replace('/create/', '/survey/'));
+				alert('Survey successfully published!');
 				window.location.href = "/login";
 			} else {
 				alert(response);
