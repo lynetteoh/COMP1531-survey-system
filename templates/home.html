@@ -53,7 +53,7 @@
 					<td>
 						<button onclick = "window.location.href = '/metrics/{{survey.course.name}}/{{survey.course.semester}}';"> View Metrics </button>
 					</td>
-					<td>  <button onclick = "if (!date_in_future('{{survey.end}}')) {window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}';} else { alert('Survey cannot be closed until {{survey.end}}'); }"> Close Survey </button>   </td>
+					<td>  <button onclick = "if (!date_in_future('{{survey.end}}') || today('{{survey.end}}')) {window.location.href = '/close_survey/{{survey.course.name}}/{{survey.course.semester}}';} else { alert('Survey cannot be closed until {{survey.end}}'); }"> Close Survey </button>   </td>
 				</tr>
 			{% endfor %}
 			</table>
