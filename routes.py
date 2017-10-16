@@ -21,22 +21,23 @@ def index():
 	return redirect("/login")
 
 @app.route("/login", methods = ["GET", "POST"])
-@app.route("/login/<page>", methods=["GET", "POST"])
-def login(page = None):
-	if (has_access(request.remote_addr, Admin)):
-		return redirect("/adminHome")
-	if (has_access(request.remote_addr, Student)):
-		return redirect("/studentHome")
-	if (has_access(request.remote_addr, Staff)):
-		return redirect("/staffHome")
+@app.route("/login/<role>/<page>", methods=["GET", "POST"])
+def login(role = None, page = None):
+	if page == None:
+		if (has_access(request.remote_addr, Admin)):
+			return redirect("/adminHome")
+		if (has_access(request.remote_addr, Student)):
+			return redirect("/studentHome")
+		if (has_access(request.remote_addr, Staff)):
+			return redirect("/staffHome")
 	update(request.remote_addr)
 	
-	return login_page(request, page)
+	return login_page(request, role, page)
 
 @app.route("/adminHome")
 def home():
 	if (not has_access(request.remote_addr, Admin)):
-		return redirect("/login")
+		return redirect("/login/Admin/@2FadminHome")
 	update(request.remote_addr)
 
 	review_surveys = get_surveys(state = 0)
@@ -50,7 +51,7 @@ def home():
 @app.route("/studentHome")
 def studentHome():
 	if (not has_access(request.remote_addr, Student)):
-		return redirect("/login")
+		return redirect("/login/Student/@SFstudentHome")
 	update(request.remote_addr)
 
 	user = get_user(request.remote_addr)
@@ -65,7 +66,7 @@ def studentHome():
 @app.route("/create")
 def create():
 	if (not has_access(request.remote_addr, Admin)):
-		return redirect("/login/@2Fcreate")
+		return redirect("/login/Admin/@2Fcreate")
 	update(request.remote_addr)
 
 	return view_courses(request, get_surveys())
@@ -73,7 +74,7 @@ def create():
 @app.route("/review_questions")
 def review_saved_questions():
 	if (not has_access(request.remote_addr, Admin)):
-		return redirect("/login/@2Freview_questions")
+		return redirect("/login/Admin/@2Freview_questions")
 	update(request.remote_addr)
 
 	saved_questions = read_all_questions()
@@ -83,7 +84,7 @@ def review_saved_questions():
 @app.route("/create/<course>/<semester>")
 def edit_survey(course, semester):
 	if (not has_access(request.remote_addr, Admin)):
-		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
+		return redirect("/login/Admin/@2Fcreate@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 
 	saved_questions = read_all_questions()
@@ -92,7 +93,7 @@ def edit_survey(course, semester):
 @app.route("/save_question", methods=["POST"])
 def save_question():
 	if (not has_access(request.remote_addr, Admin, overrideTime = True)):
-		return redirect("/login/@2Fcreate")
+		return redirect("/login/Admin/@2Fcreate")
 	update(request.remote_addr)
 
 	return str(write_question({'questionText': request.form.get('questionText'),
@@ -105,7 +106,7 @@ def save_question():
 @app.route("/delete_question", methods = ["POST"])
 def delete_question():
 	if (not has_access(request.remote_addr, Admin, overrideTime = True)):
-		return redirect("/login/@2Fcreate@2F" + course + "@2F" + semester)
+		return redirect("/login/Admin/@2Fcreate@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 
 	remove_question(request.form.get('id'))
@@ -114,15 +115,16 @@ def delete_question():
 @app.route("/publish_survey", methods = ["POST"])
 def publish_survey():
 	if (not has_access(request.remote_addr, Admin, overrideTime = True)):
-		return redirect("/login/@2Fcreate@2F" + request.form['course'] + "@2F" + request.form['semester'])
+		return redirect("/login/Admin/@2Fcreate@2F" + request.form['course'] + "@2F" + request.form['semester'])
 	update(request.remote_addr)
+
 	response = save_survey(request.form)
 	return response
 
 @app.route("/staffHome")
 def staffHome():
 	if (not has_access(request.remote_addr, Staff)):
-		return redirect("/login")
+		return redirect("/login/Staff/@2FstaffHome")
 	update(request.remote_addr)
 
 	review_surveys = get_surveys(state = 0)
@@ -136,7 +138,7 @@ def staffHome():
 @app.route("/open_survey/<course>/<semester>")
 def openSurvey(course, semester):
 	if (not has_access(request.remote_addr, Staff)):
-		return redirect("/login/@2Fopen_survey@2F" + course + "@2F" + semester)
+		return redirect("/login/Staff/@2Fopen_survey@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 
 	survey = Survey()
@@ -147,7 +149,7 @@ def openSurvey(course, semester):
 @app.route("/close_survey/<course>/<semester>")
 def closeSurvey(course, semester):
 	if (not has_access(request.remote_addr, Staff)):
-		return redirect("/login/@2Fclose_survey@2F" + course + "@2F" + semester)
+		return redirect("/login/Staff/@2Fclose_survey@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 
 	survey = Survey()
@@ -158,7 +160,7 @@ def closeSurvey(course, semester):
 @app.route("/review/<course>/<semester>")
 def reviewSurvey(course, semester):
 	if (not has_access(request.remote_addr, Staff)):
-		return redirect("/login/@2Freview@2F" + course + "@2F" + semester)
+		return redirect("/login/Staff/@2Freview@2F" + course + "@2F" + semester)
 	update(request.remote_addr)
 
 	survey = get_survey(course, semester)
@@ -182,7 +184,7 @@ def reviewSurvey(course, semester):
 @app.route("/commit_review", methods = ["POST"])
 def commit_review():
 	if (not has_access(request.remote_addr, Staff, overrideTime = True)):
-		return redirect("/login/@2Fcommit_review")
+		return redirect("/login/Staff/@2Fcommit_review")
 	update(request.remote_addr)
 
 	print(request.form)
@@ -202,10 +204,19 @@ def commit_review():
 
 @app.route("/survey/<course>/<semester>", methods = ["POST", "GET"])
 def view_survey(course, semester):
-	update(request.remote_addr)
+	if (not has_access(request.remote_addr, Student, overrideTime = True)):
+		return redirect("/login/Student/@2Fsurvey@2F"+course+"@2F"+semester)
 
 	survey = Survey()
 	survey = survey.load_course_from_db(DATABASE_FILENAME, course, semester)
+
+	if (not get_user(request.remote_addr).is_enrolled_in(survey.course)):
+		return redirect("/login/Student/@2Fsurvey@2F"+course+"@2F"+semester)
+	if (user.has_responded_to(DATABASE_FILENAME, survey)):
+		return redirect("/login/Student/@2Fsurvey@2F"+course+"@2F"+semester)
+	update(request.remote_addr)
+
+
 
 	if request.method == "POST":
 		return save_response(DATABASE_FILENAME, survey, request)

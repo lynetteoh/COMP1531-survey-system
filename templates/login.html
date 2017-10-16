@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %} Login {% endblock %}
 {% block head %}
-<link rel="stylesheet" href="static/styles/login.css">
+<link rel="stylesheet" href="/static/styles/login.css">
 <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'>
 {% if attempt %}
 <script>
@@ -14,12 +14,25 @@ window.onload = function() {
 {% block content %}
 <div id='cssmenu'>
 <ul>
-   <li style="float:left;"><img src= "static/image/logo.png"></li>
+   <li style="float:left;"><img src= "/static/image/logo.png"></li>
 </ul>
 </div>
 <center>
 {% if page != None %}
-	<h3>Please login before you can access that page.</h3>
+  {% if role == 'Admin' %}
+    <h3 style="color: #FF0000">You need to be logged in as an Admin to access that page.</h3>
+  {% elif role == 'Staff' %}
+    <h3 style="color: #FF0000">You need to be logged in as a Staff member to access that page.</h3>
+  {% elif role == 'Student' and logged_in_as == 'Student' %}
+    <h3 style="color: #FF0000">You need to be logged in as a Student who is enrolled in that course and has not responded to that survey</h3>
+  {% elif role == 'Student' %}
+    <h3 style="color: #FF0000">You need to be logged in as a Student to access that page.</h3>
+  {% endif %}
+  {% if logged_in_as == 'Staff' %}
+    <p>You can instead <a href = '/staffHome'>return to Staff Dashboard</a></p>
+  {% elif logged_in_as == 'Student' %}
+    <p>You can instead <a href = '/studentHome'>return to Student Dashboard</a></p>
+  {% endif %}
 {% endif %}
 </br>
 <form method = "POST" class="login-form">

@@ -1,12 +1,17 @@
 from flask import Flask, request, render_template, redirect
-from security import login_user
+from security import login_user, has_access
 from securityClasses import Admin, Staff, Student
 
 
-def login_page(request, page):
+def login_page(request, role, page):
 	if request.method == "GET":
 		print(request.args.get('attempt'))
-		return render_template("login.html", page = page, attempt = request.args.get('attempt'))
+		logged_in_as = None
+		if (has_access(request.remote_addr, Student)):
+			logged_in_as = 'Student'
+		if (has_access(request.remote_addr, Staff)):
+			logged_in_as = 'Staff'
+		return render_template("login.html", page = page, role = role, logged_in_as =  logged_in_as, attempt = request.args.get('attempt'))
 	if request.method == "POST":
 		user = login_user(request.form["username"], request.form["password"], request.remote_addr)
 		if user == None:
