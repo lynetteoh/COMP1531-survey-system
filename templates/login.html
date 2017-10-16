@@ -33,6 +33,8 @@ window.onload = function() {
   {% elif logged_in_as == 'Student' %}
     <p>You can instead <a href = '/studentHome'>return to Student Dashboard</a></p>
   {% endif %}
+  <br>
+  <p>You might be getting this error message if you have left yourself logged in for more than half an hour. You will need to login again.</p>
 {% endif %}
 </br>
 <form method = "POST" class="login-form">
