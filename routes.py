@@ -156,9 +156,23 @@ def staffHome():
 		return redirect("/login/Staff/@2FstaffHome")
 	update(request.remote_addr)
 
-	review_surveys = get_surveys(state = 0)
-	active_surveys = get_surveys(state = 1)
-	closed_surveys = get_surveys(state = 2)
+	user = get_user(request.remote_addr)
+
+	all_review_surveys = get_surveys(state = 0)
+	review_surveys = []
+	for survey in all_review_surveys:
+		if (user.is_enrolled_in(survey.course)):
+			review_surveys.append(survey)
+	all_active_surveys = get_surveys(state = 1)
+	active_surveys = []
+	for survey in all_active_surveys:
+		if (user.is_enrolled_in(survey.course)):
+			active_surveys.append(survey)
+	all_closed_surveys = get_surveys(state = 2)
+	closed_surveys = []
+	for survey in all_closed_surveys:
+		if (user.is_enrolled_in(survey.course)):
+			closed_surveys.append(survey)
 	print(request.url_root)
 	root = request.url_root
 	return render_template("staffHome.html", review_surveys = review_surveys, active_surveys = active_surveys,

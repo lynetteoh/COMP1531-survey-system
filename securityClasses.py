@@ -62,8 +62,25 @@ class Student(User):
 
 class Staff(User):
 	#Private functions
-	def __init__(self, zID, password):
+	def __init__(self, zID, password, enrolled_courses = []):
 		super().__init__(zID = zID, password = password)
+		self._enrolled_courses = enrolled_courses
+
+	#Public Functions
+	def enrol(self, course):
+		self._enrolled_courses.append(course)
+
+	def unenrol(self, course):
+		for c in range(len(self._enrolled_courses)):
+			if self._enrolled_courses[c] == course:
+				self._enrolled_courses.pop(c)
+
+	def is_enrolled_in(self, course):
+		for enrolled_course in self._enrolled_courses:
+			if enrolled_course.matches(course.name, course.semester):
+				return True
+		return False
+
 
 class Admin(User):
 	#Private functions

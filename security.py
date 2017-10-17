@@ -55,6 +55,9 @@ def login_user(zID, password, ip_addr):
 		user = Admin(zID, actual_password)
 	elif role == 'staff':
 		user = Staff(zID, actual_password)
+		enrolled_courses = db_select(DATABASE_FILENAME, 'SELECT COURSE, SEMESTER FROM ENROLMENTS WHERE ZID = '+str(zID))
+		for course, semester in enrolled_courses:
+			user.enrol(find_course(course, semester))
 	else:
 		user = Student(zID, actual_password)
 		enrolled_courses = db_select(DATABASE_FILENAME, 'SELECT COURSE, SEMESTER FROM ENROLMENTS WHERE ZID = '+str(zID))
