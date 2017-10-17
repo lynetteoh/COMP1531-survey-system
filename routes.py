@@ -12,6 +12,7 @@ from questionIO import *
 from surveyIO import *
 from save_response import save_response
 from securityClasses import Admin, Staff, Student
+from metrics import get_all_survey_responses
 
 DATABASE_FILENAME = "data.db"
 
@@ -51,7 +52,7 @@ def home():
 @app.route("/studentHome")
 def studentHome():
 	if (not has_access(request.remote_addr, Student)):
-		return redirect("/login/Student/@SFstudentHome")
+		return redirect("/login/Student/@2FstudentHome")
 	update(request.remote_addr)
 
 	user = get_user(request.remote_addr)
@@ -62,6 +63,34 @@ def studentHome():
 			active_surveys.append(survey)
 
 	return render_template("studentHome.html", active_surveys = active_surveys)
+
+@app.route("/studentResults")
+def studentResults():
+	if (not has_access(request.remote_addr, Student)):
+		return redirect("/login/Student/@2FstudentResults")
+	update(request.remote_addr)
+
+	user = get_user(request.remote_addr)
+	all_closed_surveys = get_surveys(state = 2)
+	closed_surveys = []
+	for survey in all_closed_surveys:
+		if user.is_enrolled_in(survey.course):
+			closed_surveys.append(survey)
+
+	return render_template("studentResults.html", closed_surveys = closed_surveys)
+
+@app.route("/results/<course>/<semester>")
+def viewResults(course, semester):
+	if (not (has_access(request.remote_addr, Student) or has_access(request.remote_addr, Staff))):
+		return redirect("/login/Staff/@2Fresults@2F"+course+"@2F"+semester)
+	update(request.remote_addr)
+
+	survey = Survey()
+	survey = survey.load_course_from_db(DATABASE_FILENAME, course, semester)
+
+	responses = get_all_survey_responses(survey)
+
+	return render_template('metrics.html', survey = survey, responses = responses)
 
 @app.route("/create")
 def create():
@@ -204,7 +233,7 @@ def commit_review():
 
 @app.route("/survey/<course>/<semester>", methods = ["POST", "GET"])
 def view_survey(course, semester):
-	if (not has_access(request.remote_addr, Student, overrideTime = True)):
+	if (not has_access(request.remote_addr, Student)):
 		return redirect("/login/Student/@2Fsurvey@2F"+course+"@2F"+semester)
 
 	survey = Survey()
@@ -226,6 +255,20 @@ def view_survey(course, semester):
 	if survey == None:
 		return render_template("surveyFail.html")
 	return render_template("survey.html", survey = survey, numQuestions = numQuestions)
+
+@app.route("/metrics/<course>/<semester>")
+def metrics(course, semester):
+	if (not has_access(request.remote_addr, Admin)):
+		return redirect("/login/Admin/@2Fmetrics@2F"+course+"@2F"+semester)
+	update(request.remote_addr)
+
+	survey = Survey()
+	survey = survey.load_course_from_db(DATABASE_FILENAME, course, semester)
+
+	responses = get_all_survey_responses(survey)
+
+	return render_template('metrics.html', survey = survey, responses = responses)
+
 
 @app.route("/logout")
 def logout_page():

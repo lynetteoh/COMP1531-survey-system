@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %} Metrics for {{survey.course.name}}:{{survey.course.semester}} {% endblock %}
+{% block head %} {% endblock %}
+
+{% block content %}
+<div id='cssmenu'>
+<ul>
+	 <img src= "static/image/logo.png">
+	 <li><a href ='/logout'>Logout</a><li>
+	 <li><a href="{{ url_for('login') }}">Dashboard</a></li>
+</ul>
+</div>
+
+<center>
+	<h1> Metrics for {{survey.course.name}}:{{survey.course.semester}} </h1>
+	<br>
+	<br>
+
+	{% for question in survey.questions %}
+		<h3>{{question.get_question_text()}}</h3>
+		{% if question.get_type() == 'multi' or question.get_type() == 'single' %}
+		<table>
+		<tr>
+			<th>Option</th>
+			<th>Responses</th>
+		</tr>
+		{% for option in question.get_options() %}
+		<tr>
+			<td>{{option}}</td>
+			<td>{{responses[question.get_id()].count(option)}}</td>
+		</tr>
+		{% endfor %}
+		</table>
+		{% elif question.get_type() == 'text' %}
+		<button data-toggle="collapse" data-target="#Q{{question.get_id()}}Responses">Show Responses</button>
+		<br>
+		<div id = "Q{{question.get_id()}}Responses" class="collapse">
+			<table>
+			{% for response in responses[question.get_id()] %}
+			<tr>
+				<td style = "white-space: wrap">{{response}}</td>
+			</tr>
+			{% endfor %}
+			</table>
+		</div>
+		{% endif %}
+	{% endfor %}
+
+	<br>
+	<br>
+	<button onclick="window.location.href='/login'">Home</button>
+
+</center>
+{% endblock %}

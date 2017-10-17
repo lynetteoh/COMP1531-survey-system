@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %} Results {% endblock %}
+{% block head %} {% endblock %}
+
+{% block content %}
+<div id='cssmenu'>
+<ul>
+	 <img src= "static/image/logo.png">
+	 <li><a href ='/logout'>Logout</a><li>
+	 <li><a href="{{ url_for('login') }}">Dashboard</a></li>
+</ul>
+</div>
+
+<center>
+		<h1> Survey Results </h1>
+		<br>
+		<br>
+
+		{% if closed_surveys %}
+			<table>
+			{% for survey in closed_surveys %}
+				<tr>
+					<td> {{survey.course.name}}: {{survey.course.semester}}   </td>
+					<td> <button onclick = "window.location.href = '/results/{{survey.course.name}}/{{survey.course.semester}}'"> View Results </button> </td>
+				</tr>
+			{% endfor %}
+			</table>
+		{% else %}
+			<p> No surveys have closed yet. </p>
+		{% endif %}
+
+		<button onclick = "window.location.href = '/studentHome';"> Dashboard </button>
+{% endblock %}
