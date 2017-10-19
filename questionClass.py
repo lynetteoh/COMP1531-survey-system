@@ -77,7 +77,7 @@ class Question:
 			options = db_select(filename, """SELECT OPTION
 											 FROM OPTIONS
 											 WHERE QUESTIONID = """ + str(id) +
-											 "ORDER BY ID")
+											 " ORDER BY ID")
 		for option in range(len(options)):
 			self._options.append(Option(option, options[option][0]))
 
