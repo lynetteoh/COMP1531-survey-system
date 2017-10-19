@@ -47,6 +47,7 @@ class Student(User):
 		for c in range(len(self._enrolled_courses)):
 			if self._enrolled_courses[c].matches(course.name, course.semester):
 				self._enrolled_courses.pop(c)
+				break
 
 	def is_enrolled_in(self, course):
 		for enrolled_course in self._enrolled_courses:
