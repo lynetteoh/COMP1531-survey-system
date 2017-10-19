@@ -51,6 +51,8 @@ class Student(User):
 				break
 
 	def is_enrolled_in(self, course):
+		if course == None:
+			return False
 		for enrolled_course in self._enrolled_courses:
 			if enrolled_course.matches(course.name, course.semester):
 				return True
