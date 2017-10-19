@@ -76,7 +76,8 @@ class Question:
 		if (not self._text):
 			options = db_select(filename, """SELECT OPTION
 											 FROM OPTIONS
-											 WHERE QUESTIONID = """ + str(id))
+											 WHERE QUESTIONID = """ + str(id) +
+											 "ORDER BY ID")
 		for option in range(len(options)):
 			self._options.append(Option(option, options[option][0]))
 

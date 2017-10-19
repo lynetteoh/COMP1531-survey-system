@@ -123,7 +123,7 @@ class Survey:
 					exists = True
 			if not exists:
 				write_id = question.write_to_db(filename)
-				db_execute(filename, """INSERT INTO INCLUDE (SURVEYID, QUESTIONID)
+				db_execute(filename, """INSERT INTO INCLUDE (SURVEYID, QUESTIONID, POSITION)
 										VALUES ("{0}", "{1}", "{2}")""".format(str(max_survey_id + 1), str(write_id), i+1))
 			i += 1
 		
