@@ -41,7 +41,8 @@ class Student(User):
 
 	#Public Functions
 	def enrol(self, course):
-		self._enrolled_courses.append(course)
+		if course != None:
+			self._enrolled_courses.append(course)
 
 	def unenrol(self, course):
 		for c in range(len(self._enrolled_courses)):
