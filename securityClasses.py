@@ -45,7 +45,7 @@ class Student(User):
 
 	def unenrol(self, course):
 		for c in range(len(self._enrolled_courses)):
-			if self._enrolled_courses[c] == course:
+			if self._enrolled_courses[c].matches(course):
 				self._enrolled_courses.pop(c)
 
 	def is_enrolled_in(self, course):
