@@ -20,7 +20,7 @@ def find_course(name, semester):
 	result = db_select(DATABASE_FILENAME, 'SELECT NAME, SEMESTER FROM COURSES WHERE NAME = "{0}" AND SEMESTER = "{1}"'.format(
 							name, semester
 						))
-	if len(result) == []:
+	if len(result) == 0:
 		return None
 
 	course = Course(name, semester)
