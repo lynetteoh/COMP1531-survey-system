@@ -268,6 +268,7 @@ function saveQuestion(question){
 				var savedID = document.createAttribute("savedID");
 				savedID.value = num;
 				table.parentNode.setAttributeNode(savedID);
+				table.rows[0].cells[0].getElementsByTagName('button')[2].innerHTML = 'Update Question';
 			} else {
 				alert(response);
 			}

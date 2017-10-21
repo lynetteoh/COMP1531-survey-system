@@ -6,7 +6,7 @@ from server import app
 from login import login_page
 from security import has_access, logout, get_user
 from common import update
-from create import view_courses
+from create import view_courses, view_semesters
 import json
 from questionIO import *
 from surveyIO import *
@@ -98,7 +98,15 @@ def create():
 		return redirect("/login/Admin/@2Fcreate")
 	update(request.remote_addr)
 
-	return view_courses(request, get_surveys())
+	return view_semesters(request, get_surveys())
+
+@app.route("/select_course/<semester>")
+def create_course(semester):
+	if (not has_access(request.remote_addr, Admin)):
+		return redirect("/login/Admin/@2Fselect_course@2F"+semester)
+	update(request.remote_addr)
+
+	return view_courses(request, get_surveys(), semester)
 
 @app.route("/review_questions")
 def review_saved_questions():

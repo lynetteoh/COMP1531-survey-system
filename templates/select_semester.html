@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %} Select a course {% endblock %}
+{% block title %} Select a semester {% endblock %}
 {% block head %} {% endblock %}
 
 {% block content %}
@@ -10,20 +10,18 @@
 </ul>
 </div>
 <center>
-<h1 > Select a course </h1>
+<h1 > Select a semester for the survey </h1>
 </br>
-{% if courses == [] %}
+{% if semesters == [] %}
 	<p> No courses are available right now. </p>
 {% else %}
 	<table >
 	<tr>
-		<th >Course &nbsp;&nbsp;&nbsp;</th>
 		<th >Year/Semester</th>
 	</tr >
-	{% for course in courses %}
+	{% for semester in semesters %}
 	<tr>
-		<td ><a href = "/create/{{course.name}}/{{course.semester}}">{{course.name}}</a> &nbsp;&nbsp;&nbsp;</td>
-		<td s> {{course.semester}} </td>
+		<td ><a href = "/select_course/{{semester}}">{{semester}}</a></td>
 	</tr>
 	{% endfor %}
 	</table>
