@@ -144,7 +144,7 @@ class Question:
 								SET QUESTION_TEXT = "{0}", TEXT = "{1}", MULTI = "{2}", MANDATORY = "{3}", VISIBLE = "{4}"
 								WHERE ID = {5}""".format(self._question_text, 1 if self._text else 0, 1 if self._multi else 0,
 									                     1 if self._mandatory else 0, 1 if self._visible else 0, str(id)))
-		current_options = db_select(filename, "SELECT ID, OPTION FROM OPTIONS WHERE QUESTIONID = " + str(id))
+		current_options = db_select(filename, "SELECT ID, OPTION FROM OPTIONS WHERE QUESTIONID = " + str(id) + " ORDER BY ID")
 		if len(current_options) < len(self._options):
 			option_ids = [i[0] for i in db_select(filename, "SELECT ID FROM OPTIONS")]
 			if option_ids == []:
@@ -161,9 +161,11 @@ class Question:
 			else:
 				db_execute(filename, 'INSERT INTO OPTIONS (ID, OPTION, QUESTIONID) VALUES ("{0}", "{1}", "{2}")'.format(
 								 	  str(option - len(current_options) + max_option_id + 1), self._options[option].text, str(id)))
+
 		for i in range(len(self._options), len(current_options)):
 			db_execute(filename, """DELETE FROM OPTIONS
 									WHERE ID = {0}""".format(current_options[i][0]))
+
 		return id;
 
 	def __str__(self):

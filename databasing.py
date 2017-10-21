@@ -5,7 +5,7 @@ silent_prints = 0
 def db_execute(database, expression, silent = False):
 	global silent_prints
 	if not silent:
-		print(' '.join([x.strip() for x in expression.split(' ')]))
+		print(' '.join([x.replace('\n', '').strip() for x in expression.split(' ')]))
 	else:
 		silent_prints += 1
 		if silent_prints % 50 == 0:
@@ -23,7 +23,7 @@ def db_execute(database, expression, silent = False):
 def db_select(database, query, silent = False):
 	global silent_prints
 	if not silent:
-		print(' '.join([x.strip() for x in query.split(' ')]))
+		print(' '.join([x.replace('\n', '').strip() for x in query.split(' ')]))
 	else:
 		silent_prints += 1
 		if silent_prints % 50 == 0:

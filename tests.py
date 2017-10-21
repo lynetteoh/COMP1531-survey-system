@@ -8,7 +8,7 @@ import datetime
 from databasing import db_select, db_execute
 from courses import find_course
 
-DATABASE_FILENAME = "data.db"
+DATABASE_FILENAME = "test_data.db"
 
 class test_question(unittest.TestCase):
 	def set_up(self):
@@ -126,6 +126,29 @@ class test_question(unittest.TestCase):
 
 		self.assertEqual(question.get_mandatory(), False)
 
+	def test_create_text_question_no_options(self):
+		question = Question()
+
+		data = {
+			'questionText': 'Example text',
+			'multi': 'false',
+			'options': [],
+			'text': 'true',
+			'mandatory': 'false'
+		}
+
+		question.load_from_dict(data)
+
+		write_id = question.write_to_db(DATABASE_FILENAME)
+
+		question = None
+
+		question = Question()
+		question.load_from_db(DATABASE_FILENAME, write_id)
+
+		self.assertEqual(question.get_type(), 'text')
+		self.assertEqual(question.get_options(), [])
+
 	
 
 class test_login(unittest.TestCase):
@@ -197,6 +220,32 @@ class test_login(unittest.TestCase):
 		self.assertEqual(user, None)
 		self.assertEqual(has_access('localhost', Admin), False)
 
+	def test_admin_level_of_access(self):
+		logout('localhost')
+
+		user = login_user('z1', 'adminPass', 'localhost')
+		self.assertEqual(has_access('localhost', Student), True)
+		self.assertEqual(has_access('localhost', Staff), True)
+		self.assertEqual(has_access('localhost', Admin), True)
+
+	def test_staff_level_of_access(self):
+		logout('localhost')
+
+		user = login_user('z50', 'staff670', 'localhost')
+		self.assertEqual(has_access('localhost', Student), False)
+		self.assertEqual(has_access('localhost', Staff), True)
+		self.assertEqual(has_access('localhost', Admin), False)
+
+	def test_student_level_of_access(self):
+		logout('localhost')
+
+		user = login_user('z100', 'student228', 'localhost')
+		self.assertEqual(has_access('localhost', Student), True)
+		self.assertEqual(has_access('localhost', Staff), False)
+		self.assertEqual(has_access('localhost', Admin), False)
+
+
+
 class test_survey(unittest.TestCase):
 	def set_up(self):
 		pass
@@ -236,6 +285,63 @@ class test_survey(unittest.TestCase):
 		self.assertEqual(survey.course.semester, '17s2')
 		self.assertEqual(survey.start, datetime.date(2017,10,25))
 		self.assertEqual(survey.questions[0].get_question_text(), 'Example text')
+
+	def test_survey_correct_ordered_questions(self):
+		survey = Survey()
+
+		data = {
+			'course': 'COMP1531',
+			'semester': '17s2',
+			'start': '2017-10-25',
+			'end': '2017-10-26',
+			'surveyData': json.dumps([
+				{
+					'questionNum': -1,
+					'questionText': 'Example text',
+					'multi': 'false',
+					'options': ['yes', 'no'],
+					'text': 'false',
+					'mandatory': 'true'
+				},
+				{
+					'questionNum': -1,
+					'questionText': 'Example text 2',
+					'multi': 'false',
+					'options': ['yes', 'no'],
+					'text': 'false',
+					'mandatory': 'true'
+				}
+			])
+		}
+
+		survey.load_from_dict(data)
+
+		question1Dict = {
+			'questionNum': -1,
+			'questionText': 'Example text',
+			'multi': 'false',
+			'options': ['yes', 'no'],
+			'text': 'false',
+			'mandatory': 'true'
+		}
+
+		question2Dict = {
+			'questionNum': -1,
+			'questionText': 'Example text 2',
+			'multi': 'false',
+			'options': ['yes', 'no'],
+			'text': 'false',
+			'mandatory': 'true'
+		}
+
+		question1 = Question()
+		question1.load_from_dict(question1Dict)
+
+		question2 = Question()
+		question2.load_from_dict(question2Dict)
+
+		self.assertEqual(survey.questions[0].matches(question1), True)
+		self.assertEqual(survey.questions[1].matches(question2), True)
 
 	def test_save_survey(self):
 		survey = Survey()
@@ -290,7 +396,7 @@ class enrol_student(unittest.TestCase):
 		self.assertEqual(user.is_enrolled_in(course), True)
 
 
-	def test_update_enrollment(self):
+	def test_cancel_enrollment(self):
 		user = login_user('z100', 'student228', 'localhost')
 		course = find_course('COMP1531', '17s2')
 		user.unenrol(course)
@@ -299,7 +405,7 @@ class enrol_student(unittest.TestCase):
 
 	def test_fail_enrollment(self):
 		user = login_user('z100', 'student228', 'localhost')
-		course = find_course('COMP15610', '17s2')
+		course = find_course('COMP15610', '17s2') #Course does not exist
 		user.enrol(course)
 
 		self.assertEqual(course, None)
@@ -343,12 +449,12 @@ class test_update_question(unittest.TestCase):
 		question.load_from_dict(data)
 
 
-		self.assertEqual(question.get_visible(), True)
+		self.assertEqual(question.get_visible(), True) #A new question will always be visible
 		question.turn_invisible()
 		self.assertEqual(question.get_visible(), False)
 
 
-	def test_edit_question(self):
+	def test_edit_saved_question(self):
 		question = Question()
 
 		data = {
@@ -370,10 +476,10 @@ class test_update_question(unittest.TestCase):
 		data = {
 			'questionNum': write_id,
 			'questionText': 'Example other text',
-			'multi': 'false',
-			'options': ['yes', 'no'],
+			'multi': 'true',
+			'options': ['maybe', 'not'],
 			'text': 'false',
-			'mandatory': 'false'
+			'mandatory': 'true'
 		}
 
 		question.load_from_dict(data)
@@ -387,6 +493,12 @@ class test_update_question(unittest.TestCase):
 
 		self.assertNotEqual(question.get_question_text(), 'Example text')
 		self.assertEqual(question.get_question_text(), 'Example other text')
+		self.assertNotEqual(question.get_type(), 'single')
+		self.assertEqual(question.get_type(), 'multi')
+		self.assertNotEqual(question.get_options(), ['yes', 'no'])
+		self.assertEqual(question.get_options(), ['maybe', 'not'])
+		self.assertNotEqual(question.get_mandatory(), False)
+		self.assertEqual(question.get_mandatory(), True)
 
 	def test_edit_question_type(self):
 		question = Question()
