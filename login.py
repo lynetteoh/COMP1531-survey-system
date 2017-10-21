@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect
 from security import login_user, has_access
-from securityClasses import Admin, Staff, Student
+from securityClasses import Admin, Staff, Student, Guest
 
 
 def login_page(request, role, page):
@@ -30,7 +30,7 @@ def login_page(request, role, page):
 			if page:
 				return redirect(page.replace("@2F", "/"))
 			return redirect("/staffHome") #Staff Homepage
-		elif type(user) is Student:
+		elif type(user) is Student or type(user) is Guest:
 			if page:
 				return redirect(page.replace("@2F", "/"))
 			return redirect("/studentHome") #Student Homepage

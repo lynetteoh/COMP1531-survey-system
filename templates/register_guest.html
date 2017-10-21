@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %} Register as Guest {% endblock %}
+{% block head %}
+{% if register_success %}
+<script>
+  window.onload = function() {
+    window.alert("The registration has been sent to the Admin for verification.");
+    window.location.href = '/login';
+  }
+</script>
+{% endif %}
+{% endblock %}
+{% block content %}
+<div id='cssmenu'>
+<ul>
+   <li style="float:left;"><img src= "/static/image/logo.png"></li>
+</ul>
+</div>
+<center>
+<h1> Register as Guest User</h1>
+<br>
+<form method = "POST">
+<h3>Username (Must be a number that is not a registered zID):</h3>
+<input type = "text" name = "username">
+{% if bad_username %}
+<p style = 'color: #FF0000'>That zID already exists</p>
+{% endif %}
+<h3>Password:</h3>
+<input type = "password" name = "password">
+<h3>Desired Course, including semester:</h3>
+<input type = "text" name = "course">
+<p>(Eg. COMP1531:17s2)</p>
+{% if bad_course %}
+<p style = 'color: #FF0000'>That course does not exist</p>
+{% endif %}
+<br>
+<button type = "submit" name = "Submit">Submit request</button>
+</form>
+</center>
+{% endblock %}

@@ -64,6 +64,37 @@ class Student(User):
 			return True
 		return False
 
+class Guest(User):
+	#Private Functions
+	def __init__(self, zID, password, enrolled_courses = []):
+		super().__init__(zID = zID, password = password)
+		self._enrolled_courses = enrolled_courses
+
+	#Public Functions
+	def enrol(self, course):
+		if course != None:
+			self._enrolled_courses.append(course)
+
+	def unenrol(self, course):
+		for c in range(len(self._enrolled_courses)):
+			if self._enrolled_courses[c].matches(course.name, course.semester):
+				self._enrolled_courses.pop(c)
+				break
+
+	def is_enrolled_in(self, course):
+		if course == None:
+			return False
+		for enrolled_course in self._enrolled_courses:
+			if enrolled_course.matches(course.name, course.semester):
+				return True
+		return False
+
+	def has_responded_to(self, filename, survey):
+		result = db_select(filename, """SELECT ID FROM RESPONSES WHERE ZID = {0} AND SURVEYID = {1}""".format(self._zID, survey.id))
+		if len(result) > 0:
+			return True
+		return False
+
 class Staff(User):
 	#Private functions
 	def __init__(self, zID, password, enrolled_courses = []):

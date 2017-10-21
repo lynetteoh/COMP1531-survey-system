@@ -4,7 +4,7 @@
 from flask import Flask, redirect, render_template, request, url_for
 from server import app
 from login import login_page
-from security import has_access, logout, get_user
+from security import has_access, logout, get_user, guest_register, get_pending_guests, approve_guest, deny_guest
 from common import update
 from create import view_courses, view_semesters
 import json
@@ -13,6 +13,7 @@ from surveyIO import *
 from save_response import save_response
 from securityClasses import Admin, Staff, Student
 from metrics import get_all_survey_responses
+from courses import find_course
 
 DATABASE_FILENAME = "data.db"
 
@@ -35,19 +36,31 @@ def login(role = None, page = None):
 	
 	return login_page(request, role, page)
 
-@app.route("/adminHome")
+@app.route("/adminHome", methods = ["GET", "POST"])
 def home():
 	if (not has_access(request.remote_addr, Admin)):
 		return redirect("/login/Admin/@2FadminHome")
 	update(request.remote_addr)
 
+	guest_was_approved = None
+
+	if request.method == "POST":
+		if request.form.get('approve'):
+			approve_guest(request.form.get('approve'))
+			guest_was_approved = True
+		elif request.form.get('deny'):
+			deny_guest(request.form.get('deny'))
+			guest_was_approved = False
+
+	pending_guests = get_pending_guests()
 	review_surveys = get_surveys(state = 0)
 	active_surveys = get_surveys(state = 1)
 	closed_surveys = get_surveys(state = 2)
 	print(request.url_root)
 	root = request.url_root
 	return render_template("home.html", review_surveys = review_surveys, active_surveys = active_surveys,
-		                                closed_surveys = closed_surveys, root = root)
+		                                closed_surveys = closed_surveys, root = root, pending_guests = pending_guests,
+		                                guest_was_approved = guest_was_approved)
 
 @app.route("/studentHome")
 def studentHome():
@@ -63,6 +76,30 @@ def studentHome():
 			active_surveys.append(survey)
 
 	return render_template("studentHome.html", active_surveys = active_surveys)
+
+@app.route("/registerGuest", methods = ['GET', 'POST'])
+def register_guest():
+	if request.method == 'GET':
+		return render_template("register_guest.html", bad_username=False, bad_course=False, register_success=False)
+
+	zID = int(request.form.get('username').replace('z',''))
+	password = request.form.get('password')
+	try:
+		course = find_course(request.form.get('course').split(':')[0].upper(),
+							 request.form.get('course').split(':')[1].lower())
+	except IndexError:
+		course = None
+
+	existing_zIDs = [int(x[0]) for x in db_select(DATABASE_FILENAME, 'SELECT ZID FROM PASSWORDS')]
+	bad_username = True if zID in existing_zIDs else False
+	bad_course = True if course == None else False
+
+	if bad_username or bad_course:
+		return render_template("register_guest.html", bad_username=bad_username, bad_course=bad_course, register_success=False)
+
+	guest_register(zID, password, course)
+	return render_template("register_guest.html", bad_username=bad_username, bad_course=bad_course, register_success=True)
+
 
 @app.route("/studentResults")
 def studentResults():

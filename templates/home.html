@@ -2,6 +2,19 @@
 {% block title %} Admin Homepage {% endblock %}
 {% block head %}
 <script src = "{{ url_for('static', filename = 'edit_survey_functions.js') }}"> </script>
+{% if guest_was_approved %}
+<script>
+	window.onload = function() {
+		alert("Guest was successfully approved!");
+	}
+</script>
+{% elif guest_was_approved == False %}
+<script>
+	window.onload = function() {
+		alert("Guest was denied.");
+	}
+</script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -18,7 +31,28 @@
 		<p> <button onclick = "window.location.href = '/review_questions'" style="font-size: 150%" >Review saved questions </button> </p>
 		<p> <button onclick = "window.location.href='/create'" style="font-size: 150%" >Create a new survey </button> <p>
 		<br>
+		{% if pending_guests %}
+		<h2> Guest Account Requests: </h2>
+		<table>
 		<tr>
+			<th> <center> ID </center> </th>
+			<th> <center> Course:Semester </center> </th>
+			<th> <center> Approve </center> </th>
+			<th> <center> Deny </center> </th>
+		</tr>
+		<form method = "POST">
+		{% for guest in pending_guests %}
+		<tr>
+			<td> {{ guest[0] }} </td>
+			<td> {{ guest[1].name }}:{{ guest[1].semester }} </td>
+			<td> <button type = "submit" name = "approve" value = "{{ guest[0] }}">Approve</button> </td>
+			<td> <button type = "submit" name = "deny" value = "{{ guest[0] }}">Deny</button> </td>
+		</tr>
+		{% endfor %}
+		</form>
+		</table>
+		{% endif %}
+
 		{% if review_surveys %}
 			<h2> Surveys in review: </h2>
 			<table>

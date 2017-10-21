@@ -5,7 +5,7 @@
 import time
 from flask import redirect
 from courses import find_course
-from securityClasses import Student, Staff, Admin
+from securityClasses import Student, Staff, Admin, Guest
 from databasing import db_select, db_execute
 import sqlite3
 import csv
@@ -39,6 +39,31 @@ print("Loading complete.")
 
 logged_in = {}
 
+def guest_register(zID, password, course):
+	db_execute(DATABASE_FILENAME, 'INSERT INTO PASSWORDS (ZID, PASSWORD, ROLE) VALUES ("{0}", "{1}", "{2}")'.format(
+							zID, password, 'pending:'+course.name+':'+course.semester))
+
+def get_pending_guests():
+	users = db_select(DATABASE_FILENAME, 'SELECT ZID, ROLE FROM PASSWORDS')
+	guests = []
+	for user in users:
+		if user[1].startswith('pending'):
+			guests.append([int(user[0]), find_course(user[1].split(':')[1], user[1].split(':')[2])])
+
+	return guests
+
+
+def approve_guest(zID):
+	role = db_select(DATABASE_FILENAME, 'SELECT ROLE FROM PASSWORDS WHERE ZID = '+str(zID))[0][0]
+	db_execute(DATABASE_FILENAME, 'UPDATE PASSWORDS SET ROLE = "guest" WHERE ZID = ' + str(zID))
+	db_execute(DATABASE_FILENAME, 'INSERT INTO ENROLMENTS (ZID, COURSE, SEMESTER) VALUES ("{0}", "{1}", "{2}")'.format(
+						zID, role.split(':')[1], role.split(':')[2]
+					))
+
+def deny_guest(zID):
+	db_execute(DATABASE_FILENAME, 'DELETE FROM PASSWORDS WHERE ZID = ' + str(zID))
+
+
 def login_user(zID, password, ip_addr):
 	zID = zID.replace('z', '')
 	try:
@@ -58,8 +83,13 @@ def login_user(zID, password, ip_addr):
 		enrolled_courses = db_select(DATABASE_FILENAME, 'SELECT COURSE, SEMESTER FROM ENROLMENTS WHERE ZID = '+str(zID))
 		for course, semester in enrolled_courses:
 			user.enrol(find_course(course, semester))
-	else:
+	elif role == 'student':
 		user = Student(zID, actual_password)
+		enrolled_courses = db_select(DATABASE_FILENAME, 'SELECT COURSE, SEMESTER FROM ENROLMENTS WHERE ZID = '+str(zID))
+		for course, semester in enrolled_courses:
+			user.enrol(find_course(course, semester))
+	elif role == 'guest':
+		user = Guest(zID, actual_password)
 		enrolled_courses = db_select(DATABASE_FILENAME, 'SELECT COURSE, SEMESTER FROM ENROLMENTS WHERE ZID = '+str(zID))
 		for course, semester in enrolled_courses:
 			user.enrol(find_course(course, semester))
@@ -67,13 +97,16 @@ def login_user(zID, password, ip_addr):
 	if user.login(zID, password):
 		logged_in[ip_addr] = user
 		print(zID, "logged in", "["+str(time.time())+"]",
-			  "(Admin)" if type(user) == Admin else ("(Student)" if type(user) == Student else "(Staff)"))
+			  {Admin: 'Admin', Student: 'Student', Staff: 'Staff', Guest: 'Guest'}[type(user)])
 		return user
 	return None
 
 def has_access(ip_addr, level, overrideTime = False):
 	if ip_addr in logged_in:
 		if level == type(logged_in[ip_addr]) or type(logged_in[ip_addr]) == Admin:
+			if overrideTime or logged_in[ip_addr].last_activity >= time.time() - 1800: #30 mins after last action
+				return True
+		if level == Student and type(logged_in[ip_addr]) == Guest: #Special case as Guests have same priveleges as Student
 			if overrideTime or logged_in[ip_addr].last_activity >= time.time() - 1800: #30 mins after last action
 				return True
 	return False
@@ -89,7 +122,8 @@ def update_time(ip_addr):
 
 def logout(ip_addr):
 	if ip_addr in logged_in:
-		print(zID, "logged out", "["+str(time.time())+"]",
-			  "(Admin)" if type(logged_in[ip_addr]) == Admin else ("(Student)" if type(logged_in[ip_addr]) == Student else "(Staff)"))
+		user = logged_in[ip_addr]
+		print(user.zID, "logged out", "["+str(time.time())+"]",
+			  {Admin: 'Admin', Student: 'Student', Staff: 'Staff', Guest: 'Guest'}[type(user)])
 		logged_in.pop(ip_addr)
 	return redirect('/login')

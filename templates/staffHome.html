@@ -16,6 +16,11 @@
 		<h1> Staff Homepage </h1>
 		<br>
 		<br>
+
+		{% if not review_surveys and not active_surveys and not closed_surveys %}
+			<p>There are no surveys for your course(s). Please contact the administrator to register for lecturing a course or request a new survey.</p>
+		{% endif %}
+
 		{% if review_surveys %}
 			<h2> Surveys in review: </h2>
 			<table>

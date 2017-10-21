@@ -25,6 +25,8 @@
 					<td> <button onclick = "window.location.href = '/survey/{{survey.course.name}}/{{survey.course.semester}}'"> Complete </button> </td>
 			{% endfor %}
 			</table>
+		{% else %}
+			<p>There are no surveys for you to respond to.</p>
 		{% endif %}
 
 		<button onclick = "window.location.href = '/studentResults';"> View Closed Survey Results </button>
