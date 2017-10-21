@@ -267,7 +267,12 @@ function saveQuestion(question){
 			saved_id: saved_id,
 		},
 		success: function callback(response){
-			alert(response);
+			num = parseInt(response);
+			if (!isNaN(num)){
+				alert('Question saved successfully!');
+			} else {
+				alert(response);
+			}
 			window.location.reload(true);
 		}
 	});
