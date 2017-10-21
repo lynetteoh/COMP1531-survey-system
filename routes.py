@@ -258,16 +258,16 @@ def view_survey(course, semester):
 	if (not has_access(request.remote_addr, Student)):
 		return redirect("/login/Student/@2Fsurvey@2F"+course+"@2F"+semester)
 
+	user = get_user(request.remote_addr)
+
 	survey = Survey()
 	survey = survey.load_course_from_db(DATABASE_FILENAME, course, semester)
 
-	if (not get_user(request.remote_addr).is_enrolled_in(survey.course)):
+	if (not user.is_enrolled_in(survey.course)):
 		return redirect("/login/Student/@2Fsurvey@2F"+course+"@2F"+semester)
 	if (user.has_responded_to(DATABASE_FILENAME, survey)):
 		return redirect("/login/Student/@2Fsurvey@2F"+course+"@2F"+semester)
 	update(request.remote_addr)
-
-
 
 	if request.method == "POST":
 		return save_response(DATABASE_FILENAME, survey, request)
