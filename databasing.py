@@ -1,11 +1,12 @@
 import sqlite3
 
 silent_prints = 0
+import re
 
 def db_execute(database, expression, silent = False):
 	global silent_prints
 	if not silent:
-		print(' '.join([x.replace('\n', '').strip() for x in expression.split(' ')]))
+		print(re.sub('\s+', ' ', expression))
 	else:
 		silent_prints += 1
 		if silent_prints % 50 == 0:
@@ -23,7 +24,7 @@ def db_execute(database, expression, silent = False):
 def db_select(database, query, silent = False):
 	global silent_prints
 	if not silent:
-		print(' '.join([x.replace('\n', '').strip() for x in query.split(' ')]))
+		print(re.sub('\s+', ' ', query))
 	else:
 		silent_prints += 1
 		if silent_prints % 50 == 0:

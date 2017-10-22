@@ -17,7 +17,8 @@ PASSWORD_FILE = "passwords.csv"
 
 print("Checking accounts data matches database...")
 #Loading users - done on startup.
-db_execute(DATABASE_FILENAME, 'INSERT INTO PASSWORDS (ZID, PASSWORD, ROLE) VALUES ("1", "adminPass", "admin")')
+if not db_select(DATABASE_FILENAME, 'SELECT * FROM PASSWORDS WHERE ZID = "1"'):
+	db_execute(DATABASE_FILENAME, 'INSERT INTO PASSWORDS (ZID, PASSWORD, ROLE) VALUES ("1", "adminPass", "admin")')
 with open(PASSWORD_FILE,'r') as csv_in:
 	existing_values = db_select(DATABASE_FILENAME, 'SELECT ZID, PASSWORD, ROLE FROM PASSWORDS')
 	reader = csv.reader(csv_in)
