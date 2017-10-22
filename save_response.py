@@ -1,7 +1,6 @@
 from flask import Flask, request, redirect
 from databasing import db_select, db_execute
 from security import get_user
-import os
 
 def save_response(filename, survey, request):
 	user = get_user(request.remote_addr)
