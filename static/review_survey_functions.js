@@ -119,7 +119,8 @@ function updateSurvey() {
 			   semester: semester,
 			   course: course},
 		success: function callback(response){
-			window.location.href = '/adminHome';
+			alert("Survey has been updated.")
+			window.location.href = '/login';
 		}
 	});
 }
