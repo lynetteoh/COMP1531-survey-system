@@ -3,6 +3,7 @@
 #Exports only function login_success
 
 import time
+from datetime import datetime
 from flask import redirect
 from courses import find_course
 from securityClasses import Student, Staff, Admin, Guest
@@ -97,7 +98,7 @@ def login_user(zID, password, ip_addr):
 
 	if user.login(zID, password):
 		logged_in[ip_addr] = user
-		print(zID, "logged in", "["+str(time.time())+"]",
+		print(zID, "logged in", "["+str(datetime.now())+"]",
 			  {Admin: 'Admin', Student: 'Student', Staff: 'Staff', Guest: 'Guest'}[type(user)])
 		return user
 	return None
@@ -124,7 +125,7 @@ def update_time(ip_addr):
 def logout(ip_addr):
 	if ip_addr in logged_in:
 		user = logged_in[ip_addr]
-		print(user.zID, "logged out", "["+str(time.time())+"]",
+		print(user.zID, "logged out", "["+str(datetime.now())+"]",
 			  {Admin: 'Admin', Student: 'Student', Staff: 'Staff', Guest: 'Guest'}[type(user)])
 		logged_in.pop(ip_addr)
 	return redirect('/login')
