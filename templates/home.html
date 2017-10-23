@@ -65,7 +65,7 @@
 				<tr>
 					<td> {{survey.course.name}}   </td>
 					<td> {{survey.course.semester}}   </td>
-					<td> <button onclick = "window.location.href = '/open_survey/{{survey.course.name}}/{{survey.course.semester}}'"> Open Survey </button> </td>
+					<td> <button onclick = "if (!date_in_future('{{survey.start}}') || today('{{survey.start}}')) {window.location.href = '/open_survey/{{survey.course.name}}/{{survey.course.semester}}';} else { alert('Survey cannot be opened until {{survey.start}}'); }"> Open Survey </button> </td>
 				</tr>
 			{% endfor %}
 			</table>

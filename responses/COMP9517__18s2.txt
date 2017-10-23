@@ -1,9 +1,0 @@
-New Response
-New Response
-Q1    O3
-Q2    O3
-Q3    O3
-New Response
-Q1    O2
-Q2    O2
-Q3    O3
