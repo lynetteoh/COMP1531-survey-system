@@ -8,11 +8,13 @@ import datetime
 from databasing import db_select, db_execute
 from courses import find_course
 
+from create_db import create_db
 DATABASE_FILENAME = "test_data.db"
+
 
 class test_question(unittest.TestCase):
 	def set_up(self):
-		pass
+		create_db(DATABASE_FILENAME)
 
 	def test_values_read_from_dictionary(self):
 		
@@ -154,7 +156,7 @@ class test_question(unittest.TestCase):
 class test_login(unittest.TestCase):
 
 	def set_up(self):
-		pass
+		create_db(DATABASE_FILENAME)
 
 	def test_admin_login(self):
 		user = login_user('z1', 'adminPass', 'localhost')
@@ -248,7 +250,7 @@ class test_login(unittest.TestCase):
 
 class test_survey(unittest.TestCase):
 	def set_up(self):
-		pass
+		create_db(DATABASE_FILENAME)
 
 	def test_add_question_survey(self):
 		survey = Survey()
@@ -386,7 +388,7 @@ class test_survey(unittest.TestCase):
 
 class enrol_student(unittest.TestCase):
 	def set_up(self):
-		pass
+		create_db(DATABASE_FILENAME)
 	
 	def test_enrol_student(self):
 		user = login_user('z100', 'student228', 'localhost')
@@ -413,7 +415,7 @@ class enrol_student(unittest.TestCase):
 
 class test_update_question(unittest.TestCase):
 	def set_up():
-		pass
+		create_db(DATABASE_FILENAME)
 
 	def test_add_option(self):
 
@@ -519,21 +521,6 @@ class test_update_question(unittest.TestCase):
 		self.assertEqual(question.get_type(), 'multi')
 		question.toggle_multi()
 		self.assertEqual(question.get_type(), 'single')
-
-
-
-
-
-
-		
-		
-		
-
-
-
-
-	
-	
 
 
 

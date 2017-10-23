@@ -1,6 +1,10 @@
 #Routing program
 #Used to route websites.
 
+from create_db import create_db
+DATABASE_FILENAME = "data.db"
+create_db(DATABASE_FILENAME)
+
 from flask import Flask, redirect, render_template, request, url_for
 from server import app
 from login import login_page
@@ -15,7 +19,6 @@ from securityClasses import Admin, Staff, Student
 from metrics import get_all_survey_responses
 from courses import find_course
 
-DATABASE_FILENAME = "data.db"
 
 @app.route("/")
 def index():
