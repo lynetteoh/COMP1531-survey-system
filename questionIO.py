@@ -9,7 +9,6 @@ def read_all_questions():
 	for questionID in [i[0] for i in db_select(QUESTIONS_FILENAME, "SELECT ID FROM QUESTIONS")]:
 		question = Question()
 		question.load_from_db(QUESTIONS_FILENAME, questionID)
-		print(question)
 		question_list.append(question)
 	return question_list
 

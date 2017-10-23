@@ -6,7 +6,6 @@ from flask import request
 SURVEY_FILENAME = "data.db"
 
 def save_survey(survey_data):
-	print("!!!")
 	if (get_survey(survey_data['course'], survey_data['semester']) != None):
 		return 'Survey for that semester already exists'
 

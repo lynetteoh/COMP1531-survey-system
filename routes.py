@@ -59,7 +59,6 @@ def home():
 	review_surveys = get_surveys(state = 0)
 	active_surveys = get_surveys(state = 1)
 	closed_surveys = get_surveys(state = 2)
-	print(request.url_root)
 	root = request.url_root
 	return render_template("home.html", review_surveys = review_surveys, active_surveys = active_surveys,
 		                                closed_surveys = closed_surveys, root = root, pending_guests = pending_guests,
@@ -221,7 +220,7 @@ def staffHome():
 	for survey in all_closed_surveys:
 		if (user.is_enrolled_in(survey.course)):
 			closed_surveys.append(survey)
-	print(request.url_root)
+
 	root = request.url_root
 	return render_template("staffHome.html", review_surveys = review_surveys, active_surveys = active_surveys,
 		                                	 closed_surveys = closed_surveys, root = root)
@@ -266,7 +265,7 @@ def reviewSurvey(course, semester):
 				break
 		if not matches and question.get_visible() and not question.get_mandatory():
 			extra_questions.append(question)
-	print(extra_questions)
+
 	num_extra_questions = len(extra_questions)
 
 	return render_template("reviewSurvey.html", survey = survey, num_questions = num_questions,
@@ -277,8 +276,6 @@ def commit_review():
 	if (not has_access(request.remote_addr, Staff, overrideTime = True)):
 		return redirect("/login/Staff/@2Fcommit_review")
 	update(request.remote_addr)
-
-	print(request.form)
 
 	survey = Survey()
 	survey.load_course_from_db(DATABASE_FILENAME, request.form.get('course'), request.form.get('semester'))

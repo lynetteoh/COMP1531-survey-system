@@ -5,7 +5,6 @@ from securityClasses import Admin, Staff, Student, Guest
 
 def login_page(request, role, page):
 	if request.method == "GET":
-		print(request.args.get('attempt'))
 		logged_in_as = None
 		if (has_access(request.remote_addr, Student)):
 			logged_in_as = 'Student'
