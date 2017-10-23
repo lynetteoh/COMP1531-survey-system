@@ -1,6 +1,6 @@
 from databasing import db_execute
 
-def create_db(filename):
+def create_database(filename):
 	db_execute(filename, """
 	CREATE TABLE IF NOT EXISTS SURVEYS
 	(ID INT PRIMARY KEY    NOT NULL,

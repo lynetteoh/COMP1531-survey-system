@@ -8,13 +8,13 @@ import datetime
 from databasing import db_select, db_execute
 from courses import find_course
 
-from create_db import create_db
+from create_db import create_database
 DATABASE_FILENAME = "test_data.db"
 
 
 class test_question(unittest.TestCase):
-	def set_up(self):
-		create_db(DATABASE_FILENAME)
+	def setUp(self):
+		create_database(DATABASE_FILENAME)
 
 	def test_values_read_from_dictionary(self):
 		
@@ -155,8 +155,8 @@ class test_question(unittest.TestCase):
 
 class test_login(unittest.TestCase):
 
-	def set_up(self):
-		create_db(DATABASE_FILENAME)
+	def setUp(self):
+		pass
 
 	def test_admin_login(self):
 		user = login_user('z1', 'adminPass', 'localhost')
@@ -249,8 +249,8 @@ class test_login(unittest.TestCase):
 
 
 class test_survey(unittest.TestCase):
-	def set_up(self):
-		create_db(DATABASE_FILENAME)
+	def setUp(self):
+		create_database(DATABASE_FILENAME)
 
 	def test_add_question_survey(self):
 		survey = Survey()
@@ -387,8 +387,8 @@ class test_survey(unittest.TestCase):
 
 
 class enrol_student(unittest.TestCase):
-	def set_up(self):
-		create_db(DATABASE_FILENAME)
+	def setUp(self):
+		pass
 	
 	def test_enrol_student(self):
 		user = login_user('z100', 'student228', 'localhost')
@@ -414,8 +414,8 @@ class enrol_student(unittest.TestCase):
 		self.assertEqual(user.is_enrolled_in(course), False)
 
 class test_update_question(unittest.TestCase):
-	def set_up():
-		create_db(DATABASE_FILENAME)
+	def setUp(self):
+		create_database(DATABASE_FILENAME)
 
 	def test_add_option(self):
 

@@ -1,9 +1,9 @@
 #Routing program
 #Used to route websites.
 
-from create_db import create_db
+from create_db import create_database
 DATABASE_FILENAME = "data.db"
-create_db(DATABASE_FILENAME)
+create_database(DATABASE_FILENAME)
 
 from flask import Flask, redirect, render_template, request, url_for
 from server import app

@@ -3,7 +3,7 @@ import sqlite3
 silent_prints = 0
 import re
 
-def db_execute(database, expression, silent = False):
+def db_execute(database, expression, silent = True):
 	global silent_prints
 	if not silent:
 		print(re.sub('\s+', ' ', expression))
@@ -21,7 +21,7 @@ def db_execute(database, expression, silent = False):
 	connection.commit()
 	cursorObj.close()
 
-def db_select(database, query, silent = False):
+def db_select(database, query, silent = True):
 	global silent_prints
 	if not silent:
 		print(re.sub('\s+', ' ', query))

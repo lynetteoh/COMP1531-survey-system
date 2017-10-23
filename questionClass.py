@@ -82,7 +82,6 @@ class Question:
 			self._options.append(Option(option, options[option][0]))
 
 	def load_from_dict(self, data):
-		print(data)
 		if 'questionNum' in data:
 			self._id = int(data['questionNum'])
 		self._question_text = data['questionText'].strip()
@@ -132,7 +131,6 @@ class Question:
 		else:
 			max_option_id = max(option_ids)
 		for i, option in enumerate(self._options):
-			print(i, option, max_option_id)
 			db_execute(filename, 'INSERT INTO OPTIONS (ID, OPTION, QUESTIONID) VALUES ("{0}", "{1}", "{2}")'.format(
 								 str(i+max_option_id+1), option.text, str(max_question_id + 1))
 					  )
@@ -172,7 +170,6 @@ class Question:
 		string = 'Question' + str(self._id) + ' multi=' + str(self._multi) + ' ' + self._question_text + '\n'
 		string += 'mandatory=' + str(self._mandatory) + ' text=' + str(self._text) + '\n'
 		for i, option in enumerate(self._options):
-			print(option.text)
 			string += 'Q' + str(self._id) + 'O' + str(i+1) + ' ' + option.text + '\n'
 		return string
 
