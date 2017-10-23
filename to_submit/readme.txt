@@ -37,7 +37,8 @@ A note for date constraints: A survey cannot be opened/closed until the open/clo
 Section 3
 ---------
 
-To run the tests, move tests.py into the application folder. Then run the command:
+To run the tests, move tests.py into the application folder. (From the application folder, you would run "mv ../tests/tests.py .")
+Then, from the application folder, run the command:
 python3 tests.py
 
 There are 5 classes of tests which will be run on the system. These are:
