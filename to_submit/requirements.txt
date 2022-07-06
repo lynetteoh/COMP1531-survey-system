@@ -5,7 +5,7 @@ Werkzeug==0.12.2
 chardet==2.2.1
 click==6.7
 colorama==0.2.5
-html5lib==0.999
+html5lib==0.999999999
 itsdangerous==0.24
 requests==2.2.1
 six==1.5.2
